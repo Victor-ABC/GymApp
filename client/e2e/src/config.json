@@ -1,0 +1,6 @@
+{
+  "client": "http://localhost:8080/app",
+  "server": "http://localhost:3000/api",
+  "headless": true,
+  "slowMo": 0
+}

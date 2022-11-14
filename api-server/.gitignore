@@ -1,0 +1,13 @@
+# Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) 
+
+# Packages
+node_modules/
+
+# Generierte Dateien
+coverage/
+
+# Mac only
+.DS_Store
+
+
+

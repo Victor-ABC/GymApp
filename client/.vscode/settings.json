@@ -1,0 +1,6 @@
+{
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.options": { "configFile": ".eslintrc.json" }
+}
