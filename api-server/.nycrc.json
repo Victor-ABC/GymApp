@@ -1,0 +1,5 @@
+{
+  "exclude": ["coverage/**", "node_modules/**", "**/*.d.ts", "**/*.spec.ts"],
+  "reporter": ["html", "text", "text-summary"],
+  "all": false
+}

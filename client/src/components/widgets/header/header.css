@@ -1,0 +1,111 @@
+/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  position: sticky;
+  top: 0;
+  margin: 0px;
+  padding: 1rem 0.5rem 1rem 1rem;
+  background-color: var(--app-primary-color);
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: #ccc;
+}
+
+a:hover {
+  color: #fff;
+}
+
+.logo {
+  display: inline-flex;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid white;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.75rem;
+}
+
+.logo::before {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  content: '✓';
+}
+
+.title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: lighter;
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+}
+
+ol {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+ol a {
+  padding: 0 0.5rem 0 0;
+  display: inline-block;
+}
+
+.menu-button {
+  display: none;
+}
+
+@media screen and (max-width: 576px) {
+  ol {
+    display: flex;
+    flex-basis: 100%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-direction: column;
+  }
+
+  ol a {
+    padding-top: 0.75rem;
+  }
+
+  ol:not([open]) {
+    display: none;
+  }
+
+  li:first-child a {
+    padding-top: 1rem;
+  }
+  li:last-child a {
+    padding-bottom: 0;
+  }
+
+  .menu-button {
+    display: inline;
+    font-size: 1.25rem;
+    user-select: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1.25rem;
+  }
+
+  .menu-button::before {
+    content: '☰';
+  }
+
+  .menu-button:not(:disabled) {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,9 @@
+# Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) 
+
+# Packages
+node_modules/
+
+# Mac only
+.DS_Store
+
+

@@ -1,0 +1,16 @@
+{
+  "server": { "https": false, "port": 3000 },
+  "db": {
+    "use": "in-memory-db",
+    "connect": {
+      "user": "taskman",
+      "host": "localhost",
+      "database": "taskman",
+      "password": "wifhm",
+      "port": {
+        "mongodb": 27017,
+        "psql": 5432
+      }
+    }
+  }
+}
