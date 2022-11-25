@@ -3,8 +3,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { GenericDAO } from '../models/generic.dao.js';
-import { User } from '../models/user.js';
-import { Task } from '../models/task.js';
+import { User } from '../models/users/user.js';
 import { authService } from '../services/auth.service.js';
 
 const router = express.Router();
@@ -34,7 +33,8 @@ router.post('/', async (req, res) => {
   const createdUser = await userDAO.create({
     name: req.body.name,
     email: req.body.email,
-    password: await bcrypt.hash(req.body.password, 10)
+    password: await bcrypt.hash(req.body.password, 10),
+    isTrainer: false,
   });
   authService.createAndSetToken({ id: createdUser.id }, res);
   res.status(201).json(createdUser);
@@ -68,10 +68,8 @@ router.delete('/sign-out', (req, res) => {
 
 router.delete('/', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
 
   userDAO.delete(res.locals.user.id);
-  taskDAO.deleteAll({ userId: res.locals.user.id });
 
   authService.removeToken(res);
   res.status(200).end();

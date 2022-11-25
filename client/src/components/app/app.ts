@@ -12,7 +12,7 @@ import componentStyle from './app.css';
 class AppComponent extends LitElement {
   static styles = componentStyle;
 
-  @state() private appTitle = 'Aufgabenverwaltung';
+  @state() private appTitle = 'Gym+';
 
   @state() private linkItems = [
     { title: 'Konto erstellen', routePath: 'users/sign-up' },
@@ -36,10 +36,7 @@ class AppComponent extends LitElement {
         'users/sign-in': () => html`<app-sign-in></app-sign-in>`,
         'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
-        'tasks': () => html`<app-tasks></app-tasks>`,
-        'tasks/:id': params => html`<app-task-details .taskId=${params.id}></app-task-details>`
       },
-      () => html`<app-tasks></app-tasks>`
     );
   }
 

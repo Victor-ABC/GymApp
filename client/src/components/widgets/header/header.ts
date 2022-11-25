@@ -14,12 +14,11 @@ class HeaderComponent extends LitElement {
 
   @property({ type: Array }) linkItems: Array<{ title: string; routePath: string }> = [];
 
-  @state() menuOpen = false;
+  @state() menuOpen = false; 
 
   render() {
     return html`
-      <span class="logo"></span>
-      <a href="tasks" class="title">${this.title}</a>
+      <a href="" class="title">${this.title}</a>
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
         ${this.linkItems.map(

@@ -6,7 +6,6 @@ import http from 'node:http';
 import https from 'node:https';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tasks from './routes/tasks.js';
 import users from './routes/users.js';
 import startDB from './db.js';
 import { corsService } from './services/cors.service.js';
@@ -22,7 +21,6 @@ function configureApp(app: Express) {
   app.use(cookieParser());
   app.use(corsService.corsMiddleware);
   app.use('/api/users', users);
-  app.use('/api/tasks', tasks);
 }
 
 export async function start() {

@@ -48,7 +48,7 @@ class SignInComponent extends PageMixin(LitElement) {
       };
       try {
         await httpClient.post('/users/sign-in', authData);
-        router.navigate('/tasks');
+        router.navigate('/'); //todo: route to default page of screen
       } catch (e) {
         this.showNotification((e as Error).message, 'error');
       }
