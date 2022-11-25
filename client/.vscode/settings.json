@@ -2,5 +2,9 @@
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "eslint.options": { "configFile": ".eslintrc.json" }
+  "eslint.options": { "configFile": ".eslintrc.json" },
+  "files.exclude": {
+    "**/node_modules" : true,
+    "**/.git": true,
+  }
 }
