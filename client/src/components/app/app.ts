@@ -28,6 +28,7 @@ class AppComponent extends LitElement {
     httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
   }
 
+
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }

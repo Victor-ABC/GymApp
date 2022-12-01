@@ -20,13 +20,10 @@ class SignInComponent extends PageMixin(LitElement) {
 
   @query('#password') private passwordElement!: HTMLInputElement;
 
-  protected createRenderRoot(): Element | ShadowRoot {
-    return this;
-  }
-
   render() {
     return html`
-      ${this.renderNotification()}
+        <ion-content>
+          ${this.renderNotification()}
       <h1>Anmelden</h1>
       <form novalidate>
         <div>
@@ -41,6 +38,8 @@ class SignInComponent extends PageMixin(LitElement) {
         </div>
         <button type="button" @click="${this.submit}">Anmelden</button>
       </form>
+        </ion-content>
+      
     `;
   }
 

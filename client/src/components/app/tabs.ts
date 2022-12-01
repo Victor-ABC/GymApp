@@ -15,13 +15,10 @@ class TabsComponent extends PageMixin(LitElement) {
     return html` 
     <ion-tabs>
         <ion-tab tab="app-sign-up" component="app-sign-up">
-            <ion-nav></ion-nav>
         </ion-tab>
         <ion-tab tab="app-sign-in" component="app-sign-in">
-            <ion-nav></ion-nav>
         </ion-tab>
         <ion-tab tab="app-chat-all" component="app-chat-all">
-            <ion-nav></ion-nav>
         </ion-tab>
         <ion-tab-bar slot="bottom">
             <ion-tab-button tab="app-chat-all" href="/chat/all">
