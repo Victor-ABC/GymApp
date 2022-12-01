@@ -5,10 +5,10 @@
         "numbers" : "Zahlen",
         "specialLetters" : "Sonderzeichen (!$%&*...)",
         "noDublicateChars" : "Bitte keine selben Zeichen nebeneinander",
-        "toShortSmallLength" : "Password zu kurz",
-        "toShortMediumLenghth" : "Password könnte länger sein",
+        "toShortSmallLength" : "Passwort zu kurz",
+        "toShortMediumLenghth" : "Passwort könnte länger sein",
         "equalityToPasswordCheck" : "Passwörter müssen gleich sein",
-        "doesNotHave" : "Password hat keine ",
-        "doesOnlyHaveOne" : "Password hat nur ein "
+        "doesNotHave" : "Passwort hat keine ",
+        "doesOnlyHaveOne" : "Passwort hat nur ein "
     }
 }
