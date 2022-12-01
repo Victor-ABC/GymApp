@@ -17,7 +17,8 @@ class AppComponent extends LitElement {
   @state() private linkItems = [
     { title: 'Konto erstellen', routePath: 'users/sign-up' },
     { title: 'Anmelden', routePath: 'users/sign-in' },
-    { title: 'Abmelden', routePath: 'users/sign-out' }
+    { title: 'Abmelden', routePath: 'users/sign-out' },
+    { title: 'Chat', routePath: 'chat/all' }
   ];
 
   constructor() {
@@ -36,6 +37,7 @@ class AppComponent extends LitElement {
         'users/sign-in': () => html`<app-sign-in></app-sign-in>`,
         'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
+        'chat/all' : () => html`<app-chat-all></app-chat-all>`
       },
     );
   }
@@ -46,4 +48,16 @@ class AppComponent extends LitElement {
       <div class="main">${this.renderRouterOutlet()}</div>
     `;
   }
+
+  buildTabNavigation() {
+    return html`
+    <ion-app>
+      <ion-router use-hash="false">
+        <ion-route component="app-tabs">
+          
+        </ion-route>
+      </ion-router>
+    </ion-app>`;
+  }
+
 }
