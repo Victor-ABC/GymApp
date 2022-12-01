@@ -14,13 +14,13 @@ class TabsComponent extends PageMixin(LitElement) {
   render() {
     return html` 
     <ion-tabs>
-        <ion-tab tab="app-sign-up">
+        <ion-tab tab="app-sign-up" component="app-sign-up">
             <ion-nav></ion-nav>
         </ion-tab>
-        <ion-tab tab="app-sign-in">
+        <ion-tab tab="app-sign-in" component="app-sign-in">
             <ion-nav></ion-nav>
         </ion-tab>
-        <ion-tab tab="app-chat-all">
+        <ion-tab tab="app-chat-all" component="app-chat-all">
             <ion-nav></ion-nav>
         </ion-tab>
         <ion-tab-bar slot="bottom">

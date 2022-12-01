@@ -68,9 +68,9 @@ class AppComponent extends LitElement {
       <ion-router use-hash="false">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         <ion-route component="app-tabs">
-          <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
-          <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
-          <ion-route url="chat/all" component="app-chat-all"></ion-route>
+        <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
+        <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
+        <ion-route url="chat/all" component="app-chat-all"></ion-route>
         </ion-route>
       </ion-router>
       <ion-nav root="app-sign-up"></ion-nav>
