@@ -20,6 +20,10 @@ class SignInComponent extends PageMixin(LitElement) {
 
   @query('#password') private passwordElement!: HTMLInputElement;
 
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
+  }
+
   render() {
     return html`
       ${this.renderNotification()}
