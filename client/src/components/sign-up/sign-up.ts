@@ -6,7 +6,7 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 //Json for all Text -> All Text at 1 place.
-import text from '../../resources/text.json' assert { type: 'json' };
+import text from './text.json';
 
 import sharedStyle from '../shared.css';
 import componentStyle from './sign-up.css';
@@ -49,7 +49,8 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   render() {
     return html`
-      ${this.renderNotification()}
+    <ion-content>
+            ${this.renderNotification()}
       <h1>Konto erstellen</h1>
       <form novalidate>
         <div>
@@ -78,6 +79,8 @@ class SignUpComponent extends PageMixin(LitElement) {
         </div>
         <button type="button" @click="${this.submit}">Konto erstellen</button>
       </form>
+    </ion-content>
+
     `;
   }
 

@@ -11,7 +11,7 @@ form {
 
 /*
   Password Validation on Client Side
-  by Manipulating CSS-Variables via JS
+  by Manipulating CSS-Variables via JS (TS)
   */
 .password-strength {
   width: 100%;

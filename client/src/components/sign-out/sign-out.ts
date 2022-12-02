@@ -12,6 +12,10 @@ class SignOutComponent extends PageMixin(LitElement) {
     return html` ${this.renderNotification()} `;
   }
 
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
+  }
+
   async firstUpdated() {
     try {
       await httpClient.delete('/users/sign-out');
