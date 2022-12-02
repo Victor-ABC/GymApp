@@ -59,49 +59,78 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-        <h1>Registrieren</h1>
-        <form>
-          <ion-item lines="full">
-            <ion-label position="floating">Name</ion-label>
-            <ion-input type="text" required placeholder="Text eingeben"></ion-input>
-          </ion-item>
-          <ion-item lines="full">
-            <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" required placeholder="Text eingeben"></ion-input>
-          </ion-item>
-          <ion-item lines="full">
-            <ion-label position="floating">Passwort</ion-label>
-            <ion-input type="password" required id="password" placeholder="Text eingeben"></ion-input>
-          </ion-item>
-          <ion-progress-bar id="password-progress"></ion-progress-bar>
-          <ion-list id="problems" class="problems">
-            ${this.errors.map(
-              (error, index) =>
-                html`
-                  <ion-item>
-                    <ion-icon name="information-circle-outline" color="danger"></ion-icon>
-                    <ion-label>
-                      <p>${(error as CustomError).errorMessage}</p>
-                    </ion-label>
-                  </ion-item>
-                `
-            )}
-          </ion-list>
-          <ion-item lines="full">
-            <ion-label position="floating">Passwort-check</ion-label>
-            <ion-input type="password" required laceholder="Text eingeben"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label>Trainer</ion-label>
-            <ion-checkbox></ion-checkbox>
-          </ion-item>
-          <ion-row>
-            <ion-col>
-              <ion-button type="submit" color="primary" expand="block">Submit</ion-button>
-            </ion-col>
-          </ion-row>
-        </form>
+      <h1>Registrieren</h1>
+      <form>
+        <ion-item lines="full">
+          <ion-label position="floating">Name</ion-label>
+          <ion-input type="text" required placeholder="Text eingeben"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" required placeholder="Text eingeben"></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="floating">Passwort</ion-label>
+          <ion-input type="password" required id="password" placeholder="Text eingeben"></ion-input>
+        </ion-item>
+        <ion-progress-bar id="password-progress"></ion-progress-bar>
+        <ion-list id="problems" class="problems">
+          ${this.errors.map(
+            (error, index) =>
+              html`
+                <ion-item>
+                  <ion-icon name="information-circle-outline" color="danger"></ion-icon>
+                  <ion-label>
+                    <p>${(error as CustomError).errorMessage}</p>
+                  </ion-label>
+                </ion-item>
+              `
+          )}
+        </ion-list>
+        <ion-item lines="full">
+          <ion-label position="floating">Passwort-check</ion-label>
+          <ion-input type="password" required laceholder="Text eingeben"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Trainer</ion-label>
+          <ion-checkbox></ion-checkbox>
+        </ion-item>
+        <ion-button href="chat/all" type="submit" color="primary" expand="block" onclick="this.logSomething">Registrieren</ion-button>
+      </form>
     `;
+  }
+
+  logSomething() {
+    alert("asdf");
+  }
+
+  async submit() {
+    console.log('called sign-up submit');
+    if (this.isFormValid()) {
+      const accountData = {
+        name: this.nameElement.value,
+        email: this.emailElement.value,
+        password: this.passwordElement.value,
+        passwordCheck: this.passwordCheckElement.value
+      };
+      try {
+        await httpClient.post('users', accountData);
+        router.navigate('/'); //todo: add starting page route
+      } catch (e) {
+        this.showNotification((e as Error).message, 'error');
+      }
+    } else {
+      this.form.classList.add('was-validated');
+    }
+  }
+
+  isFormValid() {
+    if (this.inputOfPasswordElement.value !== this.passwordCheckElement.value) {
+      this.passwordCheckElement.setCustomValidity('Passwörter müssen gleich sein');
+    } else {
+      this.passwordCheckElement.setCustomValidity('');
+    }
+    return this.form.checkValidity();
   }
 
   computeStrengthOfPasswordAgain() {
@@ -135,9 +164,7 @@ class SignUpComponent extends PageMixin(LitElement) {
     errors.push(this.reapeatCharactersError(password));
     return errors;
   }
-  /*
-    Todo: auch in json auslageer
-  */
+
   lowercaseError(password: string) {
     return this.genericErrorFinder(password, /[a-z]/g, 'Kleinbuchstaben');
   }
@@ -191,33 +218,5 @@ class SignUpComponent extends PageMixin(LitElement) {
         punishment: 25
       };
     }
-  }
-
-  async submit() {
-    if (this.isFormValid()) {
-      const accountData = {
-        name: this.nameElement.value,
-        email: this.emailElement.value,
-        password: this.passwordElement.value,
-        passwordCheck: this.passwordCheckElement.value
-      };
-      try {
-        await httpClient.post('users', accountData);
-        router.navigate('/'); //todo: add starting page route
-      } catch (e) {
-        this.showNotification((e as Error).message, 'error');
-      }
-    } else {
-      this.form.classList.add('was-validated');
-    }
-  }
-
-  isFormValid() {
-    if (this.inputOfPasswordElement.value !== this.passwordCheckElement.value) {
-      this.passwordCheckElement.setCustomValidity('Passwörter müssen gleich sein');
-    } else {
-      this.passwordCheckElement.setCustomValidity('');
-    }
-    return this.form.checkValidity();
   }
 }
