@@ -36,6 +36,12 @@ import { IonTitle } from '@ionic/core/components/ion-title.js';
 import { IonToggle } from '@ionic/core/components/ion-toggle.js';
 import { IonToolbar } from '@ionic/core/components/ion-toolbar.js';
 import { addIcons } from 'ionicons';
+import { IonCard } from '@ionic/core/components/ion-card';
+import { IonCardContent } from '@ionic/core/components/ion-card-content';
+import { IonCardHeader } from '@ionic/core/components/ion-card-header';
+import { IonCardTitle } from '@ionic/core/components/ion-card-title';
+import { IonCardSubtitle } from '@ionic/core/components/ion-card-subtitle';
+ 
 
 import { IonProgressBar } from '@ionic/core/components/ion-progress-bar';
 
@@ -43,7 +49,7 @@ import { initialize } from '@ionic/core/components';
 import '@ionic/core/css/ionic.bundle.css';
 
 // Icons that are used by internal components
-import { arrowBackSharp, caretBackSharp, chevronBack, chevronDown, chevronForward, close, closeCircle, closeSharp, menuOutline, menuSharp, reorderThreeOutline, reorderTwoSharp, searchOutline, searchSharp } from 'ionicons/icons';
+import { arrowBackSharp, informationCircleOutline, caretBackSharp, chevronBack, chevronDown, chevronForward, close, closeCircle, closeSharp, menuOutline, menuSharp, reorderThreeOutline, reorderTwoSharp, searchOutline, searchSharp, todayOutline } from 'ionicons/icons';
 
 // Application specific icons
 import { home, logoHtml5, logoCss3, logoJavascript, logoNodejs, logoPython, settings } from 'ionicons/icons';
@@ -53,6 +59,7 @@ import '@ionic/core/css/core.css'; // core ist die Minimalanforderung
 initialize();
 
 addIcons({
+  'information-circle-outline' : informationCircleOutline,
   'arrow-back-sharp': arrowBackSharp,
   'caret-back-sharp': caretBackSharp,
   'chevron-back': chevronBack,
@@ -79,6 +86,11 @@ addIcons({
   'settings': settings
 });
 
+customElements.define('ion-card', IonCard);
+customElements.define('ion-card-content', IonCardContent);
+customElements.define('ion-card-header', IonCardHeader);
+customElements.define('ion-card-title', IonCardTitle);
+customElements.define('ion-card-subtitle', IonCardSubtitle);
 customElements.define('ion-progress-bar', IonProgressBar);
 customElements.define('ion-app', IonApp);
 customElements.define('ion-back-button', IonBackButton);

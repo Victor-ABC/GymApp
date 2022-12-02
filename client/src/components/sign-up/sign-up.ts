@@ -20,13 +20,6 @@ type CustomError = {
 class SignUpComponent extends PageMixin(LitElement) {
   static styles = [componentStyle];
 
-  /*
-  @query('#password-strength')
-  displayPasswordStrengthElement!: HTMLDivElement;
-  */
-  @query('#problems')
-  allProblems!: HTMLIonListElement;
-
   @query('#password')
   inputOfPasswordElement!: HTMLInputElement;
 
@@ -59,7 +52,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   render() {
     return html`
-      <ion-content>
+        <h1>Registrieren</h1>
         <form>
           <ion-item lines="full">
             <ion-label position="floating">Name</ion-label>
@@ -75,7 +68,17 @@ class SignUpComponent extends PageMixin(LitElement) {
           </ion-item>
           <ion-progress-bar id="password-progress"></ion-progress-bar>
           <ion-list id="problems" class="problems">
-            ${this.errors.map((error, index) => html` <ion-item>${(error as CustomError).errorMessage}</ion-item> `)}
+            ${this.errors.map(
+              (error, index) =>
+                html`
+                  <ion-item>
+                    <ion-icon name="information-circle-outline" color="danger"></ion-icon>
+                    <ion-label>
+                      <p>${(error as CustomError).errorMessage}</p>
+                    </ion-label>
+                  </ion-item>
+                `
+            )}
           </ion-list>
           <ion-item lines="full">
             <ion-label position="floating">Passwort-check</ion-label>
@@ -87,11 +90,10 @@ class SignUpComponent extends PageMixin(LitElement) {
           </ion-item>
           <ion-row>
             <ion-col>
-              <ion-button type="submit" color="danger" expand="block">Submit</ion-button>
+              <ion-button type="submit" color="primary" expand="block">Submit</ion-button>
             </ion-col>
           </ion-row>
         </form>
-      </ion-content>
     `;
   }
 
@@ -106,20 +108,14 @@ class SignUpComponent extends PageMixin(LitElement) {
       newErrorList.push(error);
     });
     (this.errors as Array<CustomError>) = newErrorList;
-    this.passwordElement.value = strength/100;
-    //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength', String(strength));
+    this.passwordElement.value = strength / 100;
     if (strength < 45) {
-
-      this.passwordElement.style.setProperty('--color', '#ff3838') //red
-      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'red');
+      this.passwordElement.style.setProperty('--color', '#ff3838'); //red
     } else if (strength >= 45 && strength < 70) {
-      this.passwordElement.style.setProperty('--color', '#cef717') //yellow
-      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'yellow');
+      this.passwordElement.style.setProperty('--color', '#cef717'); //yellow
     } else {
-      this.passwordElement.style.setProperty('--color', '#1ac228') //green
-      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'green');
+      this.passwordElement.style.setProperty('--color', '#1ac228'); //green
     }
-
   }
 
   computeStrengthOfPassword(password: string) {

@@ -8,11 +8,14 @@ form {
   margin-top: 1rem;
 }
 
-
 /*
   Password Validation on Client Side
   by Manipulating CSS-Variables via JS (TS)
   */
+
+* {
+  max-width: 500px;
+}
 
 .password-strength {
   width: 100%;

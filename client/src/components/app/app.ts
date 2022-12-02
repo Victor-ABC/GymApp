@@ -1,7 +1,7 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { LitElement, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { router } from '../../router/router.js';
 import { httpClient } from '../../http-client.js';
 import { when } from 'lit/directives/when.js';
@@ -15,6 +15,8 @@ class AppComponent extends LitElement {
 
   @state() private appTitle = 'Gym+';
 
+  @query('#main') private mainFrame!: HTMLIonContentElement;
+
   @state() private linkItems = [
     { title: 'Konto erstellen', routePath: 'users/sign-up' },
     { title: 'Anmelden', routePath: 'users/sign-in' },
@@ -27,7 +29,6 @@ class AppComponent extends LitElement {
     const port = location.protocol === 'https:' ? 3443 : 3000;
     httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
   }
-
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
@@ -49,29 +50,44 @@ class AppComponent extends LitElement {
     );
   }
 
+  /*
+    Diese Methode sorgt dafür, dass 
+    alle Seiten (=Custom-Elements/Lit-Elements) richtig angezeigt werden.
+    -> alle haben die höhe Max
+    -> alle haben die Breite 7/12 vom Bildschirm (immer responsiv)
+  */
   buildBrowser() {
     return html`
       <app-header title="${this.appTitle}" .linkItems=${this.linkItems}> </app-header>
-      <div class="main">${this.renderRouterOutlet()}</div>
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col></ion-col>
+            <ion-col size="7">${this.renderRouterOutlet()}</ion-col>
+            <ion-col></ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-content>
     `;
   }
 
   render() {
     return html`${when(
       Capacitor.isNativePlatform(),
-      () => this.buildBrowser(),
-      () => this.buildMobile()
+      () => this.buildMobile(),
+      () => this.buildBrowser()
     )}`;
   }
 
   buildMobile() {
-    return html` <ion-app>
+    return html` 
+    <ion-app>
       <ion-router use-hash="false">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         <ion-route component="app-tabs">
-        <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
-        <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
-        <ion-route url="chat/all" component="app-chat-all"></ion-route>
+          <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
+          <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
+          <ion-route url="chat/all" component="app-chat-all"></ion-route>
         </ion-route>
       </ion-router>
       <ion-nav root="app-sign-up"></ion-nav>
