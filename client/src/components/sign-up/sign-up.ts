@@ -7,20 +7,25 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 //Json for all Text -> All Text at 1 place.
 import text from './text.json';
-
-import sharedStyle from '../shared.css';
+//import sharedStyle from '../shared.css';
 import componentStyle from './sign-up.css';
+
+type CustomError = {
+  errorMessage: string;
+  punishment: number;
+};
 
 @customElement('app-sign-up')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignUpComponent extends PageMixin(LitElement) {
-  static styles = [sharedStyle, componentStyle];
+  static styles = [componentStyle];
 
+  /*
   @query('#password-strength')
   displayPasswordStrengthElement!: HTMLDivElement;
-
+  */
   @query('#problems')
-  allProblems!: HTMLDivElement;
+  allProblems!: HTMLIonListElement;
 
   @query('#password')
   inputOfPasswordElement!: HTMLInputElement;
@@ -28,6 +33,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   @property()
   isFirstinputOfPasswordElement = true;
 
+  @property({ type: Array<CustomError> }) errors = [];
 
   @query('form') private form!: HTMLFormElement;
 
@@ -35,7 +41,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#email') private emailElement!: HTMLInputElement;
 
-  @query('#password') private passwordElement!: HTMLInputElement;
+  @query('#password-progress') private passwordElement!: HTMLIonProgressBarElement;
 
   @query('#password-check') private passwordCheckElement!: HTMLInputElement;
 
@@ -47,71 +53,73 @@ class SignUpComponent extends PageMixin(LitElement) {
     });
   }
 
-  render() {
-    return html`
-    <ion-content>
-            ${this.renderNotification()}
-      <h1>Konto erstellen</h1>
-      <form novalidate>
-        <div>
-          <label for="name">Name</label>
-          <input type="text" autofocus required id="name" />
-          <div class="invalid-feedback">Name ist erforderlich</div>
-        </div>
-        <div>
-          <label for="email">E-Mail</label>
-          <input type="email" required id="email" />
-          <div class="invalid-feedback">E-Mail ist erforderlich und muss gültig sein</div>
-        </div>
-        <div>
-          <label for="password">Passwort</label>
-          <input type="password" required minlength="10" id="password" />
-          <div id="password-strength" class="password-strength"></div>
-          <div id="problems" class="problems"></div>
-          <div class="invalid-feedback">Passwort ist nicht komplex genug</div>
-        </div>
-        <div>
-          <label for="password-check">Passwort nochmals eingeben</label>
-          <input type="password" required minlength="10" id="password-check" @focus="${this.removeValueFrominputOfPasswordElementElement}"/>
-          <div class="invalid-feedback">
-            Erneute Passworteingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
-          </div>
-        </div>
-        <button type="button" @click="${this.submit}">Konto erstellen</button>
-      </form>
-    </ion-content>
-
-    `;
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
   }
 
-
-  removeValueFrominputOfPasswordElementElement() {
-    if (this.isFirstinputOfPasswordElement) {
-      this.isFirstinputOfPasswordElement = false;
-      this.inputOfPasswordElement.value = '';
-    }
+  render() {
+    return html`
+      <ion-content>
+        <form>
+          <ion-item lines="full">
+            <ion-label position="floating">Name</ion-label>
+            <ion-input type="text" required placeholder="Text eingeben"></ion-input>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" required placeholder="Text eingeben"></ion-input>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-label position="floating">Passwort</ion-label>
+            <ion-input type="password" required id="password" placeholder="Text eingeben"></ion-input>
+          </ion-item>
+          <ion-progress-bar id="password-progress"></ion-progress-bar>
+          <ion-list id="problems" class="problems">
+            ${this.errors.map((error, index) => html` <ion-item>${(error as CustomError).errorMessage}</ion-item> `)}
+          </ion-list>
+          <ion-item lines="full">
+            <ion-label position="floating">Passwort-check</ion-label>
+            <ion-input type="password" required laceholder="Text eingeben"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Trainer</ion-label>
+            <ion-checkbox></ion-checkbox>
+          </ion-item>
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" color="danger" expand="block">Submit</ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-content>
+    `;
   }
 
   computeStrengthOfPasswordAgain() {
     const errors = this.computeStrengthOfPassword(this.inputOfPasswordElement.value);
     let strength = 100;
-    this.allProblems.innerHTML = '';
-
-    errors.forEach(errors => {
-      if (errors == null) return;
-      strength -= errors.punishment;
-      const errorMessageElement = document.createElement('p');
-      errorMessageElement.innerText = errors.errorMessage;
-      this.allProblems.appendChild(errorMessageElement);
+    //this.allProblems.innerHTML = '';
+    const newErrorList: Array<CustomError> = [];
+    errors.forEach(error => {
+      if (error == null) return;
+      strength -= error.punishment;
+      newErrorList.push(error);
     });
-    this.displayPasswordStrengthElement.style.setProperty('--passwordStrength', String(strength));
+    (this.errors as Array<CustomError>) = newErrorList;
+    this.passwordElement.value = strength/100;
+    //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength', String(strength));
     if (strength < 45) {
-      this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'red');
+
+      this.passwordElement.style.setProperty('--color', '#ff3838') //red
+      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'red');
     } else if (strength >= 45 && strength < 70) {
-      this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'yellow');
+      this.passwordElement.style.setProperty('--color', '#cef717') //yellow
+      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'yellow');
     } else {
-      this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'green');
+      this.passwordElement.style.setProperty('--color', '#1ac228') //green
+      //this.displayPasswordStrengthElement.style.setProperty('--passwordStrength_color', 'green');
     }
+
   }
 
   computeStrengthOfPassword(password: string) {
@@ -127,18 +135,18 @@ class SignUpComponent extends PageMixin(LitElement) {
   /*
     Todo: auch in json auslageer
   */
-    lowercaseError(password: string) {
-      return this.genericErrorFinder(password, /[a-z]/g, text.passwordRequirements.lowerCase);
-    }
-    uppercaseError(password: string) {
-      return this.genericErrorFinder(password, /[A-Z]/g, text.passwordRequirements.upperCase);
-    }
-    numberError(password: string) {
-      return this.genericErrorFinder(password, /[0-9]/g, text.passwordRequirements.numbers);
-    }
-    specialCharactersError(password: string) {
-      return this.genericErrorFinder(password, /[^0-9a-zA-Z\s]/g, text.passwordRequirements.specialLetters);
-    }
+  lowercaseError(password: string) {
+    return this.genericErrorFinder(password, /[a-z]/g, text.passwordRequirements.lowerCase);
+  }
+  uppercaseError(password: string) {
+    return this.genericErrorFinder(password, /[A-Z]/g, text.passwordRequirements.upperCase);
+  }
+  numberError(password: string) {
+    return this.genericErrorFinder(password, /[0-9]/g, text.passwordRequirements.numbers);
+  }
+  specialCharactersError(password: string) {
+    return this.genericErrorFinder(password, /[^0-9a-zA-Z\s]/g, text.passwordRequirements.specialLetters);
+  }
 
   genericErrorFinder(password: string, regex: RegExp, requirement: string) {
     const matches = password.match(regex) || [];
@@ -202,7 +210,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   }
 
   isFormValid() {
-    if (this.passwordElement.value !== this.passwordCheckElement.value) {
+    if (this.inputOfPasswordElement.value !== this.passwordCheckElement.value) {
       this.passwordCheckElement.setCustomValidity(text.passwordRequirements.equalityToPasswordCheck);
     } else {
       this.passwordCheckElement.setCustomValidity('');

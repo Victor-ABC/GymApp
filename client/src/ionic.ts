@@ -37,6 +37,8 @@ import { IonToggle } from '@ionic/core/components/ion-toggle.js';
 import { IonToolbar } from '@ionic/core/components/ion-toolbar.js';
 import { addIcons } from 'ionicons';
 
+import { IonProgressBar } from '@ionic/core/components/ion-progress-bar';
+
 import { initialize } from '@ionic/core/components';
 import '@ionic/core/css/ionic.bundle.css';
 
@@ -77,6 +79,7 @@ addIcons({
   'settings': settings
 });
 
+customElements.define('ion-progress-bar', IonProgressBar);
 customElements.define('ion-app', IonApp);
 customElements.define('ion-back-button', IonBackButton);
 customElements.define('ion-button', IonButton);
