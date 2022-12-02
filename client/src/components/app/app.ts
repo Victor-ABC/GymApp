@@ -72,8 +72,11 @@ class AppComponent extends LitElement {
   }
 
   render() {
+    var isNative = Capacitor.isNativePlatform();
+    //For Testing Smartphone and Browser without using AndroidStudio + Capacitor
+    isNative = true;  
     return html`${when(
-      Capacitor.isNativePlatform(),
+      isNative,
       () => this.buildMobile(),
       () => this.buildBrowser()
     )}`;

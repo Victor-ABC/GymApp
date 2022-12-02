@@ -1,12 +1,13 @@
 /* Autor: Victor Corbet*/
 
+import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
 import { customElement, query, property } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 //Json for all Text -> All Text at 1 place.
-import text from './text.json';
 //import sharedStyle from '../shared.css';
 import componentStyle from './sign-up.css';
 
@@ -51,6 +52,14 @@ class SignUpComponent extends PageMixin(LitElement) {
   }
 
   render() {
+    return html`${when(
+      Capacitor.isNativePlatform(),
+      () => html`<ion-content>${this.buildBody()}</ion-content>`,
+      () => this.buildBody()
+    )}`;
+  }
+
+  buildBody() {
     return html`
         <h1>Registrieren</h1>
         <form>
@@ -132,16 +141,16 @@ class SignUpComponent extends PageMixin(LitElement) {
     Todo: auch in json auslageer
   */
   lowercaseError(password: string) {
-    return this.genericErrorFinder(password, /[a-z]/g, text.passwordRequirements.lowerCase);
+    return this.genericErrorFinder(password, /[a-z]/g, 'Kleinbuchstaben');
   }
   uppercaseError(password: string) {
-    return this.genericErrorFinder(password, /[A-Z]/g, text.passwordRequirements.upperCase);
+    return this.genericErrorFinder(password, /[A-Z]/g, 'Großbuchstaben');
   }
   numberError(password: string) {
-    return this.genericErrorFinder(password, /[0-9]/g, text.passwordRequirements.numbers);
+    return this.genericErrorFinder(password, /[0-9]/g, 'Zahlen');
   }
   specialCharactersError(password: string) {
-    return this.genericErrorFinder(password, /[^0-9a-zA-Z\s]/g, text.passwordRequirements.specialLetters);
+    return this.genericErrorFinder(password, /[^0-9a-zA-Z\s]/g, 'Sonderzeichen (!$%&*...)');
   }
 
   genericErrorFinder(password: string, regex: RegExp, requirement: string) {
@@ -149,14 +158,14 @@ class SignUpComponent extends PageMixin(LitElement) {
     //1/2 -> bad
     if (matches.length == 1) {
       return {
-        errorMessage: text.passwordRequirements.doesOnlyHaveOne + requirement,
+        errorMessage: 'Passwort hat nur ein ' + requirement,
         punishment: 10
       };
     }
     //0/2 -> worse
     if (matches.length == 0) {
       return {
-        errorMessage: text.passwordRequirements.doesNotHave + requirement,
+        errorMessage: 'Passwort hat keine ' + requirement,
         punishment: 15
       };
     }
@@ -165,7 +174,7 @@ class SignUpComponent extends PageMixin(LitElement) {
     const matches = password.match(/(.)\1/g) || [];
     if (matches.length > 0) {
       return {
-        errorMessage: text.passwordRequirements.noDublicateChars,
+        errorMessage: 'Bitte keine selben Zeichen nebeneinander',
         punishment: matches.length * 10
       };
     }
@@ -174,13 +183,13 @@ class SignUpComponent extends PageMixin(LitElement) {
     const length = password.length;
     if (length <= 4) {
       return {
-        errorMessage: text.passwordRequirements.toShortSmallLength,
+        errorMessage: 'Passwort zu kurz',
         punishment: 40
       };
     }
     if (length < 10) {
       return {
-        errorMessage: text.passwordRequirements.toShortMediumLenghth,
+        errorMessage: 'Passwort könnte länger sein',
         punishment: 25
       };
     }
@@ -207,7 +216,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   isFormValid() {
     if (this.inputOfPasswordElement.value !== this.passwordCheckElement.value) {
-      this.passwordCheckElement.setCustomValidity(text.passwordRequirements.equalityToPasswordCheck);
+      this.passwordCheckElement.setCustomValidity('Passwörter müssen gleich sein');
     } else {
       this.passwordCheckElement.setCustomValidity('');
     }
