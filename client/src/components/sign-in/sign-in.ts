@@ -22,7 +22,6 @@ class SignInComponent extends PageMixin(LitElement) {
 
   render() {
     return html`
-        <ion-content>
           ${this.renderNotification()}
       <h1>Anmelden</h1>
       <form novalidate>
@@ -38,7 +37,6 @@ class SignInComponent extends PageMixin(LitElement) {
         </div>
         <button type="button" @click="${this.submit}">Anmelden</button>
       </form>
-        </ion-content>
       
     `;
   }

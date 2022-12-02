@@ -8,11 +8,15 @@ form {
   margin-top: 1rem;
 }
 
-
 /*
   Password Validation on Client Side
   by Manipulating CSS-Variables via JS (TS)
   */
+
+* {
+  max-width: 500px;
+}
+
 .password-strength {
   width: 100%;
   border: 1px solid lightgrey;
@@ -31,8 +35,9 @@ form {
   position: absolute;
   left: 0;
 }
+
 .problems > * {
-  color: var(--app-error-color); /*Todo: AppColor nehmen*/
+  color: var(--app-error-color); 
   margin-top: 0.7rem;
   height: auto;
 }

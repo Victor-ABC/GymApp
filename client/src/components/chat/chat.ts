@@ -46,12 +46,12 @@ class SignOutComponent extends PageMixin(LitElement) {
 
   render() {
     return html`
-    <ion-content>
+
             <ion-list>
             ${this.messages.map(m => html`
                 <ion-item>${m.content}</ion-item>
             `)}
         </ion-list>
-    </ion-content>    `;
+       `;
   }
 }
