@@ -7,8 +7,6 @@ import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
-//Json for all Text -> All Text at 1 place.
-//import sharedStyle from '../shared.css';
 import componentStyle from './sign-up.css';
 
 type CustomError = {
