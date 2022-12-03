@@ -42,6 +42,7 @@ import { IonCardHeader } from '@ionic/core/components/ion-card-header';
 import { IonCardTitle } from '@ionic/core/components/ion-card-title';
 import { IonCardSubtitle } from '@ionic/core/components/ion-card-subtitle';
 import { IonToast } from '@ionic/core/components/ion-toast';
+import { IonImg } from '@ionic/core/components/ion-img';
 
 import { IonProgressBar } from '@ionic/core/components/ion-progress-bar';
 
@@ -49,7 +50,7 @@ import { initialize } from '@ionic/core/components';
 import '@ionic/core/css/ionic.bundle.css';
 
 // Icons that are used by internal components
-import { arrowBackSharp, informationCircleOutline, caretBackSharp, chevronBack, chevronDown, chevronForward, close, closeCircle, closeSharp, menuOutline, menuSharp, reorderThreeOutline, reorderTwoSharp, searchOutline, searchSharp, todayOutline } from 'ionicons/icons';
+import { arrowBackSharp, personOutline, informationCircleOutline, caretBackSharp, chevronBack, chevronDown, chevronForward, close, closeCircle, closeSharp, menuOutline, menuSharp, reorderThreeOutline, reorderTwoSharp, searchOutline, searchSharp, todayOutline } from 'ionicons/icons';
 
 // Application specific icons
 import { home, logoHtml5, logoCss3, logoJavascript, logoNodejs, logoPython, settings } from 'ionicons/icons';
@@ -59,6 +60,7 @@ import '@ionic/core/css/core.css'; // core ist die Minimalanforderung
 initialize();
 
 addIcons({
+  'person-outline' : personOutline,
   'information-circle-outline' : informationCircleOutline,
   'arrow-back-sharp': arrowBackSharp,
   'caret-back-sharp': caretBackSharp,
@@ -86,6 +88,7 @@ addIcons({
   'settings': settings
 });
 
+customElements.define('ion-img', IonImg);
 customElements.define('ion-toast', IonToast);
 customElements.define('ion-card', IonCard);
 customElements.define('ion-card-content', IonCardContent);
