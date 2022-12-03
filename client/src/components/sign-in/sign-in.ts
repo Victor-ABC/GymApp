@@ -50,19 +50,11 @@ class SignInComponent extends PageMixin(LitElement) {
         </ion-item>
         <ion-row>
           <ion-col>
-            <button onClick="this.doIt">Normal Button</button>
-            <ion-button href="chat/all" type="submit" color="primary" expand="block" onclick="this.logSomething"
-              >Anmelden</ion-button
-            >
+            <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Anmelden</ion-button>
           </ion-col>
         </ion-row>
       </form>
     `;
-  }
-
-  doIt() {
-    console.log('it');
-    alert('it');
   }
 
   async submit() {
