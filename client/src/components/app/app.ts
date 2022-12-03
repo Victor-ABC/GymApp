@@ -84,7 +84,7 @@ class AppComponent extends LitElement {
 
   buildMobile() {
     return html` 
-    <ion-app>
+    <ion-app class="toast-wrapper">
       <ion-router use-hash="false">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         <ion-route component="app-tabs">

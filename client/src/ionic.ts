@@ -41,7 +41,7 @@ import { IonCardContent } from '@ionic/core/components/ion-card-content';
 import { IonCardHeader } from '@ionic/core/components/ion-card-header';
 import { IonCardTitle } from '@ionic/core/components/ion-card-title';
 import { IonCardSubtitle } from '@ionic/core/components/ion-card-subtitle';
- 
+import { IonToast } from '@ionic/core/components/ion-toast';
 
 import { IonProgressBar } from '@ionic/core/components/ion-progress-bar';
 
@@ -86,6 +86,7 @@ addIcons({
   'settings': settings
 });
 
+customElements.define('ion-toast', IonToast);
 customElements.define('ion-card', IonCard);
 customElements.define('ion-card-content', IonCardContent);
 customElements.define('ion-card-header', IonCardHeader);

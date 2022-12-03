@@ -6,7 +6,6 @@ import { Express } from 'express';
 import { MongoGenericDAO } from './models/mongo-generic.dao.js';
 import { PsqlGenericDAO } from './models/psql-generic.dao.js';
 import { InMemoryGenericDAO } from './models/in-memory-generic.dao.js';
-import { Task } from './models/task.js';
 import { User } from './models/users/user.js';
 import { Course } from './models/course/course.js';
 import config from '../config.json' assert { type: 'json' };
