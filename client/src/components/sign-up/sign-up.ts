@@ -29,15 +29,15 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('form') private form!: HTMLFormElement;
 
-  @query('#name') private nameElement!: HTMLInputElement;
+  @query('#password-progress') private passwordProgressBar!: HTMLIonProgressBarElement;
 
-  @query('#email') private emailElement!: HTMLInputElement;
+  @query('#name > input') private nameElement!: HTMLInputElement;
 
-  @query('#password-progress') private passwordElement!: HTMLIonProgressBarElement;
+  @query('#email > input') private emailElement!: HTMLInputElement;
 
-  @query('#password-check') private passwordCheckElement!: HTMLInputElement;
+  @query('#password > input') private passwordElement!: HTMLInputElement;
 
-  //<app-pwt></app-pwt>
+  @query('#password-check > input') private passwordCheckElement!: HTMLInputElement;
 
   async firstUpdated() {
     this.inputOfPasswordElement.addEventListener('input', () => {
@@ -48,7 +48,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-
+  //
   render() {
     return html`${when(
       Capacitor.isNativePlatform(),
@@ -59,15 +59,16 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
+       ${this.renderNotification()}
       <h1>Registrieren</h1>
       <form>
         <ion-item lines="full">
           <ion-label position="floating">Name</ion-label>
-          <ion-input type="text" required placeholder="Text eingeben"></ion-input>
+          <ion-input type="text" required placeholder="Text eingeben" id="name"></ion-input>
         </ion-item>
         <ion-item lines="full">
           <ion-label position="floating">Email</ion-label>
-          <ion-input type="email" required placeholder="Text eingeben"></ion-input>
+          <ion-input type="email" required placeholder="Text eingeben" id="email"></ion-input>
         </ion-item>
         <ion-item lines="full">
           <ion-label position="floating">Passwort</ion-label>
@@ -89,23 +90,18 @@ class SignUpComponent extends PageMixin(LitElement) {
         </ion-list>
         <ion-item lines="full">
           <ion-label position="floating">Passwort-check</ion-label>
-          <ion-input type="password" required laceholder="Text eingeben"></ion-input>
+          <ion-input type="password" required laceholder="Text eingeben" id="password-check"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label>Trainer</ion-label>
           <ion-checkbox></ion-checkbox>
         </ion-item>
-        <ion-button href="chat/all" type="submit" color="primary" expand="block" onclick="this.logSomething">Registrieren</ion-button>
+        <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Registrieren</ion-button>
       </form>
     `;
   }
 
-  logSomething() {
-    alert("asdf");
-  }
-
   async submit() {
-    console.log('called sign-up submit');
     if (this.isFormValid()) {
       const accountData = {
         name: this.nameElement.value,
@@ -117,7 +113,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         await httpClient.post('users', accountData);
         router.navigate('/'); //todo: add starting page route
       } catch (e) {
-        this.showNotification((e as Error).message, 'error');
+        this.showNotification((e as Error).message , "error");
       }
     } else {
       this.form.classList.add('was-validated');
@@ -144,13 +140,13 @@ class SignUpComponent extends PageMixin(LitElement) {
       newErrorList.push(error);
     });
     (this.errors as Array<CustomError>) = newErrorList;
-    this.passwordElement.value = strength / 100;
+    this.passwordProgressBar.value = strength / 100;
     if (strength < 45) {
-      this.passwordElement.style.setProperty('--color', '#ff3838'); //red
+      this.passwordProgressBar.style.setProperty('--color', '#ff3838'); //red
     } else if (strength >= 45 && strength < 70) {
-      this.passwordElement.style.setProperty('--color', '#cef717'); //yellow
+      this.passwordProgressBar.style.setProperty('--color', '#cef717'); //yellow
     } else {
-      this.passwordElement.style.setProperty('--color', '#1ac228'); //green
+      this.passwordProgressBar.style.setProperty('--color', '#1ac228'); //green
     }
   }
 

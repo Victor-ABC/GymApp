@@ -1,6 +1,7 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { Capacitor } from '@capacitor/core';
+import { IonInputCustomEvent } from '@ionic/core';
 import { LitElement, html } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
@@ -17,7 +18,7 @@ class SignInComponent extends PageMixin(LitElement) {
 
   @query('form') private form!: HTMLFormElement;
 
-  @query('#email') private emailElement!: HTMLIonInputElement;
+  @query('#sign_in_email') private emailElement!: HTMLIonInputElement;
 
   @query('#sign_in_password') private passwordElement!: HTMLIonInputElement;
 
@@ -35,23 +36,33 @@ class SignInComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-        <h1>Registrieren</h1>
-        <form novalidate>
-          <ion-item lines="full">
-            <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" required placeholder="Text eingeben" id="email"></ion-input>
-          </ion-item>
-          <ion-item lines="full">
-            <ion-label position="floating">Passwort</ion-label>
-            <ion-input type="password" required placeholder="Text eingeben" id="sign_in_password"></ion-input>
-          </ion-item>
-          <ion-row>
-            <ion-col>
-              <ion-button type="submit" color="primary" expand="block" onclick="this.submit">Anmelden</ion-button>
-            </ion-col>
-          </ion-row>
-        </form>
+      ${this.renderNotification()}
+      <h1>Anmelden</h1>
+      <form novalidate onSubmit="submit">
+        <ion-item lines="full">
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" required placeholder="Text eingeben" id="sign_in_email"></ion-input>
+          <ion-note slot="error">Invalid email</ion-note>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="floating">Passwort</ion-label>
+          <ion-input type="password" required placeholder="Text eingeben" id="sign_in_password"></ion-input>
+        </ion-item>
+        <ion-row>
+          <ion-col>
+            <button onClick="this.doIt">Normal Button</button>
+            <ion-button href="chat/all" type="submit" color="primary" expand="block" onclick="this.logSomething"
+              >Anmelden</ion-button
+            >
+          </ion-col>
+        </ion-row>
+      </form>
     `;
+  }
+
+  doIt() {
+    console.log('it');
+    alert('it');
   }
 
   async submit() {

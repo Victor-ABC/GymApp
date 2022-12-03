@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Prof. Dr. Norman Lahme-HÃ¼tig (FH MÃ¼nster) */
 
 import { LitElement, html } from 'lit';
 import { state } from 'lit/decorators.js';
