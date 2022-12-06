@@ -1,0 +1,5 @@
+FROM node:19.2-bullseye
+
+WORKDIR /usr/src/app
+
+ENTRYPOINT []
