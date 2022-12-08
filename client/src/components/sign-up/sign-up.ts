@@ -50,15 +50,12 @@ class SignUpComponent extends PageMixin(LitElement) {
   }
   //
   render() {
-    return html`${when(
-      Capacitor.isNativePlatform(),
-      () => html`<ion-content>${this.buildBody()}</ion-content>`,
-      () => this.buildBody()
-    )}`;
+    return this.buildBody();
   }
 
   buildBody() {
     return html`
+    <ion-content class="ion-padding">
        ${this.renderNotification()}
       <h1>Registrieren</h1>
       <form>
@@ -98,6 +95,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         </ion-item>
         <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Registrieren</ion-button>
       </form>
+    </ion-content>
     `;
   }
 
