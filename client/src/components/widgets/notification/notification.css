@@ -11,6 +11,9 @@ div {
   color: white;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+  position: fixed;
+  z-index: 1000;
+  right: 1.5rem;
 }
 
 .error {

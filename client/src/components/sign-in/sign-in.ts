@@ -1,12 +1,11 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
-import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
-import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
+import { notificationService } from '../../notification.js'
 
 import componentStyle from './sign-in.css';
 
@@ -32,7 +31,6 @@ class SignInComponent extends PageMixin(LitElement) {
   buildBody() {
     return html`
       <ion-content class="ion-padding">
-        ${this.renderNotification()}
         <h1>Anmelden</h1>
         <form novalidate onSubmit="submit">
           <ion-item lines="full">
@@ -64,7 +62,7 @@ class SignInComponent extends PageMixin(LitElement) {
         await httpClient.post('/users/sign-in', authData);
         router.navigate('/'); //todo: route to default page of screen
       } catch (e) {
-        this.showNotification((e as Error).message, 'error');
+        notificationService.showNotification((e as Error).message, 'error');
       }
     } else {
       this.form.classList.add('was-validated');
