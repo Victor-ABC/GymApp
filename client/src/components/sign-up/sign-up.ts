@@ -8,6 +8,7 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import componentStyle from './sign-up.css';
+import { notificationService } from '../../notification.js'
 
 type CustomError = {
   errorMessage: string;
@@ -50,16 +51,12 @@ class SignUpComponent extends PageMixin(LitElement) {
   }
   //
   render() {
-    return html`${when(
-      Capacitor.isNativePlatform(),
-      () => html`<ion-content>${this.buildBody()}</ion-content>`,
-      () => this.buildBody()
-    )}`;
+    return this.buildBody();
   }
 
   buildBody() {
     return html`
-       ${this.renderNotification()}
+    <ion-content class="ion-padding">
       <h1>Registrieren</h1>
       <form>
         <ion-item lines="full">
@@ -98,6 +95,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         </ion-item>
         <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Registrieren</ion-button>
       </form>
+    </ion-content>
     `;
   }
 
@@ -113,7 +111,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         await httpClient.post('users', accountData);
         router.navigate('/'); //todo: add starting page route
       } catch (e) {
-        this.showNotification((e as Error).message , "error");
+        notificationService.showNotification((e as Error).message , "error");
       }
     } else {
       this.form.classList.add('was-validated');

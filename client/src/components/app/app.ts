@@ -62,16 +62,11 @@ class AppComponent extends LitElement {
   */
   buildBrowser() {
     return html`
-      <app-header title="${this.appTitle}" .linkItems=${this.linkItems}> </app-header>
-      <ion-content class="ion-padding">
-        <ion-grid>
-          <ion-row>
-            <ion-col></ion-col>
-            <ion-col size="7">${this.renderRouterOutlet()}</ion-col>
-            <ion-col></ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-content>
+      <app-notification id='notification'></app-notification>
+      <app-header title="${this.appTitle}" .linkItems=${this.linkItems}></app-header>
+      <div class="container">
+          ${this.renderRouterOutlet()}
+      </div>
     `;
   }
 
@@ -88,6 +83,7 @@ class AppComponent extends LitElement {
 
   buildMobile() {
     return html` 
+    <app-notification></app-notification>
     <ion-app class="toast-wrapper">
       <ion-router use-hash="false">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
