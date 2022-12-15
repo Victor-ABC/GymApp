@@ -58,23 +58,18 @@ class AppComponent extends LitElement {
   */
   buildBrowser() {
     return html`
-      <app-header title="${this.appTitle}" .linkItems=${this.linkItems}> </app-header>
-      <ion-content class="ion-padding">
-        <ion-grid>
-          <ion-row>
-            <ion-col></ion-col>
-            <ion-col size="7">${this.renderRouterOutlet()}</ion-col>
-            <ion-col></ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-content>
+      <app-notification id='notification'></app-notification>
+      <app-header title="${this.appTitle}" .linkItems=${this.linkItems}></app-header>
+      <div class="container">
+          ${this.renderRouterOutlet()}
+      </div>
     `;
   }
 
   render() {
     var isNative = Capacitor.isNativePlatform();
     //For Testing Smartphone and Browser without using AndroidStudio + Capacitor
-    //isNative = true;
+    //isNative = true;  
     return html`${when(
       isNative,
       () => this.buildMobile(),
@@ -83,18 +78,18 @@ class AppComponent extends LitElement {
   }
 
   buildMobile() {
-    return html` <ion-app class="toast-wrapper">
-      <ion-content>
-        <ion-router use-hash="false">
-          <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
-          <ion-route component="app-tabs">
-            <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
-            <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
-            <ion-route url="chat/all" component="app-chat-all"></ion-route>
-          </ion-route>
-        </ion-router>
-        <ion-nav root="app-sign-up"></ion-nav>
-      </ion-content>
+    return html` 
+    <app-notification></app-notification>
+    <ion-app class="toast-wrapper">
+      <ion-router use-hash="false">
+        <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
+        <ion-route component="app-tabs">
+          <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
+          <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
+          <ion-route url="chat/all" component="app-chat-all"></ion-route>
+        </ion-route>
+      </ion-router>
+      <ion-nav root="app-sign-up"></ion-nav>
     </ion-app>`;
   }
 }

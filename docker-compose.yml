@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  app_client:
+    build: dev-ops/docker/containers/node
+    volumes:
+      - ./client:/usr/src/app
+    command: sh -c 'npm install && npm run start-without-open'
+    links:
+      - app_api_server:api_server
+    ports:
+      - "8080:8080"
+
+  app_api_server:
+    build: dev-ops/docker/containers/node
+    volumes:
+      - ./api-server:/usr/src/app
+    command: sh -c 'npm install && npm start'
+    ports:
+      - "3000:3000"

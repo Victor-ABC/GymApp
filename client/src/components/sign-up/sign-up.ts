@@ -8,8 +8,8 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import componentStyle from './sign-up.css';
-import { PictureService } from './picture.service.js';
-import { Network } from '@capacitor/network';
+import { notificationService } from '../../notification.js'
+
 type CustomError = {
   errorMessage: string;
   punishment: number;
@@ -19,8 +19,6 @@ type CustomError = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignUpComponent extends PageMixin(LitElement) {
   static styles = [componentStyle];
-
-  pictureService: PictureService = new PictureService();
 
   @query('#password')
   inputOfPasswordElement!: HTMLInputElement;
@@ -42,17 +40,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#password-check > input') private passwordCheckElement!: HTMLInputElement;
 
-  @query('#profile_picture') private profilePictureImageElement!: HTMLIonImgElement;
-
   async firstUpdated() {
-    Network.addListener('networkStatusChange', status => {
-      Network.getStatus().then(
-        (value) => this.showNotification('connected: ' + value.connected, "info")
-      );
-    });
-    this.profilePictureImageElement.addEventListener('input', () => {
-      this.takeProfilePicture();
-    });
     this.inputOfPasswordElement.addEventListener('input', () => {
       this.computeStrengthOfPasswordAgain();
     });
@@ -61,21 +49,16 @@ class SignUpComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-  //Capacitor.isNativePlatform()
+  
   render() {
-    return html`${when(
-      Capacitor.isNativePlatform(),
-      () => html`<ion-content>${this.buildBody()}</ion-content>`,
-      () => this.buildBody()
-    )}`;
+    return this.buildBody();
   }
 
   buildBody() {
     return html`
-      ${this.renderNotification()}
+    <ion-content class="ion-padding">
       <h1>Registrieren</h1>
-      <form class="ion-padding-top" id="sign_up_form">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?20200418092106" id="profile_picture" width="70" height="70" style="border-radius: 50%; border: 2px solid #fff" @click="${this.takeProfilePicture}"/>
+      <form>
         <ion-item lines="full">
           <ion-label position="floating">Name</ion-label>
           <ion-input type="text" required placeholder="Text eingeben" id="name"></ion-input>
@@ -112,20 +95,8 @@ class SignUpComponent extends PageMixin(LitElement) {
         </ion-item>
         <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Registrieren</ion-button>
       </form>
+    </ion-content>
     `;
-  }
-
-  async takeProfilePicture() {
-    try {
-      const picture = await this.pictureService.takePhoto();
-      if (picture) {
-        console.log('pic.webPath ' + picture.webPath);
-        this.profilePictureImageElement.src = picture.webPath;
-      }
-    } catch (e) {
-      this.showNotification((e as Error).message, 'error');
-      console.error(e);
-    }
   }
 
   async submit() {
@@ -140,7 +111,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         await httpClient.post('users', accountData);
         router.navigate('/'); //todo: add starting page route
       } catch (e) {
-        this.showNotification((e as Error).message, 'error');
+        notificationService.showNotification((e as Error).message , "error");
       }
     } else {
       this.form.classList.add('was-validated');
