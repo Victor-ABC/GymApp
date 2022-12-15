@@ -7,11 +7,12 @@ import https from 'node:https';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import users from './routes/users.js';
+import chat from './routes/chat.js';
 import startDB from './db.js';
 import { corsService } from './services/cors.service.js';
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
-
+import { startWebSocketServer } from './ws-server.js';
 import config from '../config.json' assert { type: 'json' };
 
 function configureApp(app: Express) {
@@ -21,6 +22,7 @@ function configureApp(app: Express) {
   app.use(cookieParser());
   app.use(corsService.corsMiddleware);
   app.use('/api/users', users);
+  app.use('/api/chat', chat);
 }
 
 export async function start() {
@@ -46,6 +48,7 @@ async function startHttpServer(app: Express, port: number) {
     };
   };
   const httpServer = config.server.https ? https.createServer(createOptions(), app) : http.createServer(app);
+  startWebSocketServer(httpServer);
   await new Promise<void>(resolve => {
     httpServer.listen(port, () => {
       console.log(`Server running at http${config.server.https ? 's' : ''}://localhost:${port}`);

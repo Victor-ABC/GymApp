@@ -41,6 +41,7 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/sign-in', async (req, res) => {
+  console.log("called: Signed in User Method")
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const filter: Partial<User> = { email: req.body.email };
   const errors: string[] = [];
@@ -49,11 +50,12 @@ router.post('/sign-in', async (req, res) => {
     res.status(400).json({ message: errors.join('\n') });
     return;
   }
-
+  console.log(await userDAO.findAll());
   const user = await userDAO.findOne(filter);
 
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
     authService.createAndSetToken({ id: user.id }, res);
+    console.log("Signed in User")
     res.status(201).json(user);
   } else {
     authService.removeToken(res);
