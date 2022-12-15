@@ -53,6 +53,19 @@ class SignOutComponent extends PageMixin(LitElement) {
     return this;
   }
 
+  async firstUpdated() {
+    this.setupWebSocket();
+  }
+
+  setupWebSocket() {
+    const webSocket = new WebSocket('ws://localhost:3000');
+    webSocket.onmessage = event => {
+      console.log(event);
+      console.log("data: " + event.data);
+      window.location.reload();
+    };
+  }
+
   render() {
     return html`${when(
       Capacitor.isNativePlatform(),
