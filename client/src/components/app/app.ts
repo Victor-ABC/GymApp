@@ -74,7 +74,7 @@ class AppComponent extends LitElement {
   render() {
     var isNative = Capacitor.isNativePlatform();
     //For Testing Smartphone and Browser without using AndroidStudio + Capacitor
-    //isNative = true;  
+    //isNative = true;
     return html`${when(
       isNative,
       () => this.buildMobile(),
@@ -83,17 +83,18 @@ class AppComponent extends LitElement {
   }
 
   buildMobile() {
-    return html` 
-    <ion-app class="toast-wrapper">
-      <ion-router use-hash="false">
-        <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
-        <ion-route component="app-tabs">
-          <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
-          <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
-          <ion-route url="chat/all" component="app-chat-all"></ion-route>
-        </ion-route>
-      </ion-router>
-      <ion-nav root="app-sign-up"></ion-nav>
+    return html` <ion-app class="toast-wrapper">
+      <ion-content>
+        <ion-router use-hash="false">
+          <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
+          <ion-route component="app-tabs">
+            <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
+            <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
+            <ion-route url="chat/all" component="app-chat-all"></ion-route>
+          </ion-route>
+        </ion-router>
+        <ion-nav root="app-sign-up"></ion-nav>
+      </ion-content>
     </ion-app>`;
   }
 }

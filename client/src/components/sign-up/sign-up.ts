@@ -61,7 +61,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-  //
+  //Capacitor.isNativePlatform()
   render() {
     return html`${when(
       Capacitor.isNativePlatform(),
