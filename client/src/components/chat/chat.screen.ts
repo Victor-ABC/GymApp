@@ -71,7 +71,7 @@ class SignOutComponent extends PageMixin(LitElement) {
     //${title}
     return html`
       <ion-card>
-        <ion-item button href="/chat/${chatPartner.id}">
+        <ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
           <ion-label>
             <h2>${chatPartner.name}</h2>
             <p>Existiert seit: ${this.buildDate(chatPartner.createdAt)}</p>

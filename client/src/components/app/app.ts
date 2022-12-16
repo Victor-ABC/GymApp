@@ -37,7 +37,7 @@ class AppComponent extends LitElement {
   firstUpdated() {
     router.subscribe(() => this.requestUpdate());
   }
-
+  ////<ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
   renderRouterOutlet() {
     return router.select(
       {
@@ -45,7 +45,7 @@ class AppComponent extends LitElement {
         'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
         'chats/all': () => html`<app-chats></app-chats>`,
-        'chat/:id': params => html`<app-chat .id=${params.id}></app-chat>`,
+        "chat/:id/:createdAt/:email/:name": params => html`<app-chat .id=${params.id} .createdAt=${params.createdAt} .email=${params.email} .name=${params.name}></app-chat>`,
         "newchat": () => html`<app-chat-new-users></app-chat-new-users>`,
       },
       () => html`<app-sign-in></app-sign-in>`
@@ -85,7 +85,7 @@ class AppComponent extends LitElement {
     <ion-app class="toast-wrapper">
       <ion-router use-hash="false">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
-        <ion-route url="chat/:id" component="app-chat"></ion-route>
+        <ion-route url="chat/:id/:createdAt/:email/:name" component="app-chat"></ion-route>
         <ion-route url="newchat" component="app-chat-new-users"></ion-route>
         <ion-route component="app-tabs">
           <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
