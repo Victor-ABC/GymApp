@@ -1,9 +1,7 @@
 /* Autor: Victor Corbet */
 
-import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
@@ -24,7 +22,7 @@ class SignOutComponent extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLIonInputElement;
 
   @property()
-  chats: Array<User> = [];
+  chatPartners: Array<User> = [];
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
@@ -34,40 +32,38 @@ class SignOutComponent extends PageMixin(LitElement) {
     return html`
       <ion-content class="ion-padding">
         <h1>Chats</h1>
-        <ion-list> ${this.chats.map(chat => this.buildChat(chat))} </ion-list>
+        <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
       </ion-content>
     `;
   }
 
   async firstUpdated() {
-    try {
-      const response = await httpClient.get('/chat/chats');
-      var json = await response.json();
-      console.log(json)
-      console.log(JSON.stringify(json))
-      this.chats = [...json.data];
-      this.requestUpdate();
-      await this.updateComplete;
-    } catch (e) {
-      if ((e as { statusCode: number }).statusCode === 401) {
-        router.navigate('/users/sign-in');
-      } else {
-        notificationService.showNotification((e as Error).message, 'error');
+    if (this.chatPartners.length == 0) {
+      try {
+        const response = await httpClient.get('/chat/chats');
+        this.chatPartners = (await response.json()).data;
+        this.requestUpdate();
+        await this.updateComplete;
+      } catch (e) {
+        if ((e as { statusCode: number }).statusCode === 401) {
+          router.navigate('/users/sign-in');
+        } else {
+          notificationService.showNotification((e as Error).message, 'error');
+        }
       }
     }
   }
 
-  
-  buildChat(user: User) {
+  buildChat(chatPartner: User) {
     //${title}
     return html`
-    <ion-card>
-      <ion-item button href="/chat/${user.id}">
-        <ion-label>
-          <h2>${user.name}</h2>
-          <p>Existiert seit: ${this.buildDate(user.createdAt)}</p>
-        </ion-label>
-      </ion-item>
+      <ion-card>
+        <ion-item button href="/chat/${chatPartner.id}">
+          <ion-label>
+            <h2>${chatPartner.name}</h2>
+            <p>Existiert seit: ${this.buildDate(chatPartner.createdAt)}</p>
+          </ion-label>
+        </ion-item>
       </ion-card>
     `;
   }
@@ -77,7 +73,7 @@ class SignOutComponent extends PageMixin(LitElement) {
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
-    return day + "." + month + "." + year;
+    return day + '.' + month + '.' + year;
   }
 
   async onEnter() {

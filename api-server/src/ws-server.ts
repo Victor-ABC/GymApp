@@ -31,6 +31,22 @@ class WebSocketServer {
     });
   }
 
+  public sendChatMessage(fromId: string, toId: string, message: object) {
+    const messageString = JSON.stringify(message);
+    this.wss.clients.forEach(client => {
+      const ws = client as WebSocketExt;
+      /*
+      console.log("calimsetEmail: " + ws.claimsSet.email + " id " + ws.claimsSet.id);
+      console.log("fromID: " + fromId);
+      console.log("toID: " + toId);
+      ws.send(messageString);
+      */
+      if (ws.claimsSet.id === fromId || ws.claimsSet.id === toId) {
+        ws.send(messageString);
+      }
+    });
+  }
+
   private async onConnection(ws: WebSocketExt, req: IncomingMessage) {
     const valid = await this.validateConnection(ws, req);
     if (valid) {

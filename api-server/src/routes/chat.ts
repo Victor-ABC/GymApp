@@ -4,7 +4,6 @@ import { GenericDAO } from '../models/generic.dao.js';
 import { authService } from '../services/auth.service.js';
 import { Message } from '../models/users/message.js';
 import { User } from '../models/users/user.js';
-import e from 'express';
 
 const router = express.Router();
 
@@ -16,9 +15,19 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
   //Default Data -->
   if((await messageDAO.findAll()).length == 0) {
     messageDAO.create({
-      content: "hello World",
+      content: "hello World: tim an simon",
       from: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
       to: (await userDAO.findOne({email : "simon@weis.de"}))!.id,
+    })
+    messageDAO.create({
+      content: "hello World back: simon an tim",
+      from: (await userDAO.findOne({email : "simon@weis.de"}))!.id,
+      to: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
+    })
+    messageDAO.create({
+      content: "hello World: tim an demo",
+      from: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
+      to: (await userDAO.findOne({email : "demo@demo.de"}))!.id,
     })
   }
   //<--
@@ -40,42 +49,36 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
   }
   res.json({"data" : users});
 });
-/*
-router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
-  const chatDAO: GenericDAO<Chat> = req.app.locals.chatDAO;
-  const chat = await chatDAO.findOne({ id: req.params.id });
-  res.json({"data" : chat?.messages});
-});
 
+router.get('/:other', authService.authenticationMiddleware, async (req, res) => {
+  const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
+  const idOfOtherUser = req.params.other;
+  console.log("other: " + idOfOtherUser + " me: " + res.locals.user.id);
+  var messagesFromMe = await messageDAO.findAll({from : res.locals.user.id, to: idOfOtherUser});
+  var messagesToMe = await messageDAO.findAll({from: idOfOtherUser, to : res.locals.user.id});
+  var result = [...messagesFromMe, ...messagesToMe];
+  console.log("result: " + result);
+  res.json({"data" : result});
+});
+/*
 router.post('/new', authService.authenticationMiddleware, async (req, res) => {
-  console.log("new post to create new Chat");
+
   const chatDAO: GenericDAO<Chat> = req.app.locals.chatDAO;
   console.log("current user" + res.locals.user);
   //const newMessage = await chatDAO.create({ members: [], messages: [] });
   //wsServer.sendMessage(res.locals.user.id, { newMessage: newMessage });
   //res.redirect('/');
 });
+*/
 
-router.post('/', authService.authenticationMiddleware, async (req, res) => {
-    console.log("new post to create new Message");
+router.post('/new', authService.authenticationMiddleware, async (req, res) => {
     const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
-    messageDAO.create({
+    var  newMessage = await messageDAO.create({
       content : req.body.content,
       from : res.locals.user.id,
-      to : res.locals.to
+      to : req.body.to
     });
-    const chatDAO: GenericDAO<Chat> = req.app.locals.chatDAO;
-    const chat = await chatDAO.findOne({ id: req.body.id });
-    var newMessage: Message = {
-        content = req.body.content,
-
-    };
-    chat?.messages.push(req.)
-    chatDAO.update({ id: req.body.id }, {})
-    //const newMessage = await messageDAO.create({ content: req.body.content, from: res.locals.user.id, to: req.body.to });
-    //wsServer.sendMessage(res.locals.user.id, { newMessage: newMessage });
-    //console.log("sended message via WS-Connection" + newMessage.content + " from: " + newMessage.from);
-    //res.redirect('/');
+    wsServer.sendChatMessage(res.locals.user.id, req.body.to, { newMessage: newMessage });
   });
-*/
+
 export default router;

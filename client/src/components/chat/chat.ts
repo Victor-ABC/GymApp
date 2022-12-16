@@ -27,48 +27,14 @@ class SignOutComponent extends PageMixin(LitElement) {
 
   @property() id = '';
   @property() messages: Array<Message> = []
-  /*
-  @property()
-  messages: Array<Message> = [
-    {
-      from: 'timID',
-      to: 'simonID',
-      createdAt: (new Date()).getMilliseconds(),
-      content: 'Message1',
-      id: "UUID1"
-    },
-    {
-      from: 'timID',
-      to: 'simonID',
-      createdAt: (new Date()).getMilliseconds(),
-      content: 'Message2',
-      id: "UUID2"
-    },
-    {
-      from: 'timID',
-      to: 'simonID',
-      createdAt: (new Date()).getMilliseconds(),
-      content: 'Message3',
-      id: "UUID3"
-    },
-    {
-      from: 'timID',
-      to: 'simonID',
-      createdAt: (new Date()).getMilliseconds(),
-      content: 'Message4',
-      id: "UUID4"
-    },
-  ];
-  */
-
+  
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
   async firstUpdated() {
     try {
       const response = await httpClient.get('/chat/' + this.id);
-      var json = await response.json();
-      this.messages = [...json.data];
+      this.messages = (await response.json()).data; 
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;
@@ -84,8 +50,6 @@ class SignOutComponent extends PageMixin(LitElement) {
   setupWebSocket() {
     const webSocket = new WebSocket('ws://localhost:3000');
     webSocket.onmessage = event => {
-      console.log(event);
-      console.log(JSON.parse(event.data).newMessage);
       this.messages = [...this.messages, JSON.parse(event.data).newMessage];
     };
   }
@@ -126,11 +90,11 @@ class SignOutComponent extends PageMixin(LitElement) {
   async onEnter() {
     try{
         const data = {
-          to: "Simon",
+          to: this.id,
           content: this.textInputElement.value!
         };
         this.textInputElement.value = null;
-        await httpClient.post('/chat/', data);
+        await httpClient.post('/chat/new', data);
     } catch (e) {
       notificationService.showNotification((e as Error).message, 'info');
     }
