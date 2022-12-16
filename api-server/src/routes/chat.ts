@@ -4,6 +4,7 @@ import { GenericDAO } from '../models/generic.dao.js';
 import { authService } from '../services/auth.service.js';
 import { Message } from '../models/users/message.js';
 import { User } from '../models/users/user.js';
+import e from 'express';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
 
   //Default Data -->
+  /*
   if((await messageDAO.findAll()).length == 0) {
     messageDAO.create({
       content: "hello World: tim an simon",
@@ -30,6 +32,7 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
       to: (await userDAO.findOne({email : "demo@demo.de"}))!.id,
     })
   }
+  */
   //<--
 
   var messagesFromMe = await messageDAO.findAll({from : res.locals.user.id});
@@ -63,7 +66,29 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
 
 router.get('/all/users', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  res.json({"data" : (await userDAO.findAll())});
+  const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
+  var allUsers = await userDAO.findAll();
+  var allMessages = await messageDAO.findAll();
+  var newArray = allUsers.filter(e => e.id !== res.locals.user.id);
+  for(var i = 0; i < newArray.length; i++) {
+    for(var message of allMessages) {
+      console.log("message.from " + message.from);
+      console.log("message.to " + message.to);
+      console.log("my id " +res.locals.user.id);
+      console.log("user id " + newArray[i].id);
+      //already a message from user to me
+      if(message.from === newArray[i].id && message.to === res.locals.user.id) {
+        console.log("XXXX Removed XXXX");
+        newArray.splice(i, 1);
+      }
+      //already a message from me to user
+      if(message.to === newArray[i].id && message.from === res.locals.user.id) {
+        console.log("XXXX Removed XXXX");
+        newArray.splice(i, 1);
+      }
+    }
+  }
+  res.json({"data" : newArray});
 });
 
 router.post('/new', authService.authenticationMiddleware, async (req, res) => {
