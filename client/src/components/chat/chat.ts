@@ -7,62 +7,86 @@ import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
 import { PageMixin } from '../page.mixin.js';
+import { router } from '../../router/router.js';
 
 type Message = {
+  content: string;
   from: string;
   to: string;
-  date: Date;
-  content: string;
+  id: string;
+  createdAt: number;
 };
 
-@customElement('app-chat-all')
+
+
+@customElement('app-chat')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignOutComponent extends PageMixin(LitElement) {
 
   @query('#text') private textInputElement!: HTMLIonInputElement;
 
+  @property() id = '';
+  @property() messages: Array<Message> = []
+  /*
   @property()
   messages: Array<Message> = [
     {
       from: 'timID',
       to: 'simonID',
-      date: new Date(),
-      content: 'Message1'
+      createdAt: (new Date()).getMilliseconds(),
+      content: 'Message1',
+      id: "UUID1"
     },
     {
       from: 'timID',
       to: 'simonID',
-      date: new Date(),
-      content: 'Message2'
-    },
-    {
-      from: 'simonID',
-      to: 'timID',
-      date: new Date(),
-      content: 'Message3'
+      createdAt: (new Date()).getMilliseconds(),
+      content: 'Message2',
+      id: "UUID2"
     },
     {
       from: 'timID',
       to: 'simonID',
-      date: new Date(),
-      content: 'Message4'
-    }
+      createdAt: (new Date()).getMilliseconds(),
+      content: 'Message3',
+      id: "UUID3"
+    },
+    {
+      from: 'timID',
+      to: 'simonID',
+      createdAt: (new Date()).getMilliseconds(),
+      content: 'Message4',
+      id: "UUID4"
+    },
   ];
+  */
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-
   async firstUpdated() {
-    this.setupWebSocket();
+    try {
+      const response = await httpClient.get('/chat/' + this.id);
+      var json = await response.json();
+      this.messages = [...json.data];
+      this.requestUpdate();
+      this.setupWebSocket();
+      await this.updateComplete;
+    } catch (e) {
+      if ((e as { statusCode: number }).statusCode === 401) {
+        router.navigate('/users/sign-in');
+      } else {
+        notificationService.showNotification((e as Error).message, 'error');
+      }
+    }
   }
 
   setupWebSocket() {
     const webSocket = new WebSocket('ws://localhost:3000');
     webSocket.onmessage = event => {
       console.log(event);
-      console.log("data: " + event.data);
-      window.location.reload();
+      console.log(JSON.parse(event.data).newMessage);
+      this.messages = [...this.messages, JSON.parse(event.data).newMessage];
     };
   }
 
@@ -79,7 +103,7 @@ class SignOutComponent extends PageMixin(LitElement) {
       <ion-content class="ion-padding">
         <ion-grid>
           <ion-col size="6">
-            <ion-list> ${this.messages.map(m => html` <ion-item>${m.content}</ion-item> `)} </ion-list>
+            <ion-list> ${this.messages.map(m => html` <app-chat-message .message=${m}></app-chat-message> `)} </ion-list>
           </ion-col>
           <ion-col size="6">
             <ion-item lines="full" full>
@@ -105,9 +129,10 @@ class SignOutComponent extends PageMixin(LitElement) {
           to: "Simon",
           content: this.textInputElement.value!
         };
+        this.textInputElement.value = null;
         await httpClient.post('/chat/', data);
     } catch (e) {
-      notificationService.showNotification((e as Error).message, 'error');
+      notificationService.showNotification((e as Error).message, 'info');
     }
   }
 }

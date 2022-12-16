@@ -11,7 +11,9 @@ import './components/widgets/notification/notification.ts';
 //Pages
 import './components/sign-in/sign-in.ts';
 import './components/sign-out/sign-out.ts';
-import './components/sign-up/sign-up.ts'; 
+import './components/sign-up/sign-up.ts';
+import './components/chat/chat.screen.ts' 
 import './components/chat/chat.ts';
+import './components/chat/message.ts';
 
 
