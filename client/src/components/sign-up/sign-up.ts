@@ -49,7 +49,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-  //
+  
   render() {
     return this.buildBody();
   }
