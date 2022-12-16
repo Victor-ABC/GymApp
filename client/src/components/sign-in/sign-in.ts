@@ -53,9 +53,7 @@ class SignInComponent extends PageMixin(LitElement) {
   }
 
   async submit() {
-    console.log("called Submit method");
     if (this.isFormValid()) {
-      console.log("Form is Valid");
       const authData = {
         email: this.emailElement.value,
         password: this.passwordElement.value

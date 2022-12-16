@@ -53,11 +53,9 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
 router.get('/:other', authService.authenticationMiddleware, async (req, res) => {
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   const idOfOtherUser = req.params.other;
-  console.log('other: ' + idOfOtherUser + ' me: ' + res.locals.user.id);
   var messagesFromMe = await messageDAO.findAll({ from: res.locals.user.id, to: idOfOtherUser });
   var messagesToMe = await messageDAO.findAll({ from: idOfOtherUser, to: res.locals.user.id });
   var result = [...messagesFromMe, ...messagesToMe];
-  console.log('result: ' + result);
   res.json({ data: result });
 });
 
@@ -72,12 +70,10 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       //already a message from user to me
       if (newArray[i]) {
         if (message.from === newArray[i].id && message.to === res.locals.user.id) {
-          console.log('XXXX Removed XXXX');
           newArray.splice(i, 1);
         }
         //already a message from me to user
         if (message.to === newArray[i].id && message.from === res.locals.user.id) {
-          console.log('XXXX Removed XXXX');
           newArray.splice(i, 1);
         }
       }

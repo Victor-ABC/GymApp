@@ -4,10 +4,10 @@ import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
-import { httpClient } from '../../http-client.js';
-import { notificationService } from '../../notification.js';
-import { PageMixin } from '../page.mixin.js';
-import { router } from '../../router/router.js';
+import { httpClient } from '../../../http-client.js';
+import { notificationService } from '../../../notification.js';
+import { PageMixin } from '../../page.mixin.js';
+import { router } from '../../../router/router.js';
 import componentStyle from './chat.css';
 
 type Message = {
@@ -66,26 +66,32 @@ class SignOutComponent extends PageMixin(LitElement) {
   //grid height: style="height: 90%"
 
   buildBody() {
+    console.log(this.messages.length);
     return html`
-      <ion-content class="ion-padding">
+      <ion-content style="height: 7%">
+        <ion-card>
+          <ion-card-title>${this.name}</ion-card-title>
+          <ion-card-subtitle>${this.email}</ion-card-subtitle>
+        </ion-card>
+      </ion-content>
+      <ion-content style="height: 70%" class="ion-padding">
         <ion-grid style="height: 80%">
-          <ion-card>
-            <ion-title>${this.name}</ion-title>
-            <ion-label>${this.email}</ion-label>
-            <ion-label>${this.buildDate(this.createdAt)}</ion-label>
-          </ion-card>
           <ion-list [inset]="true">
-              ${this.messages.sort((a, b) => {
-                if(a.createdAt < b.createdAt) {
-                  return -1
+            ${this.messages
+              .sort((a, b) => {
+                if (a.createdAt < b.createdAt) {
+                  return -1;
                 }
-                if(a.createdAt = b.createdAt) {
-                  return 0
+                if ((a.createdAt = b.createdAt)) {
+                  return 0;
                 }
-                return 1
-              }).map(e => html`<app-chat-message ></app-chat-message>`)}
-            </ion-list>
+                return 1;
+              })
+              .map(m => html`<app-chat-message .message=${m}></app-chat-message> `)}
+          </ion-list>
         </ion-grid>
+      </ion-content>
+      <ion-content class="ion-padding">
         <ion-row>
           <ion-item lines="full" full style="width: 80%">
             <ion-label position="floating">Text</ion-label>
