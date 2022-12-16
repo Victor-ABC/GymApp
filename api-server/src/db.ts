@@ -57,7 +57,7 @@ const getDemoUser = async () => {
   return {
     name: 'demo',
     email: 'demo@demo.de',
-    password: await bcrypt.hash("demo", 10),
+    password: await bcrypt.hash('demo', 10),
     isTrainer: false
   };
 };
@@ -66,7 +66,7 @@ const getTimUser = async () => {
   return {
     name: 'simon',
     email: 'simon@weis.de',
-    password: await bcrypt.hash("demo", 10),
+    password: await bcrypt.hash('demo', 10),
     isTrainer: false
   };
 };
@@ -75,11 +75,10 @@ const getSimonUser = async () => {
   return {
     name: 'tim',
     email: 'tim@kress.de',
-    password: await bcrypt.hash("demo", 10),
+    password: await bcrypt.hash('demo', 10),
     isTrainer: false
   };
 };
-
 
 async function startInMemoryDB(app: Express) {
   app.locals.userDAO = new InMemoryGenericDAO<User>();
@@ -91,10 +90,7 @@ async function startInMemoryDB(app: Express) {
   app.locals.trainingPlanDAO = new InMemoryGenericDAO<TrainingPlan>();
   app.locals.exerciseDAO = new InMemoryGenericDAO<Exercise>();
   app.locals.machineDAO = new InMemoryGenericDAO<Machine>();
-  //app.locals.messageDAO = new InMemoryGenericDAO<Message>();
-  app.locals.chatDAO = new InMemoryGenericDAO<Chat>();
-  (app.locals.chatDAO as InMemoryGenericDAO<Chat>).create(chats[0]);
-  (app.locals.chatDAO as InMemoryGenericDAO<Chat>).create(chats[1]);
+  app.locals.messageDAO = new InMemoryGenericDAO<Message>();
   return async () => Promise.resolve();
 }
 
@@ -110,10 +106,7 @@ async function startMongoDB(app: Express) {
   app.locals.trainingPlanDAO = new MongoGenericDAO<TrainingPlan>(db, 'trainingPlan');
   app.locals.exerciseDAO = new MongoGenericDAO<Exercise>(db, 'exercise');
   app.locals.machineDAO = new MongoGenericDAO<Machine>(db, 'machine');
-  //app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'message');
-  app.locals.chatDAO = new MongoGenericDAO<Chat>(db, 'chat');
-  (app.locals.chatDAO as MongoGenericDAO<Chat>).create(chats[0]);
-  (app.locals.chatDAO as MongoGenericDAO<Chat>).create(chats[1]);
+  app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'message');
   return async () => await client.close();
 }
 
@@ -143,10 +136,7 @@ async function startPsql(app: Express) {
   app.locals.trainingPlanDAO = new PsqlGenericDAO<TrainingPlan>(client!, 'trainingPlan');
   app.locals.exerciseDAO = new PsqlGenericDAO<Exercise>(client!, 'exercise');
   app.locals.machineDAO = new PsqlGenericDAO<Machine>(client!, 'machine');
-  //app.locals.messageDAO = new PsqlGenericDAO<Message>(client!, 'message');
-  app.locals.chatDAO = new PsqlGenericDAO<Chat>(client!, 'chat');
-  (app.locals.chatDAO as PsqlGenericDAO<Chat>).create(chats[0]);
-  (app.locals.chatDAO as PsqlGenericDAO<Chat>).create(chats[1]);
+  app.locals.messageDAO = new PsqlGenericDAO<Message>(client!, 'message');
   return async () => await client.end();
 }
 
@@ -168,95 +158,3 @@ async function connectToPsql() {
   }
 }
 
-var chats: Array<Chat> = [
-  {
-    members: [
-      {
-        name: 'tim',
-        email: 'tim@tim.de',
-        password: 'asdf',
-        isTrainer: true,
-        id: 'UUID1',
-        createdAt: new Date().getTime()
-      },
-      {
-        name: 'simon',
-        email: 'simon@simon.de',
-        password: '1234',
-        isTrainer: false,
-        id: 'UUID2',
-        createdAt: new Date().getTime()
-      }
-    ],
-    messages: [
-      {
-        content: 'Hi, how are you',
-        from: 'UUID1',
-        to: 'UUID2',
-        id: 'UUID01',
-        createdAt: new Date().getTime()
-      },
-      {
-        content: 'Im not feeling good',
-        from: 'UUID2',
-        to: 'UUID1',
-        id: 'UUID02',
-        createdAt: new Date().getTime() + 20
-      },
-      {
-        content: 'What about you?',
-        from: 'UUID2',
-        to: 'UUID1',
-        id: 'UUID03',
-        createdAt: new Date().getTime() + 30
-      }
-    ],
-    id: 'UUID_Chat',
-    createdAt: new Date().getTime()
-  },
-  {
-    members: [
-      {
-        name: 'tim',
-        email: 'tim@tim.de',
-        password: 'asdf',
-        isTrainer: true,
-        id: 'UUID1',
-        createdAt: new Date().getTime()
-      },
-      {
-        name: 'simon',
-        email: 'simon@simon.de',
-        password: '1234',
-        isTrainer: false,
-        id: 'UUID2',
-        createdAt: new Date().getTime()
-      }
-    ],
-    messages: [
-      {
-        content: 'Hi, how are you',
-        from: 'UUID1',
-        to: 'UUID2',
-        id: 'UUID01',
-        createdAt: new Date().getTime()
-      },
-      {
-        content: 'Im Fine',
-        from: 'UUID2',
-        to: 'UUID1',
-        id: 'UUID02',
-        createdAt: new Date().getTime() + 20
-      },
-      {
-        content: 'What about you?',
-        from: 'UUID2',
-        to: 'UUID1',
-        id: 'UUID03',
-        createdAt: new Date().getTime() + 30
-      }
-    ],
-    id: 'UUID_Chat',
-    createdAt: new Date().getTime() - 10000000000
-  }
-];

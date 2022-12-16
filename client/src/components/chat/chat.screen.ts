@@ -17,19 +17,6 @@ type User = {
   id: string;
   createdAt: number;
 };
-type Chat = {
-  members: Array<User>;
-  messages: Array<Message>;
-  id: string;
-  createdAt: number;
-};
-type Message = {
-  content: string;
-  from: string;
-  to: string;
-  id: string;
-  createdAt: number;
-};
 
 @customElement('app-chats')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,7 +24,7 @@ class SignOutComponent extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLIonInputElement;
 
   @property()
-  chats: Array<Chat> = [];
+  chats: Array<User> = [];
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
@@ -71,25 +58,14 @@ class SignOutComponent extends PageMixin(LitElement) {
   }
 
   
-  buildChat(chat: Chat) {
-    var title = '';
-    for (var i = 0; i < chat.members.length; i++) {
-      if (i < chat.members.length - 1) {
-        title += chat.members[i].name + ', ';
-      } else {
-        title += chat.members[i].name;
-      }
-      if(chat.members[i].isTrainer) {
-        title += "(Trainer) "
-      }
-    }
+  buildChat(user: User) {
     //${title}
     return html`
     <ion-card>
-      <ion-item button href="/chat/${chat.id}">
+      <ion-item button href="/chat/${user.id}">
         <ion-label>
-          <h2>${title}</h2>
-          <p>Unterhaltung seit: ${this.buildDate(chat.createdAt)}</p>
+          <h2>${user.name}</h2>
+          <p>Existiert seit: ${this.buildDate(user.createdAt)}</p>
         </ion-label>
       </ion-item>
       </ion-card>
