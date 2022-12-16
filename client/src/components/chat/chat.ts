@@ -2,48 +2,57 @@
 
 import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
+import { notificationService } from '../../notification.js';
 import { PageMixin } from '../page.mixin.js';
+import { router } from '../../router/router.js';
 
 type Message = {
+  content: string;
   from: string;
   to: string;
-  date: Date;
-  content: string;
+  id: string;
+  createdAt: number;
 };
 
-@customElement('app-chat-all')
+
+
+@customElement('app-chat')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignOutComponent extends PageMixin(LitElement) {
-  @property()
-  messages: Array<Message> = [
-    {
-      from: 'timID',
-      to: 'simonID',
-      date: new Date(),
-      content: 'Message1'
-    },
-    {
-      from: 'timID',
-      to: 'simonID',
-      date: new Date(),
-      content: 'Message2'
-    },
-    {
-      from: 'simonID',
-      to: 'timID',
-      date: new Date(),
-      content: 'Message3'
-    },
-    {
-      from: 'timID',
-      to: 'simonID',
-      date: new Date(),
-      content: 'Message4'
+
+  @query('#text') private textInputElement!: HTMLIonInputElement;
+
+  @property() id = '';
+  @property() messages: Array<Message> = []
+  
+  protected createRenderRoot(): Element | ShadowRoot {
+    return this;
+  }
+  async firstUpdated() {
+    try {
+      const response = await httpClient.get('/chat/' + this.id);
+      this.messages = (await response.json()).data; 
+      this.requestUpdate();
+      this.setupWebSocket();
+      await this.updateComplete;
+    } catch (e) {
+      if ((e as { statusCode: number }).statusCode === 401) {
+        router.navigate('/users/sign-in');
+      } else {
+        notificationService.showNotification((e as Error).message, 'error');
+      }
     }
-  ];
+  }
+
+  setupWebSocket() {
+    const webSocket = new WebSocket('ws://localhost:3000');
+    webSocket.onmessage = event => {
+      this.messages = [...this.messages, JSON.parse(event.data).newMessage];
+    };
+  }
 
   render() {
     return html`${when(
@@ -54,6 +63,40 @@ class SignOutComponent extends PageMixin(LitElement) {
   }
 
   buildBody() {
-    return html` <ion-list> ${this.messages.map(m => html` <ion-item>${m.content}</ion-item> `)} </ion-list> `;
+    return html`
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-col size="6">
+            <ion-list> ${this.messages.map(m => html` <app-chat-message .message=${m}></app-chat-message> `)} </ion-list>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item lines="full" full>
+              <ion-label position="floating">Text</ion-label>
+              <ion-input
+                type="text"
+                required
+                placeholder="Text eingeben"
+                id="text"
+              ></ion-input>
+              <ion-note slot="error">Invalid Text</ion-note>
+            </ion-item>
+            <ion-button @click="${this.onEnter}">send</ion-button>
+          </ion-col>
+        </ion-grid>
+      </ion-content>
+    `;
+  }
+
+  async onEnter() {
+    try{
+        const data = {
+          to: this.id,
+          content: this.textInputElement.value!
+        };
+        this.textInputElement.value = null;
+        await httpClient.post('/chat/new', data);
+    } catch (e) {
+      notificationService.showNotification((e as Error).message, 'info');
+    }
   }
 }

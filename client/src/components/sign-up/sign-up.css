@@ -24,20 +24,31 @@ form {
   margin: 0 auto;
   position: relative;
   height: 1.6rem;
-  overflow:  hidden;
+  overflow: hidden;
 }
 .password-strength::before {
   content: '';
   height: 100%;
-  width: calc(1% * var(--passwordStrength , 0));
-  background-color: var(--passwordStrength_color , 'red');
+  width: calc(1% * var(--passwordStrength, 0));
+  background-color: var(--passwordStrength_color, 'red');
   transition: width 250ms;
   position: absolute;
   left: 0;
 }
 
 .problems > * {
-  color: var(--app-error-color); 
+  color: var(--app-error-color);
   margin-top: 0.7rem;
   height: auto;
+}
+
+/* Images */
+ion-img, img {
+  margin: auto;
+  height: 100px;
+  width: 100px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 5px gray;
+  display: block;
 }

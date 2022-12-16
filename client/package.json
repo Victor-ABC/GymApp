@@ -8,9 +8,7 @@
     "start": "vite --open",
     "start-without-open": "vite --host",
     "build": "vite build",
-    "lint": "eslint . --ext .ts",
-    "test": "wtr --coverage --watch",
-    "e2e": "npm run build && mocha --config e2e/.mocharc.json"
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "Prof. Dr. Norman Lahme-Hütig (FH Münster)",
@@ -40,7 +38,9 @@
   },
   "dependencies": {
     "@capacitor/android": "^4.6.0",
+    "@capacitor/camera": "^4.1.4",
     "@capacitor/core": "^4.6.0",
+    "@capacitor/network": "^4.1.0",
     "@ionic/core": "^6.3.9",
     "ionicons": "^6.0.4",
     "lit": "^2.4.0"
