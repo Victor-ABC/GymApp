@@ -25,6 +25,10 @@ class AuthService {
     res.cookie('jwt-token', token, { sameSite: 'lax' });
   }
 
+  verifyToken(token: string) {
+    return jwt.verify(token, SECRET);
+  }
+
   removeToken(res: Response) {
     res.clearCookie('jwt-token');
   }
