@@ -65,12 +65,14 @@ class SignOutComponent extends PageMixin(LitElement) {
   buildBody() {
     return html`
       <ion-content class="ion-padding">
-        <ion-grid>
+        <ion-grid style="height: 90%">
           <ion-col size="6">
-            <ion-list> ${this.messages.map(m => html` <app-chat-message .message=${m}></app-chat-message> `)} </ion-list>
+            <ion-list style="height: 85%"> ${this.messages.map(m => html` <app-chat-message .message=${m}></app-chat-message> `)} </ion-list>
           </ion-col>
           <ion-col size="6">
-            <ion-item lines="full" full>
+            <ion-card>
+              <ion-row>
+              <ion-item lines="full" full style="width: 80%">
               <ion-label position="floating">Text</ion-label>
               <ion-input
                 type="text"
@@ -80,7 +82,9 @@ class SignOutComponent extends PageMixin(LitElement) {
               ></ion-input>
               <ion-note slot="error">Invalid Text</ion-note>
             </ion-item>
-            <ion-button @click="${this.onEnter}">send</ion-button>
+            <ion-button @click="${this.onEnter}" style="margin-top: 1%">send</ion-button>
+              </ion-row>
+            </ion-card>
           </ion-col>
         </ion-grid>
       </ion-content>

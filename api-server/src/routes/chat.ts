@@ -60,16 +60,11 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
   console.log("result: " + result);
   res.json({"data" : result});
 });
-/*
-router.post('/new', authService.authenticationMiddleware, async (req, res) => {
 
-  const chatDAO: GenericDAO<Chat> = req.app.locals.chatDAO;
-  console.log("current user" + res.locals.user);
-  //const newMessage = await chatDAO.create({ members: [], messages: [] });
-  //wsServer.sendMessage(res.locals.user.id, { newMessage: newMessage });
-  //res.redirect('/');
+router.get('/all/users', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  res.json({"data" : (await userDAO.findAll())});
 });
-*/
 
 router.post('/new', authService.authenticationMiddleware, async (req, res) => {
     const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;

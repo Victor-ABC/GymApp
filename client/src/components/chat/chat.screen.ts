@@ -32,7 +32,20 @@ class SignOutComponent extends PageMixin(LitElement) {
     return html`
       <ion-content class="ion-padding">
         <h1>Chats</h1>
-        <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+        <ion-grid>
+          <ion-col>
+            <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-card>
+            <ion-item button href="/newchat" color="primary">
+              <ion-label>
+                <h2>new chat</h2>
+              </ion-label>
+            </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-grid>
       </ion-content>
     `;
   }
