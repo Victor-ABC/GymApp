@@ -22,7 +22,8 @@ class AppComponent extends LitElement {
     { title: 'Anmelden', routePath: 'users/sign-in' },
     { title: 'Abmelden', routePath: 'users/sign-out' },
     { title: 'Chat', routePath: 'chat/all' },
-    { title: 'Kurse', routePath: 'course'}
+    { title: 'Kurse', routePath: 'course'},
+    { title: 'Kurs erstellen', routePath: 'course/create'}
 
   ];
 
@@ -92,6 +93,7 @@ class AppComponent extends LitElement {
           <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
           <ion-route url="chat/all" component="app-chat-all"></ion-route>
           <ion-route url="course" component="app-course-overview"></ion-route>
+          <ion-route url="course/create" component="app-create-course"></ion-route>
       </ion-router>
       <ion-nav root="app-sign-up"></ion-nav>
     </ion-app>`;
