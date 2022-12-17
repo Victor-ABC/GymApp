@@ -8,7 +8,6 @@ import { httpClient } from '../../../http-client.js';
 import { notificationService } from '../../../notification.js';
 import { PageMixin } from '../../page.mixin.js';
 import { router } from '../../../router/router.js';
-import componentStyle from './chat.css';
 
 type Message = {
   content: string;
@@ -21,8 +20,6 @@ type Message = {
 @customElement('app-chat')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignOutComponent extends PageMixin(LitElement) {
-  static styles = componentStyle;
-
   @query('#text') private textInputElement!: HTMLIonInputElement;
   @property() id = '';
   @property() createdAt = new Date().getTime();
@@ -64,19 +61,8 @@ class SignOutComponent extends PageMixin(LitElement) {
     )}`;
   }
   //grid height: style="height: 90%"
-
-  buildBody() {
-    console.log(this.messages.length);
-    return html`
-      <ion-content style="height: 7%">
-        <ion-card>
-          <ion-card-title>${this.name}</ion-card-title>
-          <ion-card-subtitle>${this.email}</ion-card-subtitle>
-        </ion-card>
-      </ion-content>
-      <ion-content style="height: 70%" class="ion-padding">
-        <ion-grid style="height: 80%">
-          <ion-list [inset]="true">
+  /*
+            <ion-list [inset]="true">
             ${this.messages
               .sort((a, b) => {
                 if (a.createdAt < b.createdAt) {
@@ -87,19 +73,42 @@ class SignOutComponent extends PageMixin(LitElement) {
                 }
                 return 1;
               })
-              .map(m => html`<app-chat-message .message=${m}></app-chat-message> `)}
+              .map(m => html`<app-chat-message .message=${m} .isLeft=${m.from === this.id}></app-chat-message> `)}
           </ion-list>
-        </ion-grid>
+  */
+  buildBody() {
+    console.log(this.messages.length);
+    return html`
+      <ion-content style="height: 7%">
+        <ion-card>
+          <ion-card-title>${this.name}</ion-card-title>
+          <ion-card-subtitle>${this.email}</ion-card-subtitle>
+        </ion-card>
+      </ion-content>
+      <ion-content style="height: 70%" color="grey">
+        <ion-list [inset]="true" style="display: flex; flex-direction: column;">
+          ${this.messages
+            .sort((a, b) => {
+              if (a.createdAt < b.createdAt) {
+                return -1;
+              }
+              if ((a.createdAt = b.createdAt)) {
+                return 0;
+              }
+              return 1;
+            })
+            .map(m => html`<app-chat-message .message=${m} .isLeft=${m.from === this.id}></app-chat-message> `)}
+        </ion-list>
       </ion-content>
       <ion-content class="ion-padding">
-        <ion-row>
-          <ion-item lines="full" full style="width: 80%">
+        <ion-card style="display: flex; flex-grow: 2n">
+          <ion-item lines="full" full style="flex-grow: 1;">
             <ion-label position="floating">Text</ion-label>
-            <ion-input type="text" required placeholder="Text eingeben" id="text"></ion-input>
+            <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
             <ion-note slot="error">Invalid Text</ion-note>
           </ion-item>
           <ion-button @click="${this.onEnter}" style="margin-top: 1%">send</ion-button>
-        </ion-row>
+        </ion-card>
       </ion-content>
     `;
   }

@@ -21,14 +21,22 @@ type Message = {
 class SignOutComponent extends PageMixin(LitElement) {
   @property()
   message: Message = null;
-
+  @property() isLeft: boolean = true;
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-
+  log() {
+    console.log("Success");  
+  }
   render() {
-    return html` ${this.message ? html` <ion-card>
-      <ion-item> ${this.message!.content} </ion-item>
-    </ion-card> ` : nothing} `;
+    return html`
+      ${this.message
+        ? html`
+            <ion-card style=${this.isLeft ? "float:left;" : "float:right;"}>
+            <ion-item color=${this.isLeft ? 'secondary' : 'primary'}> ${this.message!.content} </ion-item>
+            </ion-card>
+          `
+        : nothing}
+    `;
   }
 }
