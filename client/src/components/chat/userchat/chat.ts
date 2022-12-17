@@ -60,33 +60,15 @@ class SignOutComponent extends PageMixin(LitElement) {
       () => this.buildBody()
     )}`;
   }
-  //grid height: style="height: 90%"
-  /*
-            <ion-list [inset]="true">
-            ${this.messages
-              .sort((a, b) => {
-                if (a.createdAt < b.createdAt) {
-                  return -1;
-                }
-                if ((a.createdAt = b.createdAt)) {
-                  return 0;
-                }
-                return 1;
-              })
-              .map(m => html`<app-chat-message .message=${m} .isLeft=${m.from === this.id}></app-chat-message> `)}
-          </ion-list>
-  */
   buildBody() {
     console.log(this.messages.length);
     return html`
-      <ion-content style="height: 7%">
-        <ion-card>
-          <ion-card-title>${this.name}</ion-card-title>
-          <ion-card-subtitle>${this.email}</ion-card-subtitle>
-        </ion-card>
-      </ion-content>
+      <ion-card>
+        <ion-card-title>${this.name}</ion-card-title>
+        <ion-card-subtitle>${this.email}</ion-card-subtitle>
+      </ion-card>
       <ion-content style="height: 70%" color="grey">
-        <ion-list [inset]="true" style="display: flex; flex-direction: column;">
+        <ion-list style="display: flex; flex-direction: column;">
           ${this.messages
             .sort((a, b) => {
               if (a.createdAt < b.createdAt) {
@@ -100,7 +82,7 @@ class SignOutComponent extends PageMixin(LitElement) {
             .map(m => html`<app-chat-message .message=${m} .isLeft=${m.from === this.id}></app-chat-message> `)}
         </ion-list>
       </ion-content>
-      <ion-content class="ion-padding">
+      <ion-content>
         <ion-card style="display: flex; flex-grow: 2n">
           <ion-item lines="full" full style="flex-grow: 1;">
             <ion-label position="floating">Text</ion-label>
