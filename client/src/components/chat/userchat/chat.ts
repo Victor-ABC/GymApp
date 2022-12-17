@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { Capacitor } from '@capacitor/core';
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../../http-client.js';
@@ -21,11 +21,13 @@ type Message = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignOutComponent extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLIonInputElement;
+  @query('#chat-list') private chatList!: HTMLIonListElement;
   @property() id = '';
   @property() createdAt = new Date().getTime();
   @property() email = '';
   @property() name = '';
   @property() messages: Array<Message> = [];
+
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
@@ -50,8 +52,15 @@ class SignOutComponent extends PageMixin(LitElement) {
     const webSocket = new WebSocket('ws://localhost:3000');
     webSocket.onmessage = event => {
       this.messages = [...this.messages, JSON.parse(event.data).newMessage];
+      this.updateComplete.then( async (c) => {
+        const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+        await delay(1);
+        this.chatList.scrollIntoView({block: "end", behavior: "smooth"})
+      });
     };
   }
+
+
 
   render() {
     return html`${when(
@@ -61,14 +70,13 @@ class SignOutComponent extends PageMixin(LitElement) {
     )}`;
   }
   buildBody() {
-    console.log(this.messages.length);
     return html`
       <ion-card>
         <ion-card-title>${this.name}</ion-card-title>
         <ion-card-subtitle>${this.email}</ion-card-subtitle>
       </ion-card>
       <ion-content style="height: 70%" color="grey">
-        <ion-list style="display: flex; flex-direction: column;">
+        <ion-list style="display: flex; flex-direction: column;" id="chat-list">
           ${this.messages
             .sort((a, b) => {
               if (a.createdAt < b.createdAt) {
