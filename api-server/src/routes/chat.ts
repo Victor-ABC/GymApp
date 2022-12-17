@@ -11,29 +11,6 @@ const router = express.Router();
 router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-
-  //Default Data -->
-  /*
-  if((await messageDAO.findAll()).length == 0) {
-    messageDAO.create({
-      content: "hello World: tim an simon",
-      from: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
-      to: (await userDAO.findOne({email : "simon@weis.de"}))!.id,
-    })
-    messageDAO.create({
-      content: "hello World back: simon an tim",
-      from: (await userDAO.findOne({email : "simon@weis.de"}))!.id,
-      to: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
-    })
-    messageDAO.create({
-      content: "hello World: tim an demo",
-      from: (await userDAO.findOne({email : "tim@kress.de"}))!.id,
-      to: (await userDAO.findOne({email : "demo@demo.de"}))!.id,
-    })
-  }
-  */
-  //<--
-
   var messagesFromMe = await messageDAO.findAll({ from: res.locals.user.id });
   var messagesToMe = await messageDAO.findAll({ to: res.locals.user.id });
   let partners = new Set<string>();
@@ -70,11 +47,13 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
       id_of_read_messages.push(new_m.id);
       new_messageToMe.push(new_m);
       await messageDAO.update(new_m);
+    } else {
+      new_messageToMe.push(m);
     }
-    new_messageToMe.push(m);
   }
   wsServer.sendReadNotification(idOfOtherUser, { readNotifications: id_of_read_messages });
   var result = [...messagesFromMe, ...new_messageToMe];
+  console.log("HTTP-GET: " + result.toString());
   res.json({ data: result });
 });
 

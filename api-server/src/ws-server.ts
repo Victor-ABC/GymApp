@@ -91,7 +91,7 @@ class WebSocketServer {
           /* noop */
         });
       });
-    }, 6000);
+    }, 30000);
   }
 }
 
