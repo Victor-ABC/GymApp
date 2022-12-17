@@ -30,7 +30,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     res.status(201).json(createdCourse);
 });
 
-router.get('/', async (req, res) => {
+router.get('/', authService.authenticationMiddleware, async (req, res) => {
         const courseDAO: GenericDAO<Course> = req.app.locals.courseDAO;
 
         const courses = await courseDAO.findAll();

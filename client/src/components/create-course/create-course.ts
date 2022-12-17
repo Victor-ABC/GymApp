@@ -4,7 +4,7 @@ import { customElement, query } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
-import { notificationService } from '../../notification.js'
+import { notificationService } from '../../notification.js';
 
 @customElement('app-create-course')
 class CreateCourseComponent extends PageMixin(LitElement){
@@ -27,6 +27,18 @@ class CreateCourseComponent extends PageMixin(LitElement){
     render() {
         return this.buildBody();
     }
+
+    async firstUpdated() {
+        try {
+            
+        } catch (e) {
+          if ((e as { statusCode: number }).statusCode === 401) {
+            router.navigate('/users/sign-in');
+          } else {
+            notificationService.showNotification((e as Error).message, 'error');
+          }
+        }
+      }
 
     buildBody(){
         return html `
