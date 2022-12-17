@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { Capacitor } from '@capacitor/core';
-import { LitElement, html, PropertyValueMap } from 'lit';
+import { LitElement, html, PropertyValueMap, nothing } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../../http-client.js';
@@ -121,7 +121,7 @@ class ChatComponent extends PageMixin(LitElement) {
               }
               return 1;
             })
-            .map(m => html`<app-chat-message .message=${m} .isLeft=${m.from === this.id}></app-chat-message> `)}
+            .map(m => this.renderMessage(m, m.from === this.id))}
         </ion-list>
       </ion-content>
       <ion-content>
@@ -137,14 +137,50 @@ class ChatComponent extends PageMixin(LitElement) {
     `;
   }
 
+  renderMessage(message: Message, isLeft: boolean) {
+    return html`
+      ${message
+        ? html`
+            <ion-card style=${isLeft ? 'float:left; width=10%' : 'float:right; width=10%;'}>
+              <ion-row>
+                <ion-card-content> ${message!.content}</ion-card-content>
+                <ion-card-content>
+                  <ion-row style="padding-top: 4px">
+                    <small>${this.buildDate(message.createdAt)}</small>
+                    ${isLeft == false ? html`<ion-icon color="primary" name=${message!.recieved ? "checkmark-done-outline" : "checkmark-outline"}></ion-icon>` : nothing}
+                  </ion-row>
+                </ion-card-content>
+              </ion-row>
+            </ion-card>
+          `
+        : nothing}
+    `;
+  }
+
+  zeroPrefix(num: number) {
+    return num < 10 ? '0' + num : num;
+  }
+
   buildDate(createdAt: number) {
     const date = new Date(createdAt);
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
     var day = date.getDate();
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
-    return day + '.' + month + '.' + year;
+    return (
+      this.zeroPrefix(hours) +
+      ':' +
+      this.zeroPrefix(minutes) +
+      ' (' +
+      this.zeroPrefix(day) +
+      '.' +
+      this.zeroPrefix(month) +
+      '.' +
+      this.zeroPrefix(year) +
+      ')'
+    );
   }
-
   async onEnter() {
     try {
       const data = {

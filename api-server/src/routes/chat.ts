@@ -128,7 +128,7 @@ router.patch('/read', authService.authenticationMiddleware, async (req, res) => 
     };
     await messageDAO.update(new_m);
     console.log("sended 1 notification!");
-    wsServer.sendReadNotification(req.body.to, { readNotification: req.params.id });
+    wsServer.sendReadNotification(req.body.to, { readNotification: req.body.id });
   }
 });
 
