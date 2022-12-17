@@ -35,7 +35,6 @@ class ChatComponent extends PageMixin(LitElement) {
   }
   async firstUpdated() {
     try {
-      console.log("http get to backend to fetch courses");
       const response = await httpClient.get('/chat/' + this.id);
       this.messages = (await response.json()).data;
       this.requestUpdate();
@@ -54,10 +53,8 @@ class ChatComponent extends PageMixin(LitElement) {
     const webSocket = new WebSocket('ws://localhost:3000');
     webSocket.onmessage = event => {
       var data = JSON.parse(event.data);
-      console.log(data);
       //new Message
       if (data.newMessage) {
-        console.log('2.1) client recieven newMessage(WS) with new message');
         this.messages = [...this.messages, data.newMessage];
         this.updateComplete.then(async c => {
           const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -67,7 +64,6 @@ class ChatComponent extends PageMixin(LitElement) {
         //Send path to tell other user, that message was recieved
         //this.id is the id of the user, we are writing witih (1 Chat = 1 Other User = His ID)
         if (this.id === data.newMessage.from) {
-          console.log('3) sended patch with id: ' + data.newMessage.id + ' to: ' + data.newMessage.from);
           httpClient.patch('/chat/read', {
             id: data.newMessage.id,
             to: this.id
@@ -76,26 +72,21 @@ class ChatComponent extends PageMixin(LitElement) {
       }
       //1. Message read by other client
       if (data.readNotification) {
-        console.log('5.1 1 read Notification: reciefed notificatoin to show 2 check-icons (WS)');
         var m = this.messages.find(e => e.id === data.readNotification);
         if (m) {
           m!.recieved = true;
           this.messages[this.messages.indexOf(m!)] = m;
           this.messages = [...this.messages];
-        } else {
-          console.log('Something went wrong! 5.1 1 read Notification:');
-        }
+        } 
       }
       //N Messages read by other client
       if (data.readNotifications) {
-        console.log('5.2) N read Notification: reciefed notificatoin to show 2 check-icons (WS)');
         var array = [];
         for (var message of this.messages) {
           message.recieved = true;
           array.push(message);
         }
         this.messages = array;
-        console.log('5.2) N read Notification: trigger rerender with new messages: ' + JSON.stringify(this.messages));
       }
     };
   }
@@ -169,7 +160,6 @@ class ChatComponent extends PageMixin(LitElement) {
         content: this.textInputElement.value!
       };
       this.textInputElement.value = null;
-      console.log('1) Post to create new Message');
       await httpClient.post('/chat/new', data);
     } catch (e) {
       notificationService.showNotification((e as Error).message, 'info');
