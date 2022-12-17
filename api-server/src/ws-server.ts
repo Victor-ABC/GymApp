@@ -47,6 +47,16 @@ class WebSocketServer {
     });
   }
 
+  public sendReadNotification(toId: string, message: object) {
+    const messageString = JSON.stringify(message);
+    this.wss.clients.forEach(client => {
+      const ws = client as WebSocketExt;
+      if (ws.claimsSet.id === toId) {
+        ws.send(messageString);
+      }
+    });
+  }
+
   private async onConnection(ws: WebSocketExt, req: IncomingMessage) {
     const valid = await this.validateConnection(ws, req);
     if (valid) {

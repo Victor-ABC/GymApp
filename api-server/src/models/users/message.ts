@@ -9,4 +9,5 @@ export interface Message extends Entity {
   content: string;
   from: string;
   to: string;
+  recieved: boolean;
 }

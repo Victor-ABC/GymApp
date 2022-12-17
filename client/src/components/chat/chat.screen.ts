@@ -18,7 +18,7 @@ type User = {
 
 @customElement('app-chats')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignOutComponent extends PageMixin(LitElement) {
+class ChatScreen extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLIonInputElement;
 
   @property()
