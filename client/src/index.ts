@@ -13,7 +13,7 @@ import './components/sign-in/sign-in.ts';
 import './components/sign-out/sign-out.ts';
 import './components/sign-up/sign-up.ts';
 import './components/chat/chat.screen.ts' 
-import './components/chat/userchat/chat.ts';
+import './components/chat/chat.ts';
 import './components/chat/chat.users.ts';
 
 

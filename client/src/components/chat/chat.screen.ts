@@ -6,6 +6,7 @@ import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
+import date from '../../service/date.service.js';
 
 type User = {
   name: string;
@@ -74,19 +75,11 @@ class ChatScreen extends PageMixin(LitElement) {
         <ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
           <ion-label>
             <h2>${chatPartner.name}</h2>
-            <p>Existiert seit: ${this.buildDate(chatPartner.createdAt)}</p>
+            <p>Existiert seit: ${date(chatPartner.createdAt)}</p>
           </ion-label>
         </ion-item>
       </ion-card>
     `;
-  }
-
-  buildDate(createdAt: number) {
-    const date = new Date(createdAt);
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    return day + '.' + month + '.' + year;
   }
 
   async onEnter() {

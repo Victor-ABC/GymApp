@@ -4,10 +4,11 @@ import { Capacitor } from '@capacitor/core';
 import { LitElement, html, PropertyValueMap, nothing } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
-import { httpClient } from '../../../http-client.js';
-import { notificationService } from '../../../notification.js';
-import { PageMixin } from '../../page.mixin.js';
-import { router } from '../../../router/router.js';
+import { httpClient } from '../../http-client.js';
+import { notificationService } from '../../notification.js';
+import { PageMixin } from '../page.mixin.js';
+import { router } from '../../router/router.js';
+import date from '../../service/date.service.js';
 
 type Message = {
   content: string;
@@ -34,6 +35,7 @@ class ChatComponent extends PageMixin(LitElement) {
   }
   async firstUpdated() {
     try {
+      console.log("http get to backend to fetch courses");
       const response = await httpClient.get('/chat/' + this.id);
       this.messages = (await response.json()).data;
       this.requestUpdate();
@@ -55,7 +57,7 @@ class ChatComponent extends PageMixin(LitElement) {
       console.log(data);
       //new Message
       if (data.newMessage) {
-        console.log("2.1) client recieven newMessage(WS) with new message");
+        console.log('2.1) client recieven newMessage(WS) with new message');
         this.messages = [...this.messages, data.newMessage];
         this.updateComplete.then(async c => {
           const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -64,8 +66,8 @@ class ChatComponent extends PageMixin(LitElement) {
         });
         //Send path to tell other user, that message was recieved
         //this.id is the id of the user, we are writing witih (1 Chat = 1 Other User = His ID)
-        if(this.id === data.newMessage.from) {
-          console.log("3) sended patch with id: " + data.newMessage.id + " to: " + data.newMessage.from);
+        if (this.id === data.newMessage.from) {
+          console.log('3) sended patch with id: ' + data.newMessage.id + ' to: ' + data.newMessage.from);
           httpClient.patch('/chat/read', {
             id: data.newMessage.id,
             to: this.id
@@ -74,7 +76,7 @@ class ChatComponent extends PageMixin(LitElement) {
       }
       //1. Message read by other client
       if (data.readNotification) {
-        console.log("5.1 1 read Notification: reciefed notificatoin to show 2 check-icons (WS)")
+        console.log('5.1 1 read Notification: reciefed notificatoin to show 2 check-icons (WS)');
         var m = this.messages.find(e => e.id === data.readNotification);
         if (m) {
           m!.recieved = true;
@@ -86,14 +88,14 @@ class ChatComponent extends PageMixin(LitElement) {
       }
       //N Messages read by other client
       if (data.readNotifications) {
-        console.log("5.2) N read Notification: reciefed notificatoin to show 2 check-icons (WS)")
+        console.log('5.2) N read Notification: reciefed notificatoin to show 2 check-icons (WS)');
         var array = [];
         for (var message of this.messages) {
           message.recieved = true;
           array.push(message);
         }
         this.messages = array;
-        console.log("5.2) N read Notification: trigger rerender with new messages: " + JSON.stringify(this.messages));
+        console.log('5.2) N read Notification: trigger rerender with new messages: ' + JSON.stringify(this.messages));
       }
     };
   }
@@ -105,7 +107,7 @@ class ChatComponent extends PageMixin(LitElement) {
       () => this.buildBody()
     )}`;
   }
-  //isleft =
+  //isleft = m.from === this.id
   buildBody() {
     return html`
       <ion-card>
@@ -139,48 +141,27 @@ class ChatComponent extends PageMixin(LitElement) {
 
   renderMessage(message: Message, isLeft: boolean) {
     return html`
-      ${message
-        ? html`
-            <ion-card style=${isLeft ? 'float:left; width=10%' : 'float:right; width=10%;'}>
-              <ion-row>
-                <ion-card-content> ${message!.content}</ion-card-content>
-                <ion-card-content>
-                  <ion-row style="padding-top: 4px">
-                    <small>${this.buildDate(message.createdAt)}</small>
-                    ${isLeft == false ? html`<ion-icon color="primary" name=${message!.recieved ? "checkmark-done-outline" : "checkmark-outline"}></ion-icon>` : nothing}
-                  </ion-row>
-                </ion-card-content>
+      <div>
+        <ion-card style=${isLeft ? 'float:left;' : 'float:right;'}>
+          <ion-row>
+            <ion-card-content> ${message!.content}</ion-card-content>
+            <ion-card-content>
+              <ion-row style="padding-top: 4px">
+                <small>${date(message.createdAt)}</small>
+                ${isLeft == false
+                  ? html`<ion-icon
+                      color="primary"
+                      name=${message!.recieved ? 'checkmark-done-outline' : 'checkmark-outline'}
+                    ></ion-icon>`
+                  : nothing}
               </ion-row>
-            </ion-card>
-          `
-        : nothing}
+            </ion-card-content>
+          </ion-row>
+        </ion-card>
+      </div>
     `;
   }
 
-  zeroPrefix(num: number) {
-    return num < 10 ? '0' + num : num;
-  }
-
-  buildDate(createdAt: number) {
-    const date = new Date(createdAt);
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    return (
-      this.zeroPrefix(hours) +
-      ':' +
-      this.zeroPrefix(minutes) +
-      ' (' +
-      this.zeroPrefix(day) +
-      '.' +
-      this.zeroPrefix(month) +
-      '.' +
-      this.zeroPrefix(year) +
-      ')'
-    );
-  }
   async onEnter() {
     try {
       const data = {
@@ -188,7 +169,7 @@ class ChatComponent extends PageMixin(LitElement) {
         content: this.textInputElement.value!
       };
       this.textInputElement.value = null;
-      console.log("1) Post to create new Message")
+      console.log('1) Post to create new Message');
       await httpClient.post('/chat/new', data);
     } catch (e) {
       notificationService.showNotification((e as Error).message, 'info');
