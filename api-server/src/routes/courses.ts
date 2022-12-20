@@ -48,7 +48,7 @@ function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: s
     let hasErrors = false;
     requiredFields.forEach(fieldName => {
       if (!object[fieldName]) {
-        errors.push(fieldName + ' darf nicht leer sein.');
+        errors.push(fieldName + ' cannot be empty.');
         hasErrors = true;
       }
     });

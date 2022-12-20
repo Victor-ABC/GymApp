@@ -7,6 +7,7 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
+import { formatWithOptions } from 'date-fns/fp';
 
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
     - Übersicht aller angebotenen Kurse (Darstellung in Cards)
@@ -48,43 +49,65 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-            <h1>Hello Course Overview</h1>
             <ion-content>
+                <h1>Course Overview</h1>
                 <div class="courses">
                     ${repeat(
                         this.courses,
                         course => course.id,
                         course => html`
-                            <ion-card>
-                                <ion-card-header>
-                                    <ion-card-title>Kurs: ${course.name}</ion-card-title>
-                                </ion-card-header>
-                                <ion-card-content>
-                                    <ion-item>
-                                        <ion-label>Beschreibung: ${course.description}</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Wochentag: ${course.dayOfWeek}</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Beginn: ${course.startTime} Uhr</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Ende: ${course.endTime} Uhr</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Erster Termin: ${format(new Date(course.startDate), 'dd MMMM yyyy')}</ion-label>
-                                    </ion-item>
-                                    <ion-item>
-                                        <ion-label>Letzter Termin: ${format(new Date(course.endDate), 'dd MMMM yyyy')}</ion-label>
-                                    </ion-item>
-                                </ion-card-content>
-                            </ion-card>
+                            <div class="course">
+                                <ion-card>
+                                    <ion-card-header>
+                                        <ion-card-title>${course.name}</ion-card-title>
+                                    </ion-card-header>
+                                    <ion-card-content>
+                                        <ion-item lines="full">
+                                            <ion-label>Beschreibung: ${course.description}</ion-label>
+                                            <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="full">
+                                            <ion-label>Wochentag: ${course.dayOfWeek}</ion-label>
+                                            <ion-icon slot="start" name="calendar-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="full">
+                                            <ion-label>Beginn: ${course.startTime} Uhr</ion-label>
+                                            <ion-icon slot="start" name="time-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="full">
+                                            <ion-label>Ende: ${course.endTime} Uhr</ion-label>
+                                            <ion-icon slot="start" name="time-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="full">
+                                            <ion-label>Erster Termin: ${format(new Date(course.startDate), 'dd.MM.yyyy')}</ion-label>
+                                            <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="full">
+                                            <ion-label>Letzter Termin: ${format(new Date(course.endDate), 'dd.MM.yyyy')}</ion-label>
+                                            <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+                                        </ion-item>
+                                        <ion-item lines="none">
+                                            <ion-button fill="outline" type="button" @click="${() => this.bookCourse(course)}">Book Course</ion-button>
+                                        </ion-item>
+                                    </ion-card-content>
+                                </ion-card>
+                            </div>
                         `
                     )}
                 </div>
             </ion-content>
-            
         `;
+    }
+
+    async bookCourse(courseToBook: Course) {
+        const memberInCourse = {
+            courseId: courseToBook.id
+        }
+
+        try {
+            await httpClient.post('/memberincourses', memberInCourse);
+        } catch (error) {
+            notificationService.showNotification((error as Error).message , "error");
+        }
     }
 }

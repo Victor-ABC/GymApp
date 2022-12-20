@@ -30,7 +30,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
     async firstUpdated() {
         try {
-            
+            //TODO: Bedingung zum überprüfen, ob User eingeloggt ist
         } catch (e) {
           if ((e as { statusCode: number }).statusCode === 401) {
             router.navigate('/users/sign-in');
@@ -54,7 +54,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
                             <ion-label position="fixed">Kursname</ion-label>
                             <ion-input type="text" required placeholder="Kursnamen vergeben" id="name"></ion-input>
                         </ion-item>
-                        <ion-item>
+                        <ion-item lines="none">
                             <ion-label position="fixed">Beschreibung</ion-label>
                             <ion-input type="text" required placeholder="Kursbeschreibung vergeben" id="description"></ion-input>
                         </ion-item>
@@ -111,7 +111,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
                             </ion-modal>
                         </ion-item>
 
-                        <ion-item>
+                        <ion-item lines="none">
                             <ion-label position="fixed">Endzeit</ion-label>
                             <ion-datetime-button datetime="endTime"></ion-datetime-button>
 
