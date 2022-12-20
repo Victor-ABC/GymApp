@@ -10,7 +10,7 @@ import { InMemoryGenericDAO } from './models/in-memory-generic.dao.js';
 import { User } from './models/users/user.js';
 import { Course } from './models/course/course.js';
 import config from '../config.json' assert { type: 'json' };
-import { MemberInCourse } from './models/course/member_in_course.js';
+import { MemberInCourse } from './models/course/member-in-course.js';
 
 import fs from 'node:fs'; //ggf. löschen, falls unbenutzt
 import { TrainingPlan } from './models/training_plan/training_plan.js';

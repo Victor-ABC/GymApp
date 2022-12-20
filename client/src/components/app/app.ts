@@ -21,7 +21,10 @@ class AppComponent extends LitElement {
     { title: 'Konto erstellen', routePath: 'users/sign-up' },
     { title: 'Anmelden', routePath: 'users/sign-in' },
     { title: 'Abmelden', routePath: 'users/sign-out' },
-    { title: 'Chat', routePath: 'chats/all' }
+    { title: 'Chat', routePath: 'chats/all' },
+    { title: 'Kurse', routePath: 'course'},
+    { title: 'Kurs erstellen', routePath: 'course/create'}
+
   ];
 
   constructor() {
@@ -45,7 +48,9 @@ class AppComponent extends LitElement {
         'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
         'chats/all': () => html`<app-chats></app-chats>`,
-        'chat/:id': params => html`<app-chat .id=${params.id}></app-chat>`
+        'chat/:id': params => html`<app-chat .id=${params.id}></app-chat>`,
+        'course': () => html`<app-course-overview></app-course-overview>`,
+        'course/create': () => html`<app-create-course></app-create-course>`
       },
       () => html`<app-sign-in></app-sign-in>`
     );
@@ -89,7 +94,8 @@ class AppComponent extends LitElement {
           <ion-route url="users/sign-in" component="app-sign-in"></ion-route>
           <ion-route url="users/sign-up" component="app-sign-up"></ion-route>
           <ion-route url="chats/all" component="app-chats"></ion-route>
-        </ion-route>
+          <ion-route url="course" component="app-course-overview"></ion-route>
+          <ion-route url="course/create" component="app-create-course"></ion-route>
       </ion-router>
       <ion-nav root="app-sign-up"></ion-nav>
     </ion-app>`;

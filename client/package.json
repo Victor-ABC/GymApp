@@ -42,6 +42,7 @@
     "@capacitor/core": "^4.6.0",
     "@capacitor/network": "^4.1.0",
     "@ionic/core": "^6.3.9",
+    "date-fns": "^2.29.3",
     "ionicons": "^6.0.4",
     "lit": "^2.4.0"
   }
