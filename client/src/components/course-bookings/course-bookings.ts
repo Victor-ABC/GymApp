@@ -35,12 +35,10 @@ class CourseBookingsComponent extends PageMixin(LitElement){
     @state() private bookings: Booking[] = [];
 
     private dataReady: Boolean = false;
-    private dataRemoved: Boolean = false;
  
     static get properties() {
         return {
-          dataReady: {type: Boolean},
-          dataRemoved: {type: Boolean}
+          dataReady: {type: Boolean}
         };
     }
 
