@@ -5,9 +5,11 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
+import componentStyle from './create-course.css';
 
 @customElement('app-create-course')
 class CreateCourseComponent extends PageMixin(LitElement){
+    //static styles = [componentStyle];
 
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
@@ -150,6 +152,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
             try {
                 await httpClient.post('courses', course);
                 router.navigate('/course');
+                notificationService.showNotification(`Der Kurs ${course.name} wurde erfolgreich erstellt!` , "info");
             } catch (error) {
                 notificationService.showNotification((error as Error).message , "error");
             }
