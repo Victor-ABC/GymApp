@@ -1,5 +1,4 @@
 import express from "express";
-import { Course } from "../models/course/course";
 import { MemberInCourse } from "../models/course/member-in-course";
 import { GenericDAO } from "../models/generic.dao";
 import { authService } from '../services/auth.service.js';
@@ -30,5 +29,11 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
 
     res.json({ results: memberInCourses});
 })
+
+router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
+    const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
+    await memberInCourseDAO.delete(req.params.id);
+    res.status(200).end(); 
+});
 
 export default router;

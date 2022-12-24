@@ -1,6 +1,5 @@
-/* Autor: Henrik Bruns */
 import { LitElement, html } from 'lit';
-import { customElement, state, query } from 'lit/decorators.js';
+import { customElement, state, query, property } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
@@ -8,37 +7,66 @@ import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
 
-/* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
-    - Übersicht aller angebotenen Kurse (Darstellung in Cards)
-    - Anmeldung/Abmeldung eines Nutzers für einen Kurs (Bspw. Button am Kurs "Anmelden"/"Abmelden")
-*/
-
 interface Course {
-        id: string;
-        name: string;
-        description: string;
-        dayOfWeek: string;
-        startDate: Date;
-        endDate: Date;
-        startTime: string;
-        endTime: string;
+    id: string;
+    name: string;
+    description: string;
+    dayOfWeek: string;
+    startDate: Date;
+    endDate: Date;
+    startTime: string;
+    endTime: string;
+    bookingDate: string;
+    bookingId: string;
 }
 
-@customElement('app-course-overview')
-class CourseOverviewComponent extends PageMixin(LitElement){
+interface Booking {
+    id: string;
+    memberId: string;
+    courseId: string;
+    createdAt: string;
+}
 
-    @state() private courses: Course[] = [];
+@customElement('app-course-bookings')
+class CourseBookingsComponent extends PageMixin(LitElement){ 
+
+    @state() private bookedCourse!: Course;
+    @state() private mycourses: Course[] = [];
+    @state() private bookings: Booking[] = [];
+
+    private dataReady: Boolean = false;
+    private dataRemoved: Boolean = false;
+ 
+    static get properties() {
+        return {
+          dataReady: {type: Boolean},
+          dataRemoved: {type: Boolean}
+        };
+    }
+
 
     async firstUpdated() {
         try {
-          const response = await httpClient.get('/courses');
-          this.courses = (await response.json()).results;
+          const responseBookings = await httpClient.get('/memberincourses');
+          this.bookings = (await responseBookings.json()).results;
+
+          for(const booking of this.bookings) {
+            const resonseBookedCourse = await httpClient.get(`/courses/${booking.courseId}`);
+            this.bookedCourse = (await resonseBookedCourse.json()).course;
+            this.bookedCourse.bookingDate = format(new Date(booking.createdAt), 'dd.MM.yyyy HH:mm');
+            this.bookedCourse.bookingId = booking.id;
+            this.mycourses.push(this.bookedCourse)
+          }
+
         } catch (e) {
             if ((e as { statusCode: number }).statusCode === 401) {
               router.navigate('/users/sign-in');
             } else {
               notificationService.showNotification((e as Error).message, 'error');
             }
+        }
+        finally {
+            this.dataReady = true;
         }
     }
 
@@ -47,12 +75,12 @@ class CourseOverviewComponent extends PageMixin(LitElement){
     }
 
     buildBody(){
-        return html `
+       return html `
             <ion-content>
-                <h1>Course Overview</h1>
+                <h1>Meine Buchungen</h1>
                 <div class="courses">
                     ${repeat(
-                        this.courses,
+                        this.mycourses,
                         course => course.id,
                         course => html`
                             <div class="course">
@@ -61,6 +89,11 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                         <ion-card-title>${course.name}</ion-card-title>
                                     </ion-card-header>
                                     <ion-card-content>
+
+                                        <ion-item lines="full">
+                                            <ion-label>Buchungszeitpunkt: ${course.bookingDate}</ion-label>
+                                            <ion-icon slot="start" name="time-outline"></ion-icon>
+                                        </ion-item>
                                         <ion-item lines="full">
                                             <ion-label>Beschreibung: ${course.description}</ion-label>
                                             <ion-icon slot="start" name="document-text-outline"></ion-icon>
@@ -86,8 +119,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                             <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                                         </ion-item>
                                         <ion-item lines="none">
-                                            <ion-button fill="outline" type="button" @click="${() => this.bookCourse(course)}">Book Course</ion-button>
+                                            <ion-button fill="outline" type="button" @click="${() => this.removeCourse(course)}">Remove Course</ion-button>
                                         </ion-item>
+                                        
                                     </ion-card-content>
                                 </ion-card>
                             </div>
@@ -98,13 +132,10 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         `;
     }
 
-    async bookCourse(courseToBook: Course) {
-        const memberInCourse = {
-            courseId: courseToBook.id
-        }
-
+    removeCourse(courseToRemove: Course) {
         try {
-            await httpClient.post('/memberincourses', memberInCourse);
+            httpClient.delete('/memberincourses/' + courseToRemove.bookingId);
+            window.location.reload();
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
         }
