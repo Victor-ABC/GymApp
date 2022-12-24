@@ -6,6 +6,7 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
+import componentStyle from './course-bookings.css';
 
 interface Course {
     id: string;
@@ -28,7 +29,8 @@ interface Booking {
 }
 
 @customElement('app-course-bookings')
-class CourseBookingsComponent extends PageMixin(LitElement){ 
+class CourseBookingsComponent extends PageMixin(LitElement){
+    //static styles = [componentStyle]; 
 
     @state() private bookedCourse!: Course;
     @state() private mycourses: Course[] = [];
@@ -74,7 +76,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
 
     buildBody(){
        return html `
-            <ion-content>
+            <ion-content class="ion-padding">
                 <h1>Meine Buchungen</h1>
                 <div class="courses">
                     ${repeat(

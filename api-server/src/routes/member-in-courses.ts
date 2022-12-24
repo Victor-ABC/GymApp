@@ -13,10 +13,16 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
+    const filter: Partial<MemberInCourse> = { courseId: req.body.courseId, memberId: res.locals.user.id};
+    if (await memberInCourseDAO.findOne(filter)) {
+        return sendErrorMessage(`Der Kurs wurde bereits von Ihnen gebucht!`);
+    }
+
     const createdMemberInCourse = await memberInCourseDAO.create({
         memberId: res.locals.user.id,
         courseId: req.body.courseId
     })
+
     console.log(`booked course: ${req.body.courseId} or user: ${res.locals.user.id}`)
     res.status(201).json(createdMemberInCourse);
 });

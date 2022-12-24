@@ -7,6 +7,7 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
+import componentStyle from './course-overview.css';
 
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
     - Übersicht aller angebotenen Kurse (Darstellung in Cards)
@@ -26,6 +27,7 @@ interface Course {
 
 @customElement('app-course-overview')
 class CourseOverviewComponent extends PageMixin(LitElement){
+    //static styles = [componentStyle];
 
     @state() private courses: Course[] = [];
 
@@ -48,7 +50,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-            <ion-content>
+            <ion-content class="ion-padding">
                 <h1>Course Overview</h1>
                 <div class="courses">
                     ${repeat(
@@ -105,6 +107,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
         try {
             await httpClient.post('/memberincourses', memberInCourse);
+            notificationService.showNotification(`Der Kurs ${courseToBook.name} wurde erfolgreich gebucht!` , "info");
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
         }
