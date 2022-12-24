@@ -40,6 +40,7 @@
     "@capacitor/android": "^4.6.0",
     "@capacitor/camera": "^4.1.4",
     "@capacitor/core": "^4.6.0",
+    "@capacitor/ios": "^4.6.1",
     "@capacitor/network": "^4.1.0",
     "@ionic/core": "^6.3.9",
     "date-fns": "^2.29.3",
