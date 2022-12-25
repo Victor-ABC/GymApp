@@ -8,7 +8,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
 import componentStyle from './course-bookings.css';
 
-interface Course {
+interface BookedCourse {
     id: string;
     name: string;
     description: string;
@@ -21,20 +21,11 @@ interface Course {
     bookingId: string;
 }
 
-interface Booking {
-    id: string;
-    memberId: string;
-    courseId: string;
-    createdAt: string;
-}
-
 @customElement('app-course-bookings')
 class CourseBookingsComponent extends PageMixin(LitElement){
     //static styles = [componentStyle]; 
 
-    @state() private bookedCourse!: Course;
-    @state() private mycourses: Course[] = [];
-    @state() private bookings: Booking[] = [];
+    @state() private mycourses: BookedCourse[] = [];
 
     private dataReady: Boolean = false;
  
@@ -48,16 +39,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
     async firstUpdated() {
         try {
           const responseBookings = await httpClient.get('/memberincourses');
-          this.bookings = (await responseBookings.json()).results;
-
-          for(const booking of this.bookings) {
-            const resonseBookedCourse = await httpClient.get(`/courses/${booking.courseId}`);
-            this.bookedCourse = (await resonseBookedCourse.json()).course;
-            this.bookedCourse.bookingDate = format(new Date(booking.createdAt), 'dd.MM.yyyy HH:mm');
-            this.bookedCourse.bookingId = booking.id;
-            this.mycourses.push(this.bookedCourse)
-          }
-
+          this.mycourses = (await responseBookings.json()).results;
         } catch (e) {
             if ((e as { statusCode: number }).statusCode === 401) {
               router.navigate('/users/sign-in');
@@ -132,7 +114,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
         `;
     }
 
-    removeCourse(courseToRemove: Course) {
+    removeCourse(courseToRemove: BookedCourse) {
         try {
             httpClient.delete('/memberincourses/' + courseToRemove.bookingId);
             window.location.reload();
