@@ -1,9 +1,24 @@
 import express from "express";
 import { MemberInCourse } from "../models/course/member-in-course";
+import { Course } from "../models/course/course";
 import { GenericDAO } from "../models/generic.dao";
 import { authService } from '../services/auth.service.js';
+import { format } from 'date-fns';
 
 const router = express.Router();
+
+interface BookedCourse {
+    id?: string;
+    name?: string;
+    description?: string;
+    dayOfWeek?: string;
+    startDate?: Date;
+    endDate?: Date;
+    startTime?: string;
+    endTime?: string;
+    bookingDate?: string;
+    bookingId?: string;
+}
 
 router.post('/', authService.authenticationMiddleware, async (req, res) => {
     const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
@@ -29,11 +44,30 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
 
 router.get('/', authService.authenticationMiddleware, async (req, res) => {
     const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
-    const filter: Partial<MemberInCourse> = { memberId: res.locals.user.id };
-
-    const memberInCourses = await memberInCourseDAO.findAll(filter);
-
-    res.json({ results: memberInCourses});
+    const bookedCourseDAO: GenericDAO<Course> = req.app.locals.courseDAO;
+    const bookedCourses: BookedCourse[] = [];
+    const filterMemberId: Partial<MemberInCourse> = { memberId: res.locals.user.id };
+    const memberInCourses = await memberInCourseDAO.findAll(filterMemberId);
+    if(memberInCourses) {
+        for(const booking of memberInCourses) {
+            const filterCourseId: Partial<Course> = { id: booking.courseId };
+            const course = await bookedCourseDAO.findOne(filterCourseId)
+            const bookedCourse: BookedCourse = {
+                id: course?.id,
+                name: course?.name,
+                description: course?.description,
+                dayOfWeek: course?.dayOfWeek,
+                startDate: course?.startDate,
+                endDate: course?.endDate,
+                startTime: course?.startTime,
+                endTime: course?.endTime,
+                bookingDate: format(new Date(booking.createdAt), 'dd.MM.yyyy HH:mm'),
+                bookingId: booking.id
+            }
+            bookedCourses.push(bookedCourse!);
+        }
+    }
+    res.json({ results: bookedCourses});
 })
 
 router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
