@@ -161,5 +161,5 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
     isFormValid() {
         return this.form.checkValidity();
-      }
+    }
 }

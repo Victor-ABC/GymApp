@@ -6,6 +6,7 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js'
+import { authenticationService } from '../../authenticationService.js';
 
 import componentStyle from './sign-in.css';
 
@@ -54,20 +55,25 @@ class SignInComponent extends PageMixin(LitElement) {
 
   async submit() {
     console.log("called Submit method");
-    if (this.isFormValid()) {
-      console.log("Form is Valid");
-      const authData = {
-        email: this.emailElement.value,
-        password: this.passwordElement.value
-      };
-      try {
-        await httpClient.post('/users/sign-in', authData);
-        router.navigate('/'); //todo: route to default page of screen
-      } catch (e) {
-        notificationService.showNotification((e as Error).message, 'error');
-      }
-    } else {
+
+    if (!this.isFormValid()) {
+      console.log('Form is not valid');
       this.form.classList.add('was-validated');
+      return;
+    }
+
+    console.log("Form is Valid");
+    const authData = {
+      email: this.emailElement.value,
+      password: this.passwordElement.value
+    };
+    try {
+      const user = await httpClient.post('/users/sign-in', authData);
+      console.log(user);
+      authenticationService.storeUser(await user.json());
+      router.navigate('/home');
+    } catch (e) {
+      notificationService.showNotification((e as Error).message, 'error');
     }
   }
 

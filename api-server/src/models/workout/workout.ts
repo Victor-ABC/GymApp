@@ -7,7 +7,7 @@ import { Entity } from "../entity.js";
  * wöchentliche Termin "date" und die 1. und letzte Kalenderwoche angegeben.
  * Zusätzlich brauchen wir das start-Jahr und end-Jahr
  */
-export interface TrainingPlan extends Entity {
-    erstelltVon: string; //user.id
+export interface Workout extends Entity {
+    createdBy: string; //user.id
     name: string;
 }

@@ -1,6 +1,7 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import PathMatcher from './path-matcher.js';
+import { authenticationService } from '../authenticationService.js';
 
 export type RouteListener = (relUrl: string) => void;
 export type Unsubscribe = () => void;
@@ -46,15 +47,27 @@ export class Router {
     return this.withoutRootPath(location.pathname);
   }
 
-  select(routeHandlerMap: Record<string, RouteHandler>, defaultRouteHandler?: RouteHandler) {
+  select(routeHandlerMap: Record<string, RouteHandler>, noAuthenticationRoutHandlerMap: Record<string, RouteHandler>, defaultRouteHandler?: RouteHandler) {
     const matcher = new PathMatcher(`${this.getPath()}`);
-    for (const routePath of Reflect.ownKeys(routeHandlerMap)) {
+    
+    if(authenticationService.isAuthenticated()) {
+      for (const routePath of Reflect.ownKeys(routeHandlerMap)) {
+        if (typeof routePath !== 'string') continue;
+        const match = matcher.match(routePath);
+        if (match) {
+          return routeHandlerMap[routePath](match);
+        }
+      }
+    }
+
+    for (const routePath of Reflect.ownKeys(noAuthenticationRoutHandlerMap)) {
       if (typeof routePath !== 'string') continue;
       const match = matcher.match(routePath);
       if (match) {
-        return routeHandlerMap[routePath](match);
+        return noAuthenticationRoutHandlerMap[routePath](match);
       }
     }
+
     return defaultRouteHandler?.({});
   }
 
