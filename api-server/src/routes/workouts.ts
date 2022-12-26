@@ -1,3 +1,4 @@
+/* Autor: Pascal Thesing (FH Münster) */
 import express from "express";
 import { Workout } from "../models/workout/workout";
 import { GenericDAO } from "../models/generic.dao";
@@ -25,6 +26,26 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     res.status(201).json(workout);
 });
 
+router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
+  const workoutDAO: GenericDAO<Workout> = req.app.locals.workoutDAO;
+  const errors: string[] = [];
+
+  const sendErrorMessage = (message: string) => {
+      res.status(400).json({ message });
+  };
+
+  if (!hasRequiredFields(req.body, ['id', 'name'], errors)) {
+      return sendErrorMessage(errors.join('\n'));
+  }
+
+  const workout = await workoutDAO.update({
+    id: req.body.id,  
+    name: req.body.name,
+  })
+
+  res.status(201).json(workout);
+});
+
 router.get('/', authService.authenticationMiddleware, async (req, res) => {
         const workoutDAO: GenericDAO<Workout> = req.app.locals.workoutDAO;
 
@@ -36,7 +57,7 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
     const workoutDAO: GenericDAO<Workout> = req.app.locals.workoutDAO;
     const workout = await workoutDAO.findOne({ id: req.params.id });
 
-    res.status(200).json({ workoutDAO })
+    res.status(200).json({ data: workout })
 })
 
 router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 

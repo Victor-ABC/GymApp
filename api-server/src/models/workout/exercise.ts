@@ -8,8 +8,8 @@ type Nullable<T> = T | null;
  * Zusätzlich brauchen wir das start-Jahr und end-Jahr
  */
 export interface Exercise extends Entity {
-    trainingsPlanId: string;
-    machineId: Nullable<string>; //0..1 Machine e.G. Liegestütze hat keine Maschiene, Bankdrücken schon evtl. später mehr als 1 maschine -> dann mit "verbunddabelle"
+    workoutId: string;
+    // machineId: Nullable<string>; //0..1 Machine e.G. Liegestütze hat keine Maschiene, Bankdrücken schon evtl. später mehr als 1 maschine -> dann mit "verbunddabelle"
     name: string;
     timeToRest: number;
     weight: number;

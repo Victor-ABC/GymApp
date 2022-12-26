@@ -15,6 +15,7 @@ import { pathToFileURL } from 'node:url';
 import courses from './routes/courses.js';
 
 import workouts from './routes/workouts.js';
+import exercises from './routes/exercises.js';
 import memberincourses from './routes/member-in-courses.js';
 
 import { startWebSocketServer } from './ws-server.js';
@@ -28,6 +29,7 @@ function configureApp(app: Express) {
   app.use(corsService.corsMiddleware);
   app.use('/api/users', users);
   app.use('/api/workouts', workouts);
+  app.use('/api/exercises', exercises);
   app.use('/api/courses', courses);
   app.use('/api/memberincourses', memberincourses);
   app.use('/api/chat', chat);
