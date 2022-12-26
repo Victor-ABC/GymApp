@@ -18,14 +18,15 @@ class AppComponent extends LitElement {
   @query('#main') private mainFrame!: HTMLIonContentElement;
 
   @state() private linkItems = [
-    { title: 'Konto erstellen', routePath: 'users/sign-up' },
-    { title: 'Anmelden', routePath: 'users/sign-in' },
-    { title: 'Abmelden', routePath: 'users/sign-out' },
-    { title: 'Chat', routePath: 'chats/all' },
-    { title: 'Kurse', routePath: 'course'},
-    { title: 'Kurs erstellen', routePath: 'course/create'},
-    { title: 'Meine Kurse', routePath: 'course/bookings'}
-
+    { title: 'Home', routePath: 'home', authRequired: true },
+    { title: 'Chat', routePath: 'chats/all', authRequired: true },
+    { title: 'Kurse', routePath: 'course', authRequired: true },
+    { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true},
+    { title: 'Meine Kurse', routePath: 'course/bookings', authRequired: true},
+    { title: 'Meine Workouts', routePath: 'workouts', authRequired: true},
+    { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true },
+    { title: 'Konto erstellen', routePath: 'users/sign-up', authRequired: false },
+    { title: 'Anmelden', routePath: 'users/sign-in', authRequired: false },
   ];
 
   constructor() {
@@ -45,19 +46,22 @@ class AppComponent extends LitElement {
   renderRouterOutlet() {
     return router.select(
       {
-        'users/sign-in': () => html`<app-sign-in></app-sign-in>`,
-        'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
-        'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
+        'home': () => html`<app-home></app-home>`,
         'chats/all': () => html`<app-chats></app-chats>`,
         'chat/:id': params => html`<app-chat .id=${params.id}></app-chat>`,
         'course': () => html`<app-course-overview></app-course-overview>`,
         'course/create': () => html`<app-create-course></app-create-course>`,
-        'course/bookings': () => html`<app-course-bookings></app-course-bookings>`
+        'course/bookings': () => html`<app-course-bookings></app-course-bookings>`,
+        'workouts/create': () => html`<app-create-workout></app-create-workout>`
       },
-      () => html`<app-sign-in></app-sign-in>`
+      {
+        'users/sign-in': () => html`<app-sign-in></app-sign-in>`,
+        'users/sign-up': () => html`<app-sign-up></app-sign-up>`,
+        'users/sign-out': () => html`<app-sign-out></app-sign-out>`,
+      },
+      () => html`<app-overlay></app-overlay>`,
     );
   }
-
   /*
     Diese Methode sorgt dafür, dass 
     alle Seiten (=Custom-Elements/Lit-Elements) richtig angezeigt werden.

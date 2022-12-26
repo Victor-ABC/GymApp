@@ -11,13 +11,15 @@ import { User } from './models/users/user.js';
 import { Course } from './models/course/course.js';
 import config from '../config.json' assert { type: 'json' };
 import { MemberInCourse } from './models/course/member-in-course.js';
+import fetch from "node-fetch";
 
 import fs from 'node:fs'; //ggf. löschen, falls unbenutzt
-import { TrainingPlan } from './models/training_plan/training_plan.js';
-import { Exercise } from './models/training_plan/exercise.js';
-import { Machine } from './models/training_plan/machine.js';
+import { Workout } from './models/workout/workout.js';
+import { Exercise } from './models/workout/exercise.js';
+import { Machine } from './models/workout/machine.js';
 import { Message } from './models/users/message.js';
 import { Chat } from './models/users/chat.js';
+import { Z_FIXED } from 'node:zlib';
 const { MongoClient } = mongodb;
 const { Client } = pg;
 
@@ -54,29 +56,38 @@ export default async function startDB(app: Express) {
  * @returns
  */
 const getDemoUser = async () => {
+  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+
   return {
     name: 'demo',
     email: 'demo@demo.de',
     password: await bcrypt.hash('demo', 10),
-    isTrainer: false
+    isTrainer: false,
+    avatar: fig
   };
 };
 
 const getTimUser = async () => {
+  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+
   return {
     name: 'simon',
     email: 'simon@weis.de',
     password: await bcrypt.hash('demo', 10),
-    isTrainer: false
+    isTrainer: false,
+    avatar: fig
   };
 };
 
 const getSimonUser = async () => {
+  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+
   return {
     name: 'tim',
     email: 'tim@kress.de',
     password: await bcrypt.hash('demo', 10),
-    isTrainer: false
+    isTrainer: false,
+    avatar: fig
   };
 };
 
@@ -87,7 +98,7 @@ async function startInMemoryDB(app: Express) {
   (app.locals.userDAO as InMemoryGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new InMemoryGenericDAO<Course>();
   app.locals.memberInCourseDAO = new InMemoryGenericDAO<MemberInCourse>();
-  app.locals.trainingPlanDAO = new InMemoryGenericDAO<TrainingPlan>();
+  app.locals.workoutDAO = new InMemoryGenericDAO<Workout>();
   app.locals.exerciseDAO = new InMemoryGenericDAO<Exercise>();
   app.locals.machineDAO = new InMemoryGenericDAO<Machine>();
   app.locals.messageDAO = new InMemoryGenericDAO<Message>();
@@ -103,10 +114,10 @@ async function startMongoDB(app: Express) {
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new MongoGenericDAO<Course>(db, 'course');
   app.locals.memberInCourseDAO = new MongoGenericDAO<MemberInCourse>(db, 'memberInCourse');
-  app.locals.trainingPlanDAO = new MongoGenericDAO<TrainingPlan>(db, 'trainingPlan');
+  app.locals.workoutDAO = new MongoGenericDAO<Workout>(db, 'workouts');
   app.locals.exerciseDAO = new MongoGenericDAO<Exercise>(db, 'exercise');
-  app.locals.machineDAO = new MongoGenericDAO<Machine>(db, 'machine');
-  app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'message');
+  app.locals.machineDAO = new MongoGenericDAO<Machine>(db, 'machines');
+  app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'messages');
   return async () => await client.close();
 }
 
@@ -133,7 +144,7 @@ async function startPsql(app: Express) {
   (app.locals.userDAO as PsqlGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new PsqlGenericDAO<Course>(client!, 'course');
   app.locals.memberInCourseDAO = new PsqlGenericDAO<MemberInCourse>(client!, 'memberInCourse');
-  app.locals.trainingPlanDAO = new PsqlGenericDAO<TrainingPlan>(client!, 'trainingPlan');
+  app.locals.workoutDAO = new PsqlGenericDAO<Workout>(client!, 'trainingPlan');
   app.locals.exerciseDAO = new PsqlGenericDAO<Exercise>(client!, 'exercise');
   app.locals.machineDAO = new PsqlGenericDAO<Machine>(client!, 'machine');
   app.locals.messageDAO = new PsqlGenericDAO<Message>(client!, 'message');

@@ -9,6 +9,11 @@ import './components/app/tabs.ts';
 import './components/widgets/header/header.ts';
 import './components/widgets/notification/notification.ts';
 //Pages
+import './components/home/home.ts';
+import './components/overlay/overlay.ts';
+
+import './components/create-workout/create-workout.ts';
+
 import './components/sign-in/sign-in.ts';
 import './components/sign-out/sign-out.ts';
 import './components/sign-up/sign-up.ts';
