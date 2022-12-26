@@ -5,6 +5,8 @@ import { customElement, state, query } from 'lit/decorators.js';
 import { PageMixin } from '../page.mixin.js';
 import { authenticationService } from '../../authenticationService.js';
 import { router } from '../../router/router.js';
+import { httpClient } from '../../http-client.js';
+import { repeat } from 'lit/directives/repeat.js';
 
 import componentStyle from './home.css';
 
@@ -30,6 +32,9 @@ class HomeComponent extends PageMixin(LitElement) {
 
   async firstUpdated() {
       this.user = authenticationService.getUser();
+
+      const responseBookings = await httpClient.get('workouts');
+      this.myWorkouts = (await responseBookings.json()).results;
   }
 
   protected createRenderRoot(): Element | ShadowRoot {
@@ -87,6 +92,38 @@ class HomeComponent extends PageMixin(LitElement) {
 
 
           <ion-card-content>
+          <ion-list>
+          ${repeat(
+            this.myWorkouts,
+            workout => workout.id,
+            workout => html`
+            <ion-item-sliding>
+              <ion-item>
+              <ion-thumbnail slot="start">
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-label>${workout.name}</ion-label>
+
+              <ion-button fill="clear" id="click-trigger-${workout.id}">
+                <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+              </ion-button>
+              <ion-popover trigger="click-trigger-${workout.id}" trigger-action="click" show-backdrop="false">
+
+              <ion-list mode="ios">
+              <ion-item button="true" detail="false" @click="${() => this.deleteWorkout(workout.id)}" color="danger">Löschen</ion-item>
+              </ion-list>
+
+              </ion-popover>
+            </ion-item>
+
+            <ion-item-options side="end">
+              <ion-item-option color="danger" @click="${() => this.deleteWorkout(workout.id)}">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>                     
+            `
+        )}
           </ion-card-content>
         </ion-card>
       </ion-content>
@@ -95,5 +132,11 @@ class HomeComponent extends PageMixin(LitElement) {
 
   openCreateWorkout() {
     router.navigate('workouts/create');
+  }
+
+  async deleteWorkout(workoutId: string) {
+    await httpClient.delete(`workouts/${workoutId}`);
+    await this.firstUpdated();
+    this.requestUpdate();
   }
 }
