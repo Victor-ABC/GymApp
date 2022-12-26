@@ -39,6 +39,12 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
     res.status(200).json({ workoutDAO })
 })
 
+router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
+  const workoutDAO: GenericDAO<Workout> = req.app.locals.workoutDAO;
+  await workoutDAO.delete(req.params.id);
+  res.status(200).end(); 
+});
+
 function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
     let hasErrors = false;
     requiredFields.forEach(fieldName => {

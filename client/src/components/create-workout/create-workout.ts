@@ -64,7 +64,7 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
             try {
                 await httpClient.post('workouts', workout);
-                // router.navigate('/workouts');
+                router.navigate('home');
                 notificationService.showNotification(`Der Kurs ${workout.name} wurde erfolgreich erstellt!` , "info");
             } catch (error) {
                 notificationService.showNotification((error as Error).message , "error");
