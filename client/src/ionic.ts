@@ -19,6 +19,7 @@ Object.keys(IonIcons).forEach(key => {
     icons[formattedKey] = IonIcons[key];
 });
 
+
 import '@ionic/core/css/core.css'; // core ist die Minimalanforderung
 
 initialize();

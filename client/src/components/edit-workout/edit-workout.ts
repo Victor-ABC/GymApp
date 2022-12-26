@@ -9,14 +9,17 @@ import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
 
-@customElement('app-create-workout')
-class CreateWorkoutComponent extends PageMixin(LitElement){
+@customElement('app-edit-workout')
+class EditWorkoutComponent extends PageMixin(LitElement){
 
 
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
 
-    @property({ reflect: true }) exercies: object[] = [{}];
+    @property({ reflect: true }) exercises: object[] = [{}];
+
+    @property({ reflect: true }) workout: object = {};
+
 
     protected createRenderRoot(): Element | ShadowRoot {
         return this;
@@ -24,6 +27,15 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
     render() {
         return this.buildBody();
+    }
+
+    async firstUpdated() {
+        const workoutResponse = await httpClient.get('/workouts/' + this.id);
+        this.workout = (await workoutResponse.json()).data; 
+  
+        console.log(this.workout);
+        const response = await httpClient.get('/exercises/workout/' + this.id);
+        this.exercises = (await response.json()).results; 
     }
 
 
@@ -40,13 +52,13 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
                     <ion-card-content>
                         <ion-item>
                             <ion-label position="fixed">Workoutname:</ion-label>
-                            <ion-input type="text" required placeholder="Name vergeben" id="name"></ion-input>
+                            <ion-input @change=${this.adjustName} type="text" required placeholder="Name vergeben" id="name" value=${this.workout.name}></ion-input>
                         </ion-item>
                     </ion-card-content>
                 </ion-card>
 
                 ${repeat(
-                    this.exercies,
+                    this.exercises,
                     (exercise, index) => html`
                     <ion-card>
                     <ion-card-content>
@@ -84,7 +96,7 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
                     </ion-row>
                     <ion-row>
                     <ion-col>
-                        <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Workout erstellen</ion-button>
+                        <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Workout updaten</ion-button>
                     </ion-col>
                 </ion-row>
 
@@ -94,21 +106,30 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
         `;
     }
 
-    onInput(event, index) {
+    adjustName(event) {
         const inputEl = event.target as HTMLInputElement;
-        this.exercies[index][inputEl.offsetParent.id] = inputEl.value;
-
-        console.log(this.exercies);
+        this.workout.name = inputEl.value;
     }
 
-    removeExercise(index: number) {
-        this.exercies.splice(index, 1);
+    onInput(event, index) {
+        const inputEl = event.target as HTMLInputElement;
+        this.exercises[index][inputEl.offsetParent.id] = inputEl.value;
+
+        console.log(this.exercises);
+    }
+
+    async removeExercise(index: number) {
+        const item = this.exercises.splice(index, 1);
+
+        if(item.id) {
+            await httpClient.delete('exercises/' + item.id);
+        }
 
         this.requestUpdate();
     }
 
     addExercise() {
-        this.exercies.push({});
+        this.exercises.push({});
 
         this.requestUpdate();
     }
@@ -116,19 +137,19 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
     async submit() {
         if (this.isFormValid()) {}
 
-        const workoutData = {
-            name: this.nameElement.value,
-        };
-
-        const workoutResponse = await httpClient.post('workouts', workoutData);
+        const workoutResponse = await httpClient.patch('workouts/' + this.workout.id, this.workout);
 
         const workout = (await workoutResponse.json());
-        this.exercies.map(exercise => {
-            httpClient.post('exercises', {...exercise, workoutId: workout.id});
+        this.exercises.map(exercise => {
+            if(exercise.id) {
+                httpClient.patch('exercises/' + exercise.id , exercise);
+            } else {
+                httpClient.post('exercises', {...exercise, workoutId: this.workout.id});
+            }
         })
 
         router.navigate('home');
-        notificationService.showNotification(`Der Kurs ${workout.name} wurde erfolgreich erstellt!` , "info");
+        notificationService.showNotification(`Der Kurs ${this.workout.name} wurde erfolgreich aktuallisiert!` , "info");
     }
 
     isFormValid() {

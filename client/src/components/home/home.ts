@@ -98,7 +98,7 @@ class HomeComponent extends PageMixin(LitElement) {
             workout => workout.id,
             workout => html`
             <ion-item-sliding>
-              <ion-item>
+              <ion-item button="true" @click="${() => this.openWorkout(workout.id)}">
               <ion-thumbnail slot="start">
                 <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
               </ion-thumbnail>
@@ -138,5 +138,9 @@ class HomeComponent extends PageMixin(LitElement) {
     await httpClient.delete(`workouts/${workoutId}`);
     await this.firstUpdated();
     this.requestUpdate();
+  }
+
+  openWorkout(workoutId: string) {
+    router.navigate(`workouts/${workoutId}`);
   }
 }
