@@ -72,6 +72,10 @@ class EditWorkoutComponent extends PageMixin(LitElement){
                         </ion-item>
                         <ion-item lines="none">
                             <ion-label position="fixed">Sätze</ion-label>
+                            <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="sets" value="${exercise.sets}"></ion-input>
+                        </ion-item>
+                        <ion-item lines="none">
+                            <ion-label position="fixed">Wiederholungen</ion-label>
                             <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="repetitions" value="${exercise.repetitions}"></ion-input>
                         </ion-item>
                         <ion-item lines="none">
@@ -114,8 +118,6 @@ class EditWorkoutComponent extends PageMixin(LitElement){
     onInput(event, index) {
         const inputEl = event.target as HTMLInputElement;
         this.exercises[index][inputEl.offsetParent.id] = inputEl.value;
-
-        console.log(this.exercises);
     }
 
     async removeExercise(index: number) {

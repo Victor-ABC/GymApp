@@ -14,6 +14,9 @@ import './components/overlay/overlay.ts';
 
 import './components/create-workout/create-workout.ts';
 
+
+
+import './components/do-workout/do-workouts.ts';
 import './components/edit-workout/edit-workout.ts';
 import './components/workout-detail/workout-detail.ts';
 import './components/sign-in/sign-in.ts';

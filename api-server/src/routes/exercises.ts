@@ -25,6 +25,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         timeToRest: req.body.timeToRest,
         weight: req.body.weight,
         repetitions: req.body.repetitions,
+        sets: req.body.sets
     })
     res.status(201).json(exercies);
 });
@@ -48,6 +49,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       timeToRest: req.body.timeToRest,
       weight: req.body.weight,
       repetitions: req.body.repetitions,
+      sets: req.body.sets
   })
   res.status(201).json(exercies);
 });

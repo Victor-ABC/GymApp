@@ -54,6 +54,7 @@ class AppComponent extends LitElement {
         'course/bookings': () => html`<app-course-bookings></app-course-bookings>`,
         'workouts/create': () => html`<app-create-workout></app-create-workout>`,
         'workouts/edit/:id': params => html`<app-edit-workout .id=${params.id}></app-create-workout>`,
+        'workouts/do/:id': params => html`<app-do-workout .id=${params.id}></app-do-workout>`,
         'workouts/:id': params => html`<app-workout-detail .id=${params.id}></app-workout-detail>`
       },
       {

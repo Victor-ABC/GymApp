@@ -34,8 +34,6 @@ class HomeComponent extends PageMixin(LitElement) {
       const workoutResponse = await httpClient.get('/workouts/' + this.id);
       this.workout = (await workoutResponse.json()).data; 
 
-      console.log(this.workout);
-
       const response = await httpClient.get('/exercises/workout/' + this.id);
       this.exercises = (await response.json()).results; 
   }
@@ -52,6 +50,7 @@ class HomeComponent extends PageMixin(LitElement) {
           <ion-card-content>
               <ion-item>
               <ion-label>${exercise.name}</ion-label>
+              </ion-item>
           </ion-card-content>
           </ion-card>                  
           `
@@ -59,7 +58,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
       <ion-row>
         <ion-col>
-            <ion-button color="primary" type="button" expand="block">Training starten</ion-button>
+            <ion-button @click="${this.doTraining}" color="primary" type="button" expand="block">Training starten</ion-button>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -78,5 +77,9 @@ class HomeComponent extends PageMixin(LitElement) {
 
   onEditTraining() {
     router.navigate('workouts/edit/'+ this.workout.id);
+  }
+
+  doTraining() {
+    router.navigate('workouts/do/'+ this.workout.id);
   }
 }
