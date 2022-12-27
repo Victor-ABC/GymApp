@@ -60,6 +60,10 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
                         </ion-item>
                         <ion-item lines="none">
                             <ion-label position="fixed">Sätze</ion-label>
+                            <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="sets" value="${exercise.sets}"></ion-input>
+                        </ion-item>
+                        <ion-item lines="none">
+                            <ion-label position="fixed">Wiederholungen</ion-label>
                             <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="repetitions" value="${exercise.repetitions}"></ion-input>
                         </ion-item>
                         <ion-item lines="none">

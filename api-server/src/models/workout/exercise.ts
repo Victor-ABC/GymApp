@@ -14,4 +14,5 @@ export interface Exercise extends Entity {
     timeToRest: number;
     weight: number;
     repetitions: number;
+    sets: number
 }

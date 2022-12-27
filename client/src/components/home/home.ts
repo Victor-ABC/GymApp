@@ -98,30 +98,33 @@ class HomeComponent extends PageMixin(LitElement) {
             workout => workout.id,
             workout => html`
             <ion-item-sliding>
-              <ion-item button="true" @click="${() => this.openWorkout(workout.id)}">
-              <ion-thumbnail slot="start">
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-label>${workout.name}</ion-label>
+              <ion-item button="true">
+                <ion-thumbnail slot="start">
+                  <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                </ion-thumbnail>
+                <ion-label>${workout.name}</ion-label>
 
-              <ion-button fill="clear" id="click-trigger-${workout.id}">
-                <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
-              </ion-button>
-              <ion-popover trigger="click-trigger-${workout.id}" trigger-action="click" show-backdrop="false">
+                <ion-button fill="clear" @click="${() => this.openWorkout(workout.id)}">
+                  Open
+                </ion-button>
+                <ion-button fill="clear" id="click-trigger-${workout.id}">
+                  <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                </ion-button>
+                <ion-popover trigger="click-trigger-${workout.id}" trigger-action="click" show-backdrop="false">
 
-              <ion-list mode="ios">
-              <ion-item button="true" detail="false" @click="${() => this.deleteWorkout(workout.id)}" color="danger">Löschen</ion-item>
-              </ion-list>
+                  <ion-list mode="ios">
+                  <ion-item button="true" detail="false" @click="${() => this.deleteWorkout(workout.id)}" color="danger">Löschen</ion-item>
+                  </ion-list>
 
-              </ion-popover>
-            </ion-item>
+                </ion-popover>
+              </ion-item>
 
-            <ion-item-options side="end">
-              <ion-item-option color="danger" @click="${() => this.deleteWorkout(workout.id)}">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>                     
+              <ion-item-options side="end">
+                <ion-item-option color="danger" @click="${() => this.deleteWorkout(workout.id)}">
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>                     
             `
         )}
           </ion-card-content>
