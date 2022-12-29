@@ -16,6 +16,15 @@ interface User {
     avatar: string | null
 }
 
+interface CourseBooking {
+  id: string;
+  courseId: string;
+  name: string;
+  dayOfWeek: string;
+  startTime: string;
+  bookingId: string;
+}
+
 interface Workout {
     name: string
 }
@@ -26,6 +35,7 @@ class HomeComponent extends PageMixin(LitElement) {
   static styles = [componentStyle];
 
   @state() private myWorkouts: Workout[] = [];
+  @state() private myCourses: CourseBooking[] = [];
 
 
   @state() private user: object = {};
@@ -33,8 +43,13 @@ class HomeComponent extends PageMixin(LitElement) {
   async firstUpdated() {
       this.user = authenticationService.getUser();
 
-      const responseBookings = await httpClient.get('workouts');
-      this.myWorkouts = (await responseBookings.json()).results;
+      
+
+      const responseBookings = await httpClient.get('/memberincourses');
+      this.myCourses = (await responseBookings.json()).results;
+
+      const responseWorkouts = await httpClient.get('workouts');
+      this.myWorkouts = (await responseWorkouts.json()).results;
   }
 
   protected createRenderRoot(): Element | ShadowRoot {
@@ -60,18 +75,50 @@ class HomeComponent extends PageMixin(LitElement) {
         <ion-card>
             <ion-card-header>
               <ion-row class="ion-justify-content-between ion-align-items-center">
-              <ion-col>
-              <ion-card-title>Deine Kurse:</ion-card-title>
-              </ion-col>
-              <ion-col size="auto">
-
-              <ion-button @click="${this.openCreateCourse}">
-              <ion-icon slot="icon-only" name="add"></ion-icon>
-              </ion-button>
-              </ion-col>
+                <ion-col>
+                  <ion-card-title>Deine Kurse:</ion-card-title>
+                </ion-col>
+                <ion-col size="auto">
+                  <ion-button @click="${this.openCreateCourse}">
+                    <ion-icon slot="icon-only" name="add"></ion-icon>
+                  </ion-button>
+                </ion-col>
               </ion-row>
             </ion-card-header>
             <ion-card-content>
+              <ion-list>
+                ${repeat(
+                  this.myCourses,
+                  course => course.id,
+                  course => html`
+                    <ion-item-sliding>
+                      <ion-item button="true">
+                        <ion-thumbnail slot="start">
+                          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                        </ion-thumbnail>
+                        <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
+
+                        <ion-button fill="clear" @click="${() => this.openCourse(course.id)}">Open</ion-button>
+                        <ion-button fill="clear" id="click-trigger-${course.id}">
+                          <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                        </ion-button>
+                        <ion-popover trigger="click-trigger-${course.id}" trigger-action="click" show-backdrop="false">
+                          <ion-list mode="ios">
+                            <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
+                          </ion-list>
+                        </ion-popover>
+                      </ion-item>
+
+                      <ion-item-options side="end">
+                        <ion-item-option color="danger" @click="${() => this.deleteCourseBooking(course.bookingId)}">
+                          <ion-icon slot="icon-only" name="trash"></ion-icon>
+                        </ion-item-option>
+                      </ion-item-options>
+
+                    </ion-item-sliding>
+                  `
+                )}
+              </ion-list>
             </ion-card-content>
         </ion-card>
 
@@ -147,7 +194,17 @@ class HomeComponent extends PageMixin(LitElement) {
     this.requestUpdate();
   }
 
+  async deleteCourseBooking(bookingId: string) {
+    await httpClient.delete('/memberincourses/' + bookingId);
+    await this.firstUpdated();
+    this.requestUpdate();
+  }
+
   openWorkout(workoutId: string) {
     router.navigate(`workouts/${workoutId}`);
+  }
+
+  openCourse(courseId: string) {
+    router.navigate(`course/${courseId}`);
   }
 }

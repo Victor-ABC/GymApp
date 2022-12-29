@@ -16,6 +16,7 @@ import './components/create-workout/create-workout.ts';
 
 
 
+import './components/course-detail/course-detail.ts';
 import './components/do-workout/do-workouts.ts';
 import './components/edit-workout/edit-workout.ts';
 import './components/workout-detail/workout-detail.ts';
