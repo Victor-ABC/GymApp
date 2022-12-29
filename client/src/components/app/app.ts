@@ -20,8 +20,7 @@ class AppComponent extends LitElement {
   @state() private linkItems = [
     { title: 'Home', routePath: 'home', authRequired: true },
     { title: 'Chat', routePath: 'chats/all', authRequired: true },
-    { title: 'Kurse', routePath: 'course', authRequired: true },
-    { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true},
+    { title: 'Alle Kurse', routePath: 'course', authRequired: true },
     { title: 'Meine Kurse', routePath: 'course/bookings', authRequired: true},
     { title: 'Meine Workouts', routePath: 'workouts', authRequired: true},
     { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true },
@@ -52,6 +51,7 @@ class AppComponent extends LitElement {
         'course': () => html`<app-course-overview></app-course-overview>`,
         'course/create': () => html`<app-create-course></app-create-course>`,
         'course/bookings': () => html`<app-course-bookings></app-course-bookings>`,
+        'course/:id': params => html`<app-course-detail .id=${params.id}></app-course-detail>`,
         'workouts/create': () => html`<app-create-workout></app-create-workout>`,
         'workouts/edit/:id': params => html`<app-edit-workout .id=${params.id}></app-create-workout>`,
         'workouts/do/:id': params => html`<app-do-workout .id=${params.id}></app-do-workout>`,

@@ -32,16 +32,8 @@ class CourseOverviewComponent extends PageMixin(LitElement){
     @state() private courses: Course[] = [];
 
     async firstUpdated() {
-        try {
-          const response = await httpClient.get('/courses');
-          this.courses = (await response.json()).results;
-        } catch (e) {
-            if ((e as { statusCode: number }).statusCode === 401) {
-              router.navigate('/users/sign-in');
-            } else {
-              notificationService.showNotification((e as Error).message, 'error');
-            }
-        }
+        const response = await httpClient.get('/courses');
+        this.courses = (await response.json()).results;
     }
 
     render() {
