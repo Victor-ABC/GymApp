@@ -65,7 +65,7 @@ class HomeComponent extends PageMixin(LitElement) {
               </ion-col>
               <ion-col size="auto">
 
-              <ion-button>
+              <ion-button @click="${this.openCreateCourse}">
               <ion-icon slot="icon-only" name="add"></ion-icon>
               </ion-button>
               </ion-col>
@@ -135,6 +135,10 @@ class HomeComponent extends PageMixin(LitElement) {
 
   openCreateWorkout() {
     router.navigate('workouts/create');
+  }
+
+  openCreateCourse() {
+    router.navigate('course/create');
   }
 
   async deleteWorkout(workoutId: string) {
