@@ -101,7 +101,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
                                             <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                                         </ion-item>
                                         <ion-item lines="none">
-                                            <ion-button fill="outline" type="button" @click="${() => this.removeCourse(course)}">Remove Course</ion-button>
+                                            <ion-button color="danger" fill="outline" type="button" @click="${() => this.removeCourse(course)}">Buchung stornieren</ion-button>
                                         </ion-item>
                                         
                                     </ion-card-content>

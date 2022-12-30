@@ -36,6 +36,10 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         this.courses = (await response.json()).results;
     }
 
+    protected createRenderRoot(): Element | ShadowRoot {
+        return this;
+      }
+
     render() {
         return this.buildBody();
     }
@@ -45,48 +49,41 @@ class CourseOverviewComponent extends PageMixin(LitElement){
             <ion-content class="ion-padding">
                 <h1>Course Overview</h1>
                 <div class="courses">
-                    ${repeat(
-                        this.courses,
-                        course => course.id,
-                        course => html`
-                            <div class="course">
-                                <ion-card>
-                                    <ion-card-header>
-                                        <ion-card-title>${course.name}</ion-card-title>
-                                    </ion-card-header>
-                                    <ion-card-content>
-                                        <ion-item lines="full">
-                                            <ion-label>Beschreibung: ${course.description}</ion-label>
-                                            <ion-icon slot="start" name="document-text-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="full">
-                                            <ion-label>Wochentag: ${course.dayOfWeek}</ion-label>
-                                            <ion-icon slot="start" name="calendar-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="full">
-                                            <ion-label>Beginn: ${course.startTime} Uhr</ion-label>
-                                            <ion-icon slot="start" name="time-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="full">
-                                            <ion-label>Ende: ${course.endTime} Uhr</ion-label>
-                                            <ion-icon slot="start" name="time-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="full">
-                                            <ion-label>Erster Termin: ${format(new Date(course.startDate), 'dd.MM.yyyy')}</ion-label>
-                                            <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="full">
-                                            <ion-label>Letzter Termin: ${format(new Date(course.endDate), 'dd.MM.yyyy')}</ion-label>
-                                            <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                                        </ion-item>
-                                        <ion-item lines="none">
-                                            <ion-button fill="outline" type="button" @click="${() => this.bookCourse(course)}">Book Course</ion-button>
-                                        </ion-item>
-                                    </ion-card-content>
-                                </ion-card>
-                            </div>
-                        `
-                    )}
+                    <ion-card>
+                        <ion-card-content>
+                            <ion-list>
+                                ${repeat(
+                                    this.courses,
+                                    course => course.id,
+                                    course => html`
+                                        <ion-item-sliding>
+                                            <ion-item>
+                                                <ion-thumbnail slot="start">
+                                                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                                                </ion-thumbnail>
+                                                <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
+                                                <ion-button fill="clear" @click="${() => this.openCourse(course.id)}">Details</ion-button>
+                                                <ion-button fill="clear" id="click-trigger-${course.id}">
+                                                    <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                                                </ion-button>
+                                                <ion-popover trigger="click-trigger-${course.id}" trigger-action="click" show-backdrop="false">
+                                                    <ion-list mode="ios">
+                                                        <ion-item button="true" detail="false" @click="${() => this.bookCourse(course)}">Kurs buchen</ion-item>
+                                                    </ion-list>
+                                                </ion-popover>
+                                            </ion-item>
+
+                                            <ion-item-options side="end">
+                                                <ion-item-option @click="${() => this.bookCourse(course)}">
+                                                <ion-icon slot="icon-only" name="add-circle-outline"></ion-icon>
+                                                </ion-item-option>
+                                            </ion-item-options>
+                                        </ion-item-sliding>
+                                    `
+                                )}
+                            </ion-list>
+                        </ion-card-content>
+                    </ion-card>
                 </div>
             </ion-content>
         `;
@@ -104,4 +101,8 @@ class CourseOverviewComponent extends PageMixin(LitElement){
             notificationService.showNotification((error as Error).message , "error");
         }
     }
+
+    openCourse(courseId: string) {
+        router.navigate(`course/${courseId}`);
+      }
 }

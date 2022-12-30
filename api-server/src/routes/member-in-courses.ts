@@ -70,6 +70,31 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
     res.json({ results: bookedCourses});
 })
 
+router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
+    const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
+    const bookedCourseDAO: GenericDAO<Course> = req.app.locals.courseDAO;
+    const bookedCourse: BookedCourse = {};
+
+    const filterMiC: Partial<MemberInCourse> = { id: req.params.id };
+    const memberInCourse = await memberInCourseDAO.findOne(filterMiC);
+    if(memberInCourse) {
+            const filterCourseId: Partial<Course> = { id: memberInCourse.courseId };
+            const course = await bookedCourseDAO.findOne(filterCourseId)
+            
+            bookedCourse.id = course?.id;
+            bookedCourse.name = course?.name,
+            bookedCourse.description = course?.description,
+            bookedCourse.dayOfWeek = course?.dayOfWeek,
+            bookedCourse.startDate = course?.startDate,
+            bookedCourse.endDate = course?.endDate,
+            bookedCourse.startTime = course?.startTime,
+            bookedCourse.endTime = course?.endTime,
+            bookedCourse.bookingDate = format(new Date(memberInCourse.createdAt), 'dd.MM.yyyy HH:mm'),
+            bookedCourse.bookingId = memberInCourse.id
+    }
+    res.json({ result: bookedCourse});
+})
+
 router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
     const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
     await memberInCourseDAO.delete(req.params.id);
