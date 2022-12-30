@@ -35,7 +35,7 @@ class HomeComponent extends PageMixin(LitElement) {
   static styles = [componentStyle];
 
   @state() private myWorkouts: Workout[] = [];
-  @state() private myCourses: CourseBooking[] = [];
+  @state() private myCourseBookings: CourseBooking[] = [];
 
 
   @state() private user: object = {};
@@ -46,7 +46,7 @@ class HomeComponent extends PageMixin(LitElement) {
       
 
       const responseBookings = await httpClient.get('/memberincourses');
-      this.myCourses = (await responseBookings.json()).results;
+      this.myCourseBookings = (await responseBookings.json()).results;
 
       const responseWorkouts = await httpClient.get('workouts');
       this.myWorkouts = (await responseWorkouts.json()).results;
@@ -76,7 +76,7 @@ class HomeComponent extends PageMixin(LitElement) {
             <ion-card-header>
               <ion-row class="ion-justify-content-between ion-align-items-center">
                 <ion-col>
-                  <ion-card-title>Deine Kurse:</ion-card-title>
+                  <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
                 </ion-col>
                 <ion-col size="auto">
                   <ion-button @click="${this.openCreateCourse}">
@@ -88,7 +88,7 @@ class HomeComponent extends PageMixin(LitElement) {
             <ion-card-content>
               <ion-list>
                 ${repeat(
-                  this.myCourses,
+                  this.myCourseBookings,
                   course => course.id,
                   course => html`
                     <ion-item-sliding>
@@ -98,11 +98,11 @@ class HomeComponent extends PageMixin(LitElement) {
                         </ion-thumbnail>
                         <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
 
-                        <ion-button fill="clear" @click="${() => this.openCourse(course.id)}">Open</ion-button>
-                        <ion-button fill="clear" id="click-trigger-${course.id}">
+                        <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
+                        <ion-button fill="clear" id="click-trigger-${course.bookingId}">
                           <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
                         </ion-button>
-                        <ion-popover trigger="click-trigger-${course.id}" trigger-action="click" show-backdrop="false">
+                        <ion-popover trigger="click-trigger-${course.bookingId}" trigger-action="click" show-backdrop="false">
                           <ion-list mode="ios">
                             <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
                           </ion-list>
@@ -185,7 +185,7 @@ class HomeComponent extends PageMixin(LitElement) {
   }
 
   openCreateCourse() {
-    router.navigate('course/create');
+    router.navigate('course');
   }
 
   async deleteWorkout(workoutId: string) {
@@ -204,7 +204,7 @@ class HomeComponent extends PageMixin(LitElement) {
     router.navigate(`workouts/${workoutId}`);
   }
 
-  openCourse(courseId: string) {
-    router.navigate(`course/${courseId}`);
+  openCourse(courseBookingId: string) {
+    router.navigate(`coursebookings/${courseBookingId}`);
   }
 }
