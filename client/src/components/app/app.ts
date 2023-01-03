@@ -75,8 +75,8 @@ class AppComponent extends LitElement {
   */
   buildBrowser() {
     return html`
-      <app-notification id='notification'></app-notification>
       <app-header title="${this.appTitle}" .linkItems=${this.linkItems}></app-header>
+      <app-notification id='notification'></app-notification>
       <div class="container">
           ${this.renderRouterOutlet()}
       </div>
