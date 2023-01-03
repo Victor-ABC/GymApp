@@ -66,7 +66,11 @@ class HomeComponent extends PageMixin(LitElement) {
 
         <ion-card>
             <ion-card-header>
-                <ion-card-title>Willkommen zurück ${this.user.name} <img src="data:image/png;base64, ${this.user.avatar}"></ion-card-title> 
+                <ion-card-title>Willkommen zurück ${this.user.name} <img src="data:image/png;base64, ${this.user.avatar}">
+                ${authenticationService.isTrainer() ?
+                  html`(Trainer)` : html`(Kunde)`
+                }
+                </ion-card-title> 
             </ion-card-header>
             <ion-card-content>
             </ion-card-content>

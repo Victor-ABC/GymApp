@@ -1,5 +1,6 @@
 /* Autor: Pascal Thesing (FH Münster) */
 
+import { User } from "./interfaces/User";
 
 const storageKey = 'USER_STORAGE_KEY';
 
@@ -15,11 +16,15 @@ export class AuthenticationService  {
     return false
   }
 
+  isTrainer() {
+    return this.getUser().isTrainer;
+  }
+
   resetUserStorage() {
     localStorage.removeItem(storageKey);
   }
 
-  getUser(): object {
+  getUser(): User {
     if(!this.isAuthenticated()) {
       throw Error('You must be authenticated to set the user.')
     }
@@ -33,7 +38,7 @@ export class AuthenticationService  {
     return JSON.parse(user);
   }
 
-  storeUser(user: object) {
+  storeUser(user: User) {
     if(!this.isAuthenticated()) {
       throw Error('You must be authenticated to set the user.')
     }
