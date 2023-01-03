@@ -27,8 +27,6 @@ export default async function startDB(app: Express) {
   switch (config.db.use) {
     case 'mongodb':
       return await startMongoDB(app);
-    case 'psql':
-      return await startPsql(app);
     default:
       return await startInMemoryDB(app);
   }
@@ -67,6 +65,19 @@ const getDemoUser = async () => {
   };
 };
 
+const getTrainerUser = async () => {
+  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+
+  return {
+    name: 'Trainer',
+    email: 'trainer@demo.de',
+    password: await bcrypt.hash('demo', 10),
+    isTrainer: true,
+    avatar: fig
+  };
+};
+
+
 const getTimUser = async () => {
   const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
 
@@ -94,6 +105,7 @@ const getSimonUser = async () => {
 async function startInMemoryDB(app: Express) {
   app.locals.userDAO = new InMemoryGenericDAO<User>();
   (app.locals.userDAO as InMemoryGenericDAO<User>).create(await getDemoUser());
+  (app.locals.userDAO as InMemoryGenericDAO<User>).create(await getTrainerUser());
   (app.locals.userDAO as InMemoryGenericDAO<User>).create(await getTimUser());
   (app.locals.userDAO as InMemoryGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new InMemoryGenericDAO<Course>();
@@ -110,6 +122,7 @@ async function startMongoDB(app: Express) {
   const db = client.db('taskman');
   app.locals.userDAO = new MongoGenericDAO<User>(db, 'users');
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getDemoUser());
+  (app.locals.userDAO as MongoGenericDAO<User>).create(await getTrainerUser());
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getTimUser());
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new MongoGenericDAO<Course>(db, 'course');
@@ -134,38 +147,5 @@ async function connectToMongoDB() {
     process.exit(1);
   }
   return client;
-}
-
-async function startPsql(app: Express) {
-  const client = await connectToPsql();
-  app.locals.userDAO = new PsqlGenericDAO<User>(client!, 'users');
-  (app.locals.userDAO as PsqlGenericDAO<User>).create(await getDemoUser());
-  (app.locals.userDAO as PsqlGenericDAO<User>).create(await getTimUser());
-  (app.locals.userDAO as PsqlGenericDAO<User>).create(await getSimonUser());
-  app.locals.courseDAO = new PsqlGenericDAO<Course>(client!, 'course');
-  app.locals.memberInCourseDAO = new PsqlGenericDAO<MemberInCourse>(client!, 'memberInCourse');
-  app.locals.workoutDAO = new PsqlGenericDAO<Workout>(client!, 'trainingPlan');
-  app.locals.exerciseDAO = new PsqlGenericDAO<Exercise>(client!, 'exercise');
-  app.locals.machineDAO = new PsqlGenericDAO<Machine>(client!, 'machine');
-  app.locals.messageDAO = new PsqlGenericDAO<Message>(client!, 'message');
-  return async () => await client.end();
-}
-
-async function connectToPsql() {
-  const client = new Client({
-    user: config.db.connect.user,
-    host: config.db.connect.host,
-    database: config.db.connect.database,
-    password: config.db.connect.password,
-    port: config.db.connect.port.psql
-  });
-
-  try {
-    await client.connect();
-    return client;
-  } catch (err) {
-    console.log('Could not connect to PostgreSQL: ', err);
-    process.exit(1);
-  }
 }
 
