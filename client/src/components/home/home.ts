@@ -63,7 +63,6 @@ class HomeComponent extends PageMixin(LitElement) {
   buildBody() {
     return html`
       <ion-content class="ion-padding">
-
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Willkommen zurück ${this.user.name} <img src="data:image/png;base64, ${this.user.avatar}">
@@ -76,57 +75,62 @@ class HomeComponent extends PageMixin(LitElement) {
             </ion-card-content>
         </ion-card>
 
-        <ion-card>
-            <ion-card-header>
-              <ion-row class="ion-justify-content-between ion-align-items-center">
-                <ion-col>
-                  <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
-                </ion-col>
-                <ion-col size="auto">
-                  <ion-button @click="${this.openCreateCourse}">
-                    <ion-icon slot="icon-only" name="add"></ion-icon>
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                ${repeat(
-                  this.myCourseBookings,
-                  course => course.id,
-                  course => html`
-                    <ion-item-sliding>
-                      <ion-item button="true">
-                        <ion-thumbnail slot="start">
-                          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                        </ion-thumbnail>
-                        <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
-
-                        <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
-                        <ion-button fill="clear" id="click-trigger-${course.bookingId}">
-                          <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-card>
+                  <ion-card-header>
+                    <ion-row class="ion-justify-content-between ion-align-items-center">
+                      <ion-col>
+                        <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
+                      </ion-col>
+                      <ion-col size="auto">
+                        <ion-button @click="${this.openCreateCourse}">
+                          <ion-icon slot="icon-only" name="add"></ion-icon>
                         </ion-button>
-                        <ion-popover trigger="click-trigger-${course.bookingId}" trigger-action="click" show-backdrop="false">
-                          <ion-list mode="ios">
-                            <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
-                          </ion-list>
-                        </ion-popover>
-                      </ion-item>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card-header>
+                  <ion-card-content>
+                    <ion-list>
+                      ${repeat(
+                        this.myCourseBookings,
+                        course => course.id,
+                        course => html`
+                          <ion-item-sliding>
+                            <ion-item button="true">
+                              <ion-thumbnail slot="start">
+                                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                              </ion-thumbnail>
+                              <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
 
-                      <ion-item-options side="end">
-                        <ion-item-option color="danger" @click="${() => this.deleteCourseBooking(course.bookingId)}">
-                          <ion-icon slot="icon-only" name="trash"></ion-icon>
-                        </ion-item-option>
-                      </ion-item-options>
+                              <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
+                              <ion-button fill="clear" id="click-trigger-${course.bookingId}">
+                                <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                              </ion-button>
+                              <ion-popover trigger="click-trigger-${course.bookingId}" trigger-action="click" show-backdrop="false">
+                                <ion-list mode="ios">
+                                  <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
+                                </ion-list>
+                              </ion-popover>
+                            </ion-item>
 
-                    </ion-item-sliding>
-                  `
-                )}
-              </ion-list>
-            </ion-card-content>
-        </ion-card>
+                            <ion-item-options side="end">
+                              <ion-item-option color="danger" @click="${() => this.deleteCourseBooking(course.bookingId)}">
+                                <ion-icon slot="icon-only" name="trash"></ion-icon>
+                              </ion-item-option>
+                            </ion-item-options>
 
-        <ion-card>
+                          </ion-item-sliding>
+                        `
+                      )}
+                    </ion-list>
+                  </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col>
+            <ion-card>
         <ion-card-header>
           <ion-row class="ion-justify-content-between ion-align-items-center">
           <ion-col>
@@ -180,6 +184,13 @@ class HomeComponent extends PageMixin(LitElement) {
         )}
           </ion-card-content>
         </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        
+
+        
       </ion-content>
     `;
   }
