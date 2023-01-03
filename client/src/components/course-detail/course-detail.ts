@@ -64,11 +64,7 @@ class CourseDetailComponent extends PageMixin(LitElement){
                                 <ion-icon slot="start" name="time-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="full">
-                                <ion-label>Erster Termin: ${format(new Date(this.course.startDate!), 'dd.MM.yyyy')}</ion-label>
-                                <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Letzter Termin: ${format(new Date(this.course.endDate!), 'dd.MM.yyyy')}</ion-label>
+                                <ion-label>Zeitraum: ${format(new Date(this.course.startDate!), 'dd.MM.yyyy')} bis  ${format(new Date(this.course.endDate!), 'dd.MM.yyyy')}</ion-label>
                                 <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="none">

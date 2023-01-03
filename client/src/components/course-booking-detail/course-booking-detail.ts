@@ -43,46 +43,73 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
         return html `
             <ion-content class="ion-padding">
                 <h1>Course Detail</h1>
-                <div class="course">
-                    <ion-card>
-                        <ion-card-header>
-                            <ion-card-title>${this.coursebooking.name}</ion-card-title>
-                        </ion-card-header>
-                        <ion-card-content>
-                            <ion-item lines="full">
-                                <ion-label>Buchungszeitpunkt: ${this.coursebooking.bookingDate}</ion-label>
-                                <ion-icon slot="start" name="document-text-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Beschreibung: ${this.coursebooking.description}</ion-label>
-                                <ion-icon slot="start" name="document-text-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>
-                                <ion-icon slot="start" name="calendar-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Beginn: ${this.coursebooking.startTime} Uhr</ion-label>
-                                <ion-icon slot="start" name="time-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Ende: ${this.coursebooking.endTime} Uhr</ion-label>
-                                <ion-icon slot="start" name="time-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Erster Termin: ${format(new Date(this.coursebooking.startDate!), 'dd.MM.yyyy')}</ion-label>
-                                <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Letzter Termin: ${format(new Date(this.coursebooking.endDate!), 'dd.MM.yyyy')}</ion-label>
-                                <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="none">
-                                <ion-button color="danger" fill="outline" type="button" @click="${() => this.deleteCourseBooking(this.coursebooking.bookingId!)}">Buchung stornieren</ion-button>
-                            </ion-item>
-                        </ion-card-content>
-                    </ion-card>
-                </div>
+
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            <ion-card>
+                                <ion-card-header>
+                                    <ion-card-title>${this.coursebooking.name}</ion-card-title>
+                                </ion-card-header>
+                                <ion-card-content>
+                                    <ion-item lines="full">
+                                        <ion-label>Buchungszeitpunkt: ${this.coursebooking.bookingDate}</ion-label>
+                                        <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Beschreibung: ${this.coursebooking.description}</ion-label>
+                                        <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>
+                                        <ion-icon slot="start" name="calendar-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Beginn: ${this.coursebooking.startTime} Uhr</ion-label>
+                                        <ion-icon slot="start" name="time-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Ende: ${this.coursebooking.endTime} Uhr</ion-label>
+                                        <ion-icon slot="start" name="time-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Zeitraum: ${format(new Date(this.coursebooking.startDate!), 'dd.MM.yyyy')} bis  ${format(new Date(this.coursebooking.endDate!), 'dd.MM.yyyy')}</ion-label>
+                                        <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="none">
+                                        <ion-button color="danger" fill="outline" type="button" @click="${() => this.deleteCourseBooking(this.coursebooking.bookingId!)}">Buchung stornieren</ion-button>
+                                    </ion-item>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-col>
+                        <ion-col>
+                            <ion-card>
+                                <ion-card-content>
+                                    <ion-accordion-group>
+                                        <ion-accordion>
+                                            <ion-item slot="header">
+                                                <ion-label>Teilnehmer</ion-label>
+                                                <ion-icon slot="start" name="people-outline"></ion-icon>
+                                            </ion-item>
+                                            <div slot="content">
+                                                <ion-item>
+                                                    <ion-label>Teilnehmer 1</ion-label>
+                                                    <ion-button slot="end" size="small" fill="outline" type="button">Chat</ion-button>
+                                                </ion-item>
+                                            </div>
+                                            <div slot="content">
+                                                <ion-item>
+                                                    <ion-label>Teilnehmer 2</ion-label>
+                                                    <ion-button slot="end" size="small" fill="outline" type="button">Chat</ion-button>
+                                                </ion-item>
+                                            </div>
+                                        </ion-accordion>
+                                    </ion-accordion-group>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
             </ion-content>
         `;
     }
