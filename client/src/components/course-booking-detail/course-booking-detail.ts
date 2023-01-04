@@ -87,6 +87,9 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                                     <ion-item lines="full">
                                         <ion-label>Trainer: ${this.trainer.name}</ion-label>
                                         <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+                                        ${this.checkIfMemberIsCurrentUser(this.trainer.id!) ?
+                                            html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(this.trainer.id!)}">Chat</ion-button>
+                                        `}
                                     </ion-item>
                                     <ion-item lines="full">
                                         <ion-label>Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>

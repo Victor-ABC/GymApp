@@ -67,6 +67,9 @@ class CourseDetailComponent extends PageMixin(LitElement){
                             <ion-item lines="full">
                                 <ion-label>Trainer: ${this.trainer.name}</ion-label>
                                 <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+                                ${this.checkIfTrainerIsCurrentUser(this.trainer.id!) ?
+                                    html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(this.trainer.id!)}">Chat</ion-button>
+                                    `}
                             </ion-item>
                             <ion-item lines="full">
                                 <ion-label>Wochentag: ${this.course.dayOfWeek}</ion-label>
@@ -113,5 +116,13 @@ class CourseDetailComponent extends PageMixin(LitElement){
     async deleteCourse(courseId: string) {
         await httpClient.delete('/courses/' + courseId);
         router.navigate(`course`);
+    }
+
+    async openChatWithMember(memberId: string) {
+        router.navigate('chat/' + memberId)
+    }
+
+    checkIfTrainerIsCurrentUser(trainerId: string){
+        return trainerId === authenticationService.getUser().id;
     }
 }
