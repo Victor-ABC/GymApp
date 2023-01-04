@@ -10,4 +10,5 @@ export interface Course extends Entity {
     endDate: Date;
     startTime: string;
     endTime: string;
+    trainerId: string;
 }

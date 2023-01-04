@@ -1,11 +1,17 @@
 /* Autor: Henrik Bruns */
 import { LitElement, html } from 'lit';
-import { customElement, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
+import { repeat } from 'lit/directives/repeat.js';
 import componentStyle from './create-course.css';
+
+interface Trainer {
+    id: string;
+    name: string;
+}
 
 @customElement('app-create-course')
 class CreateCourseComponent extends PageMixin(LitElement){
@@ -14,12 +20,15 @@ class CreateCourseComponent extends PageMixin(LitElement){
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
     @query('#description > input') private descriptionElement!: HTMLInputElement;
+    @query('#trainer') private trainerElement!: HTMLIonSelectElement;
 
     @query('#dayOfWeek') private dayOfWeekElement!: HTMLIonSelectElement;
     @query('#startDate') private startDateElement!: HTMLIonDatetimeElement;
     @query('#endDate') private endDateElement!: HTMLIonDatetimeElement;
     @query('#startTime') private startTimeElement!: HTMLIonDatetimeElement;
     @query('#endTime') private endTimeElement!: HTMLIonDatetimeElement;
+
+    @state() private trainer: Trainer[] = [];
 
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -31,15 +40,8 @@ class CreateCourseComponent extends PageMixin(LitElement){
     }
 
     async firstUpdated() {
-        try {
-            //TODO: Bedingung zum überprüfen, ob User eingeloggt ist
-        } catch (e) {
-          if ((e as { statusCode: number }).statusCode === 401) {
-            router.navigate('/users/sign-in');
-          } else {
-            notificationService.showNotification((e as Error).message, 'error');
-          }
-        }
+       const response = await httpClient.get('users/trainer');
+       this.trainer = (await response.json()).results;
       }
 
     buildBody(){
@@ -56,9 +58,20 @@ class CreateCourseComponent extends PageMixin(LitElement){
                             <ion-label position="fixed">Kursname</ion-label>
                             <ion-input type="text" required placeholder="Kursnamen vergeben" id="name"></ion-input>
                         </ion-item>
-                        <ion-item lines="none">
+                        <ion-item>
                             <ion-label position="fixed">Beschreibung</ion-label>
                             <ion-input type="text" required placeholder="Kursbeschreibung vergeben" id="description"></ion-input>
+                        </ion-item>
+                        <ion-item lines="none">
+                            <ion-label position="fixed">Trainer</ion-label>
+                            <ion-select interface="alert" placeholder="Trainer wählen" id="trainer">
+                                ${repeat(
+                                    this.trainer,
+                                    trainer => trainer.id,
+                                    trainer => html`
+                                        <ion-select-option value="${trainer.id}">${trainer.name}</ion-select-option>
+                                `)}
+                            </ion-select>
                         </ion-item>
                     </ion-card-content>
                 </ion-card>
@@ -147,6 +160,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
                 endDate: this.endDateElement.value,
                 startTime: this.startTimeElement.value,
                 endTime: this.endTimeElement.value,
+                trainerId: this.trainerElement.value
             };
 
             try {

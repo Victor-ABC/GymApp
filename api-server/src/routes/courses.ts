@@ -15,7 +15,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
-    if (!hasRequiredFields(req.body, ['name', 'description', 'dayOfWeek', 'startDate', 'endDate', 'startTime', 'endTime'], errors)) {
+    if (!hasRequiredFields(req.body, ['name', 'description', 'dayOfWeek', 'startDate', 'endDate', 'startTime', 'endTime', 'trainerId'], errors)) {
         return sendErrorMessage(errors.join('\n'));
     }
 
@@ -26,7 +26,8 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         startTime: format(new Date(req.body.startTime), 'HH:mm'),
-        endTime: format(new Date(req.body.endTime), 'HH:mm')
+        endTime: format(new Date(req.body.endTime), 'HH:mm'),
+        trainerId: req.body.trainerId
     })
     res.status(201).json(createdCourse);
 });
