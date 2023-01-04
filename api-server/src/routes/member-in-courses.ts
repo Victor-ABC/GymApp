@@ -4,6 +4,7 @@ import { Course } from "../models/course/course";
 import { GenericDAO } from "../models/generic.dao";
 import { authService } from '../services/auth.service.js';
 import { format } from 'date-fns';
+import { User } from "../models/users/user";
 
 const router = express.Router();
 
@@ -93,6 +94,24 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
             bookedCourse.bookingId = memberInCourse.id
     }
     res.json({ result: bookedCourse});
+})
+
+router.get('/member/:id', authService.authenticationMiddleware, async (req, res) => {
+    const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
+    const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+
+    const filterMiC: Partial<MemberInCourse> = { courseId: req.params.id };
+    const memberInCourses = await memberInCourseDAO.findAll(filterMiC);
+    const users: User[] = [];
+
+    for(const booking of memberInCourses) {
+        const userFilter: Partial<User> = { id: booking.memberId };
+        const user = await userDAO.findOne(userFilter);
+        if(user) {
+            users.push(user);
+        }
+    }
+    res.json({ result: users});
 })
 
 router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 

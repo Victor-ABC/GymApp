@@ -4,6 +4,9 @@ import { httpClient } from '../../http-client.js';
 import { PageMixin } from '../page.mixin.js';
 import { format } from 'date-fns';
 import { router } from '../../router/router.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { authenticationService } from '../../authenticationService.js';
+
 
 
 interface CourseBooking {
@@ -19,16 +22,26 @@ interface CourseBooking {
     bookingDate?: string
 }
 
+interface Member {
+    id: string;
+    name: string;
+    email: string;
+}
+
 @customElement('app-coursebooking-detail')
 class CourseBookingDetailComponent extends PageMixin(LitElement) {
 
     @property() id = '';
 
     @state() private coursebooking: CourseBooking = {startDate: new Date(), endDate: new Date()};
+    @state() private member: Member[] = [];
 
     async firstUpdated() {
-        const response = await httpClient.get('/memberincourses/' + this.id);
-        this.coursebooking = (await response.json()).result;
+        const responseBooking = await httpClient.get('/memberincourses/' + this.id);
+        this.coursebooking = (await responseBooking.json()).result;
+
+        const responseMember = await httpClient.get('memberincourses/member/' + this.coursebooking.id);
+        this.member = (await responseMember.json()).result;
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -91,18 +104,19 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                                                 <ion-label>Teilnehmer</ion-label>
                                                 <ion-icon slot="start" name="people-outline"></ion-icon>
                                             </ion-item>
-                                            <div slot="content">
-                                                <ion-item>
-                                                    <ion-label>Teilnehmer 1</ion-label>
-                                                    <ion-button slot="end" size="small" fill="outline" type="button">Chat</ion-button>
-                                                </ion-item>
-                                            </div>
-                                            <div slot="content">
-                                                <ion-item>
-                                                    <ion-label>Teilnehmer 2</ion-label>
-                                                    <ion-button slot="end" size="small" fill="outline" type="button">Chat</ion-button>
-                                                </ion-item>
-                                            </div>
+                                            ${repeat(
+                                                this.member,
+                                                member => member.id,
+                                                member => html`
+                                                    <div slot="content">
+                                                        <ion-item>
+                                                            <ion-label>${member.email}</ion-label>
+                                                            ${this.checkIfMemberIsCurrentUser(member.id) ?
+                                                                html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(member.id)}">Chat</ion-button>
+                                                                `}
+                                                        </ion-item>
+                                                    </div>
+                                                `)}
                                         </ion-accordion>
                                     </ion-accordion-group>
                                 </ion-card-content>
@@ -118,5 +132,13 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
         await httpClient.delete('/memberincourses/' + bookingId);
         router.navigate(`home`);
       }
+
+    async openChatWithMember(memberId: string) {
+        router.navigate('chat/' + memberId)
+    }
+
+    checkIfMemberIsCurrentUser(memberId: string){
+        return memberId === authenticationService.getUser().id;
+    }
 
 }
