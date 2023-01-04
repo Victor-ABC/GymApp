@@ -20,7 +20,7 @@ class AppComponent extends LitElement {
   @state() private linkItems = [
     { title: 'Home', routePath: 'home', authRequired: true },
     { title: 'Chat', routePath: 'chats/all', authRequired: true },
-    { title: 'Alle Kurse', routePath: 'course', authRequired: true },
+    { title: 'Kurse', routePath: 'course', authRequired: true },
     { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true },
     //{ title: 'Meine Kurse', routePath: 'coursebookings', authRequired: true},
     //{ title: 'Meine Workouts', routePath: 'workouts', authRequired: true},

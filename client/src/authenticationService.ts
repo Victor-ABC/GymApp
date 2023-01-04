@@ -17,7 +17,11 @@ export class AuthenticationService  {
   }
 
   isTrainer() {
-    return this.getUser().isTrainer;
+    try {
+        return this.getUser().isTrainer;
+    } catch (error) {
+        return false;
+    }
   }
 
   resetUserStorage() {
