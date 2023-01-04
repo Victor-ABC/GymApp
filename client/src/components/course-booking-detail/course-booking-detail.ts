@@ -19,13 +19,19 @@ interface CourseBooking {
     startTime?: string;
     endTime?: string;
     bookingId?: string,
-    bookingDate?: string
+    bookingDate?: string,
+    trainerId?: string
 }
 
 interface Member {
     id: string;
     name: string;
     email: string;
+}
+
+interface Trainer {
+    id?: string;
+    name?: string;
 }
 
 @customElement('app-coursebooking-detail')
@@ -35,10 +41,15 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
 
     @state() private coursebooking: CourseBooking = {startDate: new Date(), endDate: new Date()};
     @state() private member: Member[] = [];
+    @state() private trainer: Trainer = {};
+
 
     async firstUpdated() {
         const responseBooking = await httpClient.get('/memberincourses/' + this.id);
         this.coursebooking = (await responseBooking.json()).result;
+
+        const trainerResponse = await httpClient.get('users/' + this.coursebooking.trainerId);
+        this.trainer = (await trainerResponse.json()).result;
 
         const responseMember = await httpClient.get('memberincourses/member/' + this.coursebooking.id);
         this.member = (await responseMember.json()).result;
@@ -67,11 +78,15 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                                 <ion-card-content>
                                     <ion-item lines="full">
                                         <ion-label>Buchungszeitpunkt: ${this.coursebooking.bookingDate}</ion-label>
-                                        <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                                        <ion-icon slot="start" name="create-outline"></ion-icon>
                                     </ion-item>
                                     <ion-item lines="full">
                                         <ion-label>Beschreibung: ${this.coursebooking.description}</ion-label>
                                         <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                                    </ion-item>
+                                    <ion-item lines="full">
+                                        <ion-label>Trainer: ${this.trainer.name}</ion-label>
+                                        <ion-icon slot="start" name="person-circle-outline"></ion-icon>
                                     </ion-item>
                                     <ion-item lines="full">
                                         <ion-label>Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>

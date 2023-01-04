@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { authenticationService } from '../../authenticationService.js';
+import { User } from '../../interfaces/User.js';
 
 
 interface Course {
@@ -17,6 +18,12 @@ interface Course {
     endDate: Date;
     startTime?: string;
     endTime?: string;
+    trainerId?: string;
+}
+
+interface Trainer {
+    id?: string;
+    name?: string;
 }
 
 @customElement('app-course-detail')
@@ -25,10 +32,14 @@ class CourseDetailComponent extends PageMixin(LitElement){
     @property() id = '';
 
     @state() private course: Course = {startDate: new Date(), endDate: new Date()};
+    @state() private trainer: Trainer = {};
 
     async firstUpdated() {
         const response = await httpClient.get('/courses/' + this.id);
         this.course = (await response.json()).course;
+
+        const trainerResponse = await httpClient.get('users/' + this.course.trainerId);
+        this.trainer = (await trainerResponse.json()).result;
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -52,6 +63,10 @@ class CourseDetailComponent extends PageMixin(LitElement){
                             <ion-item lines="full">
                                 <ion-label>Beschreibung: ${this.course.description}</ion-label>
                                 <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                            </ion-item>
+                            <ion-item lines="full">
+                                <ion-label>Trainer: ${this.trainer.name}</ion-label>
+                                <ion-icon slot="start" name="person-circle-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="full">
                                 <ion-label>Wochentag: ${this.course.dayOfWeek}</ion-label>

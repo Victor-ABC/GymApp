@@ -7,6 +7,6 @@ export interface User extends Entity {
   email: string;
   password: string;
   isTrainer: boolean;
-  bild: string;
-  avatar: string | null
+  bild?: string;
+  avatar?: string | null
 }

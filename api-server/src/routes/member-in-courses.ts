@@ -19,6 +19,7 @@ interface BookedCourse {
     endTime?: string;
     bookingDate?: string;
     bookingId?: string;
+    trainerId?: string;
 }
 
 router.post('/', authService.authenticationMiddleware, async (req, res) => {
@@ -63,7 +64,8 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
                 startTime: course?.startTime,
                 endTime: course?.endTime,
                 bookingDate: format(new Date(booking.createdAt), 'dd.MM.yyyy HH:mm'),
-                bookingId: booking.id
+                bookingId: booking.id,
+                trainerId: course?.trainerId
             }
             bookedCourses.push(bookedCourse!);
         }
@@ -91,7 +93,8 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
             bookedCourse.startTime = course?.startTime,
             bookedCourse.endTime = course?.endTime,
             bookedCourse.bookingDate = format(new Date(memberInCourse.createdAt), 'dd.MM.yyyy HH:mm'),
-            bookedCourse.bookingId = memberInCourse.id
+            bookedCourse.bookingId = memberInCourse.id,
+            bookedCourse.trainerId = course?.trainerId
     }
     res.json({ result: bookedCourse});
 })
