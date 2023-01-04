@@ -3,6 +3,7 @@ import { Course } from "../models/course/course";
 import { GenericDAO } from "../models/generic.dao";
 import { authService } from '../services/auth.service.js';
 import { format } from 'date-fns';
+import { MemberInCourse } from "../models/course/member-in-course";
 
 const router = express.Router();
 
@@ -43,6 +44,21 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
 
     res.status(200).json({ course })
 })
+
+router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
+  const courseDAO: GenericDAO<Course> = req.app.locals.courseDAO;
+  const memberInCourseDAO: GenericDAO<MemberInCourse> = req.app.locals.memberInCourseDAO;
+
+  await courseDAO.delete(req.params.id);
+
+  const filterCourseId: Partial<MemberInCourse> = { courseId: req.params.id };
+  const memberInCourses = await memberInCourseDAO.findAll(filterCourseId);
+  for(const booking of memberInCourses) {
+    await memberInCourseDAO.delete(booking.id);
+  }
+  
+  res.status(200).end(); 
+});
 
 function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
     let hasErrors = false;

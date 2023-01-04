@@ -6,7 +6,7 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { format } from 'date-fns';
+import { authenticationService } from '../../authenticationService.js';
 import componentStyle from './course-overview.css';
 
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
@@ -49,7 +49,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
             <ion-content class="ion-padding">
                 <h1>Course Overview</h1>
                 <div class="courses">
-                    <ion-card>
+                    ${this.courses.length === 0 ?
+                        html`Keine Kurse im System` : html`
+                        <ion-card>
                         <ion-card-content>
                             <ion-list>
                                 ${repeat(
@@ -69,6 +71,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                                 <ion-popover trigger="click-trigger-${course.id}" trigger-action="click" show-backdrop="false">
                                                     <ion-list mode="ios">
                                                         <ion-item button="true" detail="false" @click="${() => this.bookCourse(course)}">Kurs buchen</ion-item>
+                                                        ${authenticationService.isTrainer() ? html`
+                                                            <ion-item button="true" detail="false" @click="${() => this.deleteCourse(course.id)}">Kurs löschen</ion-item>
+                                                        ` : html``}
                                                     </ion-list>
                                                 </ion-popover>
                                             </ion-item>
@@ -84,6 +89,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                             </ion-list>
                         </ion-card-content>
                     </ion-card>
+                            `
+                    }
+                    
                 </div>
             </ion-content>
         `;
@@ -104,5 +112,10 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     openCourse(courseId: string) {
         router.navigate(`course/${courseId}`);
-      }
+    }
+
+    async deleteCourse(courseId: string) {
+        await httpClient.delete('/courses/' + courseId);
+        this.firstUpdated();
+    }
 }

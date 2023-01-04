@@ -4,6 +4,8 @@ import { httpClient } from '../../http-client.js';
 import { PageMixin } from '../page.mixin.js';
 import { format } from 'date-fns';
 import { notificationService } from '../../notification.js';
+import { router } from '../../router/router.js';
+import { authenticationService } from '../../authenticationService.js';
 
 
 interface Course {
@@ -64,15 +66,14 @@ class CourseDetailComponent extends PageMixin(LitElement){
                                 <ion-icon slot="start" name="time-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="full">
-                                <ion-label>Erster Termin: ${format(new Date(this.course.startDate!), 'dd.MM.yyyy')}</ion-label>
-                                <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
-                            </ion-item>
-                            <ion-item lines="full">
-                                <ion-label>Letzter Termin: ${format(new Date(this.course.endDate!), 'dd.MM.yyyy')}</ion-label>
+                                <ion-label>Zeitraum: ${format(new Date(this.course.startDate!), 'dd.MM.yyyy')} bis  ${format(new Date(this.course.endDate!), 'dd.MM.yyyy')}</ion-label>
                                 <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="none">
                                 <ion-button fill="outline" type="button" @click="${() => this.bookCourse(this.course!)}">Kurs buchen</ion-button>
+                                ${authenticationService.isTrainer() ? html`
+                                    <ion-button fill="outline" color="danger" type="button" @click="${() => this.deleteCourse(this.course.id!)}">Kurs löschen</ion-button>
+                            ` : html``}
                             </ion-item>
                         </ion-card-content>
                     </ion-card>
@@ -92,5 +93,10 @@ class CourseDetailComponent extends PageMixin(LitElement){
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
         }
+    }
+
+    async deleteCourse(courseId: string) {
+        await httpClient.delete('/courses/' + courseId);
+        router.navigate(`course`);
     }
 }
