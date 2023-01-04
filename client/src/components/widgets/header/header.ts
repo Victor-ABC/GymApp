@@ -27,7 +27,12 @@ class HeaderComponent extends LitElement {
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
         ${this.linkItems.filter(linkItem => {
-          return linkItem.authRequired == authenticationService.isAuthenticated()
+          if(!authenticationService.isTrainer()){
+            return linkItem.authRequired == authenticationService.isAuthenticated() && linkItem.routePath != 'course/create'
+          }
+          else{
+            return linkItem.authRequired == authenticationService.isAuthenticated()
+          }
         })
         .map(
           linkItem => html`<li><a href="${linkItem.routePath}" @click=${this.closeMenu}>${linkItem.title}</a></li>`
