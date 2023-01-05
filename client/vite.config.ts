@@ -11,7 +11,6 @@ export default defineConfig({
     {
       ...viteHtmlReplacePlugin([
         [`href="/"`, `href="/app/"`],
-        [/\/assets/g, `./assets`]
       ]),
       apply: 'build'
     }
