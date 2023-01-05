@@ -8,6 +8,7 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js'
 import { repeat } from 'lit/directives/repeat.js';
+import { Capacitor } from '@capacitor/core';
 
 import componentStyle from './workout-detail.css';
 

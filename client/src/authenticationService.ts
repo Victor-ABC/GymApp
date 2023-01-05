@@ -1,19 +1,14 @@
 /* Autor: Pascal Thesing (FH Münster) */
 
 import { User } from "./interfaces/User";
+import { CapacitorCookies } from "@capacitor/core";
 
 const storageKey = 'USER_STORAGE_KEY';
 
 export class AuthenticationService  {
-  
+
   isAuthenticated(): boolean {
-    if(document.cookie.indexOf('jwt-token=') !== -1) {
-      return true;
-    }
-
-
-    localStorage.removeItem(storageKey);
-    return false
+    return !!localStorage.getItem(storageKey);
   }
 
   isTrainer() {
@@ -29,10 +24,6 @@ export class AuthenticationService  {
   }
 
   getUser(): User {
-    if(!this.isAuthenticated()) {
-      throw Error('You must be authenticated to set the user.')
-    }
-    
     const user = localStorage.getItem(storageKey);
 
     if(!user) {
@@ -42,15 +33,13 @@ export class AuthenticationService  {
     return JSON.parse(user);
   }
 
-  storeUser(user: User) {
-    if(!this.isAuthenticated()) {
-      throw Error('You must be authenticated to set the user.')
-    }
-
+  async storeUser(user: User) {
     localStorage.setItem(storageKey, JSON.stringify(user));
 
   }
 }
+
+let auth = new AuthenticationService();
   
-export const authenticationService = new AuthenticationService();
+export const authenticationService = auth;
   
