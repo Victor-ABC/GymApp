@@ -32,7 +32,12 @@ class AppComponent extends LitElement {
   constructor() {
     super();
     const port = location.protocol === 'https:' ? 3443 : 3000;
-    httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
+
+    if(Capacitor.isNativePlatform()) {
+      httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
+    } else {
+      httpClient.init({ baseURL: `http://10.0.2.2:3000/api/` });
+    }
   }
 
   protected createRenderRoot(): Element | ShadowRoot {
