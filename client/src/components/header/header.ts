@@ -15,7 +15,7 @@ class HeaderComponent extends LitElement {
 
   @property({ type: Array }) routeItems: RouteItem[] = [];
 
-  @property() private currentItem!: RouteItem;
+  @property() private currentRoute!: RouteItem;
 
   @state() menuOpen = false; 
 
