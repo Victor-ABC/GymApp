@@ -6,7 +6,7 @@ import { httpClient } from '../../http-client.js';
 import { when } from 'lit/directives/when.js';
 import { Capacitor } from '@capacitor/core';
 import componentStyle from './app.css';
-import { IonRouter, RouteTree } from '@ionic/core/components';
+import { IonHeader, IonRouter, RouteTree } from '@ionic/core/components';
 import { router } from '../../router/router.js';
 import { authenticationService, AuthenticationService } from '../../authenticationService.js';
 
@@ -16,7 +16,8 @@ export type RouteItem = {
   routePath: string,
   authRequired: boolean,
   trainerRequired: boolean,
-  props?: { [key: string]: any };
+  props?: { [key: string]: any },
+  header: boolean
 }
 
 @customElement('app-root')
@@ -28,20 +29,22 @@ class AppComponent extends LitElement {
 
   @query('#main') private mainFrame!: HTMLIonContentElement;
 
-
   @query('#router') private ionRouter!: IonRouter;
 
   @state() private routeItems: RouteItem[] = [
-    { title: 'Home', routePath: 'home', authRequired: true, trainerRequired: false, component: 'app-home' },
-    { title: 'Chat', routePath: 'chats/all', authRequired: true, trainerRequired: false, component: 'app-chats' },
-    { title: 'Kurse', routePath: 'course', authRequired: true, trainerRequired: false, component: 'app-course-overview'},
-    { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true, trainerRequired: true, component: 'app-create-course' },
+    { title: 'Home', routePath: 'home', authRequired: true, trainerRequired: false, component: 'app-home', header: false },
+    { title: 'Chat', routePath: 'chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', header: false },
+    { title: 'Kurse', routePath: 'course', authRequired: true, trainerRequired: false, component: 'app-course-overview', header: false },
+    { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true, trainerRequired: true, component: 'app-create-course', header: true },
     //{ title: 'Meine Kurse', routePath: 'coursebookings', authRequired: true},
     //{ title: 'Meine Workouts', routePath: 'workouts', authRequired: true},
-    { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out' },
-    { title: 'Konto erstellen', routePath: 'users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up' },
-    { title: 'Anmelden', routePath: 'users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in' },
-    //Test: chat components with url.params
+    { title: 'Workout erstellen', routePath: '/workouts/create', authRequired: true, trainerRequired: false, component: 'app-create-workout', header: true },
+    { title: 'Workout durchführen', routePath: '/workouts/do/:id', authRequired: true, trainerRequired: false, component: 'app-do-workout', header: true },
+    { title: 'Workout editieren', routePath: 'workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-edit-workout', header: true },
+    { title: 'Workout details', routePath: 'workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', header: true },
+    { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', header: false },
+    { title: 'Konto erstellen', routePath: 'users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', header: false },
+    { title: 'Anmelden', routePath: 'users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', header: false },
   ];
 
   constructor() {
@@ -49,6 +52,7 @@ class AppComponent extends LitElement {
 
     const port = location.protocol === 'https:' ? 3443 : 3000;
 
+    this.currentRoute = this.routeItems[0];
 
     if(Capacitor.isNativePlatform()) {
 
@@ -79,10 +83,16 @@ class AppComponent extends LitElement {
   }
 
 
+  applyBackButtion() {
+    this.ionRouter.back();
+  }
+
   buildBody() {
     return html` 
     <ion-app class="toast-wrapper">
-    <app-header title="${this.appTitle}" .currentRoute=${this.currentRoute} .routeItems=${this.routeItems}></app-header>
+
+    ${Capacitor.isNativePlatform() ? `` : html`<app-header id="header" title="${this.appTitle}" .currentRoute=${this.currentRoute} .routeItems=${this.routeItems}></app-header>`}
+    
     <app-notification></app-notification>
       <ion-router use-hash="false" id="router" @ionRouteWillChange="${this.setCurrentRoute}">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
@@ -95,6 +105,7 @@ class AppComponent extends LitElement {
           `;
         })}
         
+
         ${Capacitor.isNativePlatform() ? html`
         <ion-route component="app-tabs">
             <ion-route url="chat/:id/:createdAt/:email/:name" component="app-chat"></ion-route>
@@ -105,9 +116,21 @@ class AppComponent extends LitElement {
             <ion-route url="course/create" component="app-create-course"></ion-route>
             <ion-route url="course/bookings" component="app-course-bookings"></ion-route>
         </ion-route>
-          ` : '' }
+      ` : ``}
+
       </ion-router>
 
+
+      ${(Capacitor.isNativePlatform() && this.currentRoute.header) ? html`
+        <ion-header id="header">
+          <ion-toolbar>
+          <ion-button @click="${this.applyBackButtion}" id="backButton" slot="start" fill="clear">
+          <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+            <ion-title>${this.currentRoute!.title}</ion-title>
+          </ion-toolbar>
+        </ion-header>
+      ` : ``}
 
       <ion-content>
         <ion-router-outlet></ion-router-outlet>
