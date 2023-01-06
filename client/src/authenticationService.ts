@@ -1,6 +1,6 @@
 /* Autor: Pascal Thesing (FH Münster) */
 
-import { User } from "./interfaces/User";
+import { User } from "./interfaces";
 import { CapacitorCookies } from "@capacitor/core";
 
 const storageKey = 'USER_STORAGE_KEY';

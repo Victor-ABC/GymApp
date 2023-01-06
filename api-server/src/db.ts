@@ -19,6 +19,7 @@ import { Exercise } from './models/workout/exercise.js';
 import { Machine } from './models/workout/machine.js';
 import { Message } from './models/users/message.js';
 import { Z_FIXED } from 'node:zlib';
+import { Task } from './models/tasks/task.js';
 const { MongoClient } = mongodb;
 const { Client } = pg;
 
@@ -111,7 +112,7 @@ async function startInMemoryDB(app: Express) {
   app.locals.memberInCourseDAO = new InMemoryGenericDAO<MemberInCourse>();
   app.locals.workoutDAO = new InMemoryGenericDAO<Workout>();
   app.locals.exerciseDAO = new InMemoryGenericDAO<Exercise>();
-  app.locals.machineDAO = new InMemoryGenericDAO<Machine>();
+  app.locals.taskDAO = new InMemoryGenericDAO<Task>();
   app.locals.messageDAO = new InMemoryGenericDAO<Message>();
   return async () => Promise.resolve();
 }
@@ -128,7 +129,7 @@ async function startMongoDB(app: Express) {
   app.locals.memberInCourseDAO = new MongoGenericDAO<MemberInCourse>(db, 'memberInCourse');
   app.locals.workoutDAO = new MongoGenericDAO<Workout>(db, 'workouts');
   app.locals.exerciseDAO = new MongoGenericDAO<Exercise>(db, 'exercise');
-  app.locals.machineDAO = new MongoGenericDAO<Machine>(db, 'machines');
+  app.locals.taskDAO = new MongoGenericDAO<Task>(db, 'tasks');
   app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'messages');
   return async () => await client.close();
 }

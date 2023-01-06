@@ -32,19 +32,24 @@ class AppComponent extends LitElement {
   @query('#router') private ionRouter!: IonRouter;
 
   @state() private routeItems: RouteItem[] = [
-    { title: 'Home', routePath: 'home', authRequired: true, trainerRequired: false, component: 'app-home', header: false },
-    { title: 'Chat', routePath: 'chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', header: false },
-    { title: 'Kurse', routePath: 'course', authRequired: true, trainerRequired: false, component: 'app-course-overview', header: false },
-    { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true, trainerRequired: true, component: 'app-create-course', header: true },
+    { title: 'Home', routePath: '/home', authRequired: true, trainerRequired: false, component: 'app-home', header: false },
+    { title: 'Chat', routePath: '/chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', header: false },
+    { title: 'Kurse', routePath: '/course', authRequired: true, trainerRequired: false, component: 'app-course-overview', header: false },
+    { title: 'Kurs erstellen', routePath: '/course/create', authRequired: true, trainerRequired: true, component: 'app-create-course', header: true },
     //{ title: 'Meine Kurse', routePath: 'coursebookings', authRequired: true},
     //{ title: 'Meine Workouts', routePath: 'workouts', authRequired: true},
     { title: 'Workout erstellen', routePath: '/workouts/create', authRequired: true, trainerRequired: false, component: 'app-create-workout', header: true },
     { title: 'Workout durchführen', routePath: '/workouts/do/:id', authRequired: true, trainerRequired: false, component: 'app-do-workout', header: true },
-    { title: 'Workout editieren', routePath: 'workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-edit-workout', header: true },
-    { title: 'Workout details', routePath: 'workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', header: true },
-    { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', header: false },
-    { title: 'Konto erstellen', routePath: 'users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', header: false },
-    { title: 'Anmelden', routePath: 'users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', header: false },
+    { title: 'Workout editieren', routePath: '/workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-edit-workout', header: true },
+    { title: 'Workout details', routePath: '/workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', header: true },
+
+    { title: 'Übungen', routePath: '/exercises', authRequired: true, trainerRequired: true, component: 'app-exercise-overview', header: false },
+    { title: 'Übung erstellen', routePath: '/exercises/create', authRequired: true, trainerRequired: true, component: 'app-exercise-create', header: true },
+    { title: 'Übung editieren', routePath: '/exercises/edit/:id', authRequired: true, trainerRequired: true, component: 'app-exercise-edit', header: true }
+
+    { title: 'Abmelden', routePath: '/users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', header: false },
+    { title: 'Konto erstellen', routePath: '/users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', header: false },
+    { title: 'Anmelden', routePath: '/users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', header: false },
   ];
 
   constructor() {
