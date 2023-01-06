@@ -33,7 +33,7 @@ class AppComponent extends LitElement {
 
   @state() private routeItems: RouteItem[] = [
     { title: 'Home', routePath: 'home', authRequired: true, trainerRequired: false, component: 'app-home' },
-    { title: 'Chat', routePath: 'chats/all', authRequired: true, trainerRequired: false, component: 'app-chat' },
+    { title: 'Chat', routePath: 'chats/all', authRequired: true, trainerRequired: false, component: 'app-chats' },
     { title: 'Kurse', routePath: 'course', authRequired: true, trainerRequired: false, component: 'app-course-overview'},
     { title: 'Kurs erstellen', routePath: 'course/create', authRequired: true, trainerRequired: true, component: 'app-create-course' },
     //{ title: 'Meine Kurse', routePath: 'coursebookings', authRequired: true},
