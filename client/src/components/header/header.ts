@@ -2,8 +2,9 @@
 
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-
+import { authenticationService } from '../../authenticationService';
 import componentStyle from './header.css';
+import { RouteItem } from '../app/app';
 
 @customElement('app-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -12,7 +13,9 @@ class HeaderComponent extends LitElement {
 
   @property() title = '';
 
-  @property({ type: Array }) linkItems: Array<{ title: string; routePath: string }> = [];
+  @property({ type: Array }) routeItems: RouteItem[] = [];
+
+  @property() private currentItem!: RouteItem;
 
   @state() menuOpen = false; 
 
@@ -21,8 +24,22 @@ class HeaderComponent extends LitElement {
       <a href="" class="title">${this.title}</a>
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
-        ${this.linkItems.map(
-          linkItem => html`<li><a href="${linkItem.routePath}" @click=${this.closeMenu}>${linkItem.title}</a></li>`
+        ${this.routeItems.filter(routeItem => {
+          if(routeItem.authRequired != authenticationService.isAuthenticated()) {
+            console.log('not Authenticated')
+            return false;
+          }
+
+          if(routeItem.trainerRequired != authenticationService.isTrainer()) {
+
+            console.log('not a trainer')
+            return false;
+          }
+
+          return true;
+        })
+        .map(
+          routeItem => html`<li><a href="${routeItem.routePath}" @click=${this.closeMenu}>${routeItem.title}</a></li>`
         )}
       </ol>
     `;

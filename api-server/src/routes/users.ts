@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: await bcrypt.hash(req.body.password, 10),
-    isTrainer: false,
+    isTrainer: req.body.isTrainer
   });
   authService.createAndSetToken({ id: createdUser.id }, res);
   res.status(201).json(createdUser);
@@ -72,6 +72,20 @@ router.delete('/', authService.authenticationMiddleware, async (req, res) => {
   authService.removeToken(res);
   res.status(200).end();
 });
+
+router.get('/trainer', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  const filter: Partial<User> = { isTrainer: true };
+  const trainer = await userDAO.findAll(filter);
+  res.status(201).json({ results: trainer})
+})
+
+router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  const filter: Partial<User> = { id: req.params.id };
+  const user = await userDAO.findOne(filter);
+  res.status(201).json({ result: user})
+})
 
 function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
   let hasErrors = false;

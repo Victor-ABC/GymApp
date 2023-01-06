@@ -2,7 +2,7 @@
 
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { notificationService } from '../../../notification.js'
+import { notificationService } from '../../notification.js'
 import componentStyle from './notification.css';
 
 @customElement('app-notification')

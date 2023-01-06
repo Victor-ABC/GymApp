@@ -1,7 +1,6 @@
 /* Autor: Victor Corbet */
 
 import { Entity } from '../entity.js';
-import { DayOfWeek } from './dayOfWeek.js';
 
 /**
  * Da wir nur bestimmte Informationen über das Datum benötigen:
@@ -15,7 +14,7 @@ import { DayOfWeek } from './dayOfWeek.js';
  * Sowas wie JPA (ORM) hier nicht möglich, da wir MongoDB & PostGres im einsatz haben wollen
  */
 export interface Date extends Entity{ 
-    dayOfWeek: DayOfWeek;
+    dayOfWeek: string;
     startTimeHours: number;
     startTimeMinutes: number;
     endTimeHours: number;
