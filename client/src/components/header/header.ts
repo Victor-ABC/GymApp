@@ -21,22 +21,16 @@ class HeaderComponent extends LitElement {
 
   render() {
     return html`
-      <a href="" class="title">${this.title}</a>
+      <a class="title">${this.title}</a>
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
         ${this.routeItems.filter(routeItem => {
-          if(routeItem.authRequired != authenticationService.isAuthenticated()) {
-            console.log('not Authenticated')
-            return false;
+          if(!authenticationService.isTrainer()){
+            return routeItem.authRequired == authenticationService.isAuthenticated() && routeItem.routePath != 'course/create'
           }
-
-          if(routeItem.trainerRequired != authenticationService.isTrainer()) {
-
-            console.log('not a trainer')
-            return false;
+          else{
+            return routeItem.authRequired == authenticationService.isAuthenticated()
           }
-
-          return true;
         })
         .map(
           routeItem => html`<li><a href="${routeItem.routePath}" @click=${this.closeMenu}>${routeItem.title}</a></li>`
