@@ -99,6 +99,9 @@ class AppComponent extends LitElement {
         <ion-route url=":" component="app-404-not-found"></ion-route>
         <ion-route url="newchat" component="app-chat-new-users"></ion-route>
         <ion-route url="chat/:id/:createdAt/:email/:name" component="app-chat"></ion-route>
+        <ion-route url="course/:id" component="app-course-detail"></ion-route>
+        <ion-route url="coursebookings/:id" component="app-coursebooking-detail"></ion-route>
+
         ${this.routeItems.map(route => {
           return html`
           <ion-route url="${route.routePath}" component="${route.component}" .componentProps="${route.props}"></ion-route>

@@ -27,11 +27,14 @@ interface Member {
     id: string;
     name: string;
     email: string;
+    createdAt: string;
 }
 
 interface Trainer {
     id?: string;
     name?: string;
+    mail?: string;
+    createdAt?: string;
 }
 
 @customElement('app-coursebooking-detail')
@@ -88,7 +91,7 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                                         <ion-label>Trainer: ${this.trainer.name}</ion-label>
                                         <ion-icon slot="start" name="person-circle-outline"></ion-icon>
                                         ${this.checkIfMemberIsCurrentUser(this.trainer.id!) ?
-                                            html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(this.trainer.id!)}">Chat</ion-button>
+                                            html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(this.trainer.id!, this.trainer.name!, this.trainer.mail!, this.trainer.createdAt!)}">Chat</ion-button>
                                         `}
                                     </ion-item>
                                     <ion-item lines="full">
@@ -130,7 +133,7 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                                                         <ion-item>
                                                             <ion-label>${member.email}</ion-label>
                                                             ${this.checkIfMemberIsCurrentUser(member.id) ?
-                                                                html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(member.id)}">Chat</ion-button>
+                                                                html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(member.id, member.name, member.email, member.createdAt)}">Chat</ion-button>
                                                                 `}
                                                         </ion-item>
                                                     </div>
@@ -151,8 +154,8 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
         router.navigate(`home`);
       }
 
-    async openChatWithMember(memberId: string) {
-        router.navigate('chat/' + memberId)
+    async openChatWithMember(memberId: string, memberName: string, memberEmail: string, memberCreatedAt: string) {
+        router.navigate(`chat/${memberId}/${memberCreatedAt}/${memberEmail}/${memberName}`);
     }
 
     checkIfMemberIsCurrentUser(memberId: string){
