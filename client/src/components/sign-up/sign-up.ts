@@ -3,7 +3,6 @@
 import { Capacitor } from '@capacitor/core';
 import { LitElement, html } from 'lit';
 import { customElement, query, property } from 'lit/decorators.js';
-import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';

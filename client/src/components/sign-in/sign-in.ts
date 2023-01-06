@@ -56,31 +56,27 @@ class SignInComponent extends PageMixin(LitElement) {
   }
 
   async submit() {
-    console.log("called Submit method");
-
-    if (!this.isFormValid()) {
+    if (this.isFormValid()) {
+      const authData = {
+        email: this.emailElement.value,
+        password: this.passwordElement.value
+      };
+      try {
+        const user = await httpClient.post('/users/sign-in', authData);
+        await authenticationService.storeUser(await user.json());
+        console.log("navigate");
+        router.navigate('/home');
+        const child = document.querySelector('app-header') as LitElement;
+        child.requestUpdate();
+      } catch (e) {
+        notificationService.showNotification((e as Error).message, 'error');
+      }
+    }
+    else {
       console.log('Form is not valid');
       this.form.classList.add('was-validated');
       return;
     }
-
-    console.log("Form is Valid");
-    const authData = {
-      email: this.emailElement.value,
-      password: this.passwordElement.value
-    };
-    // try {
-      const user = await httpClient.post('/users/sign-in', authData);
-
-      await authenticationService.storeUser(await user.json());
-      console.log("navigate");
-      router.navigate('/home');
-
-      const child = document.querySelector('app-header') as LitElement;
-      child.requestUpdate();
-    // } catch (e) {
-    //   notificationService.showNotification((e as Error).message, 'error');
-    // }
   }
 
   isFormValid() {

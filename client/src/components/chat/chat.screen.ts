@@ -6,6 +6,7 @@ import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
+import date from '../../service/date.service.js';
 
 type User = {
   name: string;
@@ -18,7 +19,7 @@ type User = {
 
 @customElement('app-chats')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignOutComponent extends PageMixin(LitElement) {
+class ChatScreen extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLIonInputElement;
 
   @property()
@@ -32,7 +33,20 @@ class SignOutComponent extends PageMixin(LitElement) {
     return html`
       <ion-content class="ion-padding">
         <h1>Chats</h1>
-        <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+        <ion-grid>
+          <ion-col>
+            <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+          </ion-col>
+          <ion-col size="auto">
+            <ion-card>
+            <ion-item button href="/newchat" color="primary">
+              <ion-label>
+                <h2>new chat</h2>
+              </ion-label>
+            </ion-item>
+            </ion-card>
+          </ion-col>
+        </ion-grid>
       </ion-content>
     `;
   }
@@ -58,22 +72,14 @@ class SignOutComponent extends PageMixin(LitElement) {
     //${title}
     return html`
       <ion-card>
-        <ion-item button href="/chat/${chatPartner.id}">
+        <ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
           <ion-label>
             <h2>${chatPartner.name}</h2>
-            <p>Existiert seit: ${this.buildDate(chatPartner.createdAt)}</p>
+            <p>Existiert seit: ${date(chatPartner.createdAt)}</p>
           </ion-label>
         </ion-item>
       </ion-card>
     `;
-  }
-
-  buildDate(createdAt: number) {
-    const date = new Date(createdAt);
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-    return day + '.' + month + '.' + year;
   }
 
   async onEnter() {

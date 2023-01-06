@@ -35,13 +35,17 @@ class WebSocketServer {
     const messageString = JSON.stringify(message);
     this.wss.clients.forEach(client => {
       const ws = client as WebSocketExt;
-      /*
-      console.log("calimsetEmail: " + ws.claimsSet.email + " id " + ws.claimsSet.id);
-      console.log("fromID: " + fromId);
-      console.log("toID: " + toId);
-      ws.send(messageString);
-      */
       if (ws.claimsSet.id === fromId || ws.claimsSet.id === toId) {
+        ws.send(messageString);
+      }
+    });
+  }
+
+  public sendReadNotification(toId: string, message: object) {
+    const messageString = JSON.stringify(message);
+    this.wss.clients.forEach(client => {
+      const ws = client as WebSocketExt;
+      if (ws.claimsSet.id === toId) {
         ws.send(messageString);
       }
     });
@@ -50,6 +54,7 @@ class WebSocketServer {
   private async onConnection(ws: WebSocketExt, req: IncomingMessage) {
     const valid = await this.validateConnection(ws, req);
     if (valid) {
+      console.log("created WebSocket Connection");
       ws.isAlive = true;
       ws.on('pong', () => {
         ws.isAlive = true;
@@ -74,6 +79,7 @@ class WebSocketServer {
       this.wss.clients.forEach(client => {
         const ws = client as WebSocketExt;
         if (!ws.isAlive) {
+          console.log("deleted WebSocket Connection");
           return ws.terminate();
         }
         ws.isAlive = false;

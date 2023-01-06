@@ -18,7 +18,6 @@ import { Workout } from './models/workout/workout.js';
 import { Exercise } from './models/workout/exercise.js';
 import { Machine } from './models/workout/machine.js';
 import { Message } from './models/users/message.js';
-import { Chat } from './models/users/chat.js';
 import { Z_FIXED } from 'node:zlib';
 const { MongoClient } = mongodb;
 const { Client } = pg;

@@ -52,7 +52,6 @@ router.post('/sign-in', async (req, res) => {
   const user = await userDAO.findOne(filter);
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
     authService.createAndSetToken({ id: user.id }, res);
-    console.log("Signed in User")
     res.status(201).json(user);
   } else {
     authService.removeToken(res);
