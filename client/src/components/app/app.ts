@@ -41,6 +41,7 @@ class AppComponent extends LitElement {
     { title: 'Abmelden', routePath: 'users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out' },
     { title: 'Konto erstellen', routePath: 'users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up' },
     { title: 'Anmelden', routePath: 'users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in' },
+    //Test: chat components with url.params
   ];
 
   constructor() {
@@ -86,6 +87,8 @@ class AppComponent extends LitElement {
       <ion-router use-hash="false" id="router" @ionRouteWillChange="${this.setCurrentRoute}">
         <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         <ion-route url=":" component="app-404-not-found"></ion-route>
+        <ion-route url="newchat" component="app-chat-new-users"></ion-route>
+        <ion-route url="chat/:id/:createdAt/:email/:name" component="app-chat"></ion-route>
         ${this.routeItems.map(route => {
           return html`
           <ion-route url="${route.routePath}" component="${route.component}" .componentProps="${route.props}"></ion-route>
@@ -94,6 +97,8 @@ class AppComponent extends LitElement {
         
         ${Capacitor.isNativePlatform() ? html`
         <ion-route component="app-tabs">
+            <ion-route url="chat/:id/:createdAt/:email/:name" component="app-chat"></ion-route>
+            <ion-route url="newchat" component="app-chat-new-users"></ion-route>
             <ion-route url="chats/all" component="app-chats"></ion-route>
             <ion-route url="home" component="app-home"></ion-route>
             <ion-route url="course" component="app-course-overview"></ion-route>
