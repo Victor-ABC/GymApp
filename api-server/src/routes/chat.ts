@@ -53,7 +53,6 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
   }
   wsServer.sendReadNotification(idOfOtherUser, { readNotifications: id_of_read_messages });
   var result = [...messagesFromMe, ...new_messageToMe];
-  console.log("HTTP-GET: " + result.toString());
   res.json({ data: result });
 });
 
@@ -81,6 +80,7 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
 });
 
 router.post('/new', authService.authenticationMiddleware, async (req, res) => {
+  console.log("created message");
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   var newMessage = await messageDAO.create({
     content: req.body.content,
@@ -88,12 +88,10 @@ router.post('/new', authService.authenticationMiddleware, async (req, res) => {
     to: req.body.to,
     recieved: false
   });
-  console.log("2) newMessage(WS) to the 2 Users with new message");
   wsServer.sendChatMessage(res.locals.user.id, req.body.to, { newMessage: newMessage });
 });
 
 router.patch('/read', authService.authenticationMiddleware, async (req, res) => {
-  console.log("recieved patch!");
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   var message: Message | null = await messageDAO.findOne({id : req.body.id});
   if(message) {
@@ -106,7 +104,6 @@ router.patch('/read', authService.authenticationMiddleware, async (req, res) => 
       recieved: true
     };
     await messageDAO.update(new_m);
-    console.log("sended 1 notification!");
     wsServer.sendReadNotification(req.body.to, { readNotification: req.body.id });
   }
 });

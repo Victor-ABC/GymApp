@@ -12,12 +12,10 @@ import { Course } from './models/course/course.js';
 import config from '../config.json' assert { type: 'json' };
 import { MemberInCourse } from './models/course/member_in_course.js';
 
-import fs from 'node:fs'; //ggf. löschen, falls unbenutzt
 import { TrainingPlan } from './models/training_plan/training_plan.js';
 import { Exercise } from './models/training_plan/exercise.js';
 import { Machine } from './models/training_plan/machine.js';
 import { Message } from './models/users/message.js';
-import { Chat } from './models/users/chat.js';
 const { MongoClient } = mongodb;
 const { Client } = pg;
 
