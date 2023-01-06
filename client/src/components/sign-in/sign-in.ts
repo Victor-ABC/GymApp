@@ -9,6 +9,8 @@ import { notificationService } from '../../notification.js'
 import { authenticationService } from '../../authenticationService.js';
 
 import componentStyle from './sign-in.css';
+import { navigate } from 'ionicons/icons';
+import { IonRouter } from '@ionic/core/components';
 
 @customElement('app-sign-in')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -67,14 +69,18 @@ class SignInComponent extends PageMixin(LitElement) {
       email: this.emailElement.value,
       password: this.passwordElement.value
     };
-    try {
+    // try {
       const user = await httpClient.post('/users/sign-in', authData);
-      console.log(user);
-      authenticationService.storeUser(await user.json());
+
+      await authenticationService.storeUser(await user.json());
+      console.log("navigate");
       router.navigate('/home');
-    } catch (e) {
-      notificationService.showNotification((e as Error).message, 'error');
-    }
+
+      const child = document.querySelector('app-header') as LitElement;
+      child.requestUpdate();
+    // } catch (e) {
+    //   notificationService.showNotification((e as Error).message, 'error');
+    // }
   }
 
   isFormValid() {

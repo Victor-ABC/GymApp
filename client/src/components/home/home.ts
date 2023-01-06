@@ -187,10 +187,6 @@ class HomeComponent extends PageMixin(LitElement) {
             </ion-col>
           </ion-row>
         </ion-grid>
-
-        
-
-        
       </ion-content>
     `;
   }

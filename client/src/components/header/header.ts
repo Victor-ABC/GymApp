@@ -2,9 +2,9 @@
 
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { authenticationService } from '../../../authenticationService';
-import { router } from '../../../router/router';
+import { authenticationService } from '../../authenticationService';
 import componentStyle from './header.css';
+import { RouteItem } from '../app/app';
 
 @customElement('app-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,29 +13,33 @@ class HeaderComponent extends LitElement {
 
   @property() title = '';
 
-  @property({ type: Array }) linkItems: Array<{ title: string; routePath: string, authRequired: boolean }> = [];
+  @property({ type: Array }) routeItems: RouteItem[] = [];
+
+  @property() private currentItem!: RouteItem;
 
   @state() menuOpen = false; 
-
-  firstUpdated() {
-    router.subscribe(() => this.requestUpdate());
-  }
 
   render() {
     return html`
       <a href="" class="title">${this.title}</a>
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
-        ${this.linkItems.filter(linkItem => {
-          if(!authenticationService.isTrainer()){
-            return linkItem.authRequired == authenticationService.isAuthenticated() && linkItem.routePath != 'course/create'
+        ${this.routeItems.filter(routeItem => {
+          if(routeItem.authRequired != authenticationService.isAuthenticated()) {
+            console.log('not Authenticated')
+            return false;
           }
-          else{
-            return linkItem.authRequired == authenticationService.isAuthenticated()
+
+          if(routeItem.trainerRequired != authenticationService.isTrainer()) {
+
+            console.log('not a trainer')
+            return false;
           }
+
+          return true;
         })
         .map(
-          linkItem => html`<li><a href="${linkItem.routePath}" @click=${this.closeMenu}>${linkItem.title}</a></li>`
+          routeItem => html`<li><a href="${routeItem.routePath}" @click=${this.closeMenu}>${routeItem.title}</a></li>`
         )}
       </ol>
     `;
