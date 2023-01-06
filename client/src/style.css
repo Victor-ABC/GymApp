@@ -1,4 +1,7 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+#standardUploadImage {
+  width: 50%;
+  height: 50%;
+}
 
 :root {
   --app-primary-color: #034da1;

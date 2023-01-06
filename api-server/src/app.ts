@@ -17,14 +17,16 @@ import courses from './routes/courses.js';
 import workouts from './routes/workouts.js';
 import exercises from './routes/exercises.js';
 import memberincourses from './routes/member-in-courses.js';
+import tasks from './routes/tasks.js';
 
 import { startWebSocketServer } from './ws-server.js';
 import config from '../config.json' assert { type: 'json' };
 
 function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(corsService.corsMiddleware);
   app.use('/api/users', users);
@@ -33,6 +35,7 @@ function configureApp(app: Express) {
   app.use('/api/courses', courses);
   app.use('/api/memberincourses', memberincourses);
   app.use('/api/chat', chat);
+  app.use('/api/tasks', tasks);
 }
 
 export async function start() {

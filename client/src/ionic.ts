@@ -1,6 +1,7 @@
 import * as IonComponents from '@ionic/core/components';
 import { addIcons } from 'ionicons';
 
+
 Object.keys(IonComponents).forEach(key => {
     if (/^Ion[A-Z]\w+$/.test(key)) {
       customElements.define(key.split(/(?=[A-Z])/).join('-').toLowerCase(), IonComponents[key]);
@@ -29,3 +30,5 @@ addIcons(icons);
 
 
 document.documentElement.classList.add('ion-ce');
+
+

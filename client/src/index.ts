@@ -30,6 +30,7 @@ import './components/chat/chat.users.ts';
 import './components/create-course/create-course.ts'; 
 import './components/course-overview/course-overview.ts';
 import './components/course-bookings/course-bookings.ts';
-
-
+import './components/exercises-overview/exercises-overview.ts';
+import './components/exercise-create/exercise-create.ts';
+import './components/exercise-edit/exercise-edit.ts';
 

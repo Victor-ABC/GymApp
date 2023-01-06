@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { authenticationService } from '../../authenticationService.js';
-import { User } from '../../interfaces/User.js';
+import { User } from '../../interfaces.js';
 
 
 interface Course {

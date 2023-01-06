@@ -43,8 +43,7 @@ class HomeComponent extends PageMixin(LitElement) {
   async firstUpdated() {
       this.user = authenticationService.getUser();
 
-      
-
+  
       const responseBookings = await httpClient.get('/memberincourses');
       this.myCourseBookings = (await responseBookings.json()).results;
 
