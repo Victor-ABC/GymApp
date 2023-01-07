@@ -15,7 +15,7 @@ interface Trainer {
 
 @customElement('app-create-course')
 class CreateCourseComponent extends PageMixin(LitElement){
-    //static styles = [componentStyle];
+    static styles = [componentStyle];
 
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
@@ -64,7 +64,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
                         </ion-item>
                         <ion-item lines="none">
                             <ion-label position="fixed">Trainer</ion-label>
-                            <ion-select interface="alert" placeholder="Trainer wählen" id="trainer">
+                            <ion-select interface="action-sheet" placeholder="Trainer wählen" id="trainer">
                                 ${repeat(
                                     this.trainer,
                                     trainer => trainer.id,
@@ -83,7 +83,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
                     <ion-card-content>
                         <ion-item>
                             <ion-label position="fixed">Wochentag</ion-label>
-                            <ion-select interface="alert" placeholder="Wochentag wählen" id="dayOfWeek">
+                            <ion-select interface="action-sheet" placeholder="Wochentag wählen" id="dayOfWeek">
                                 <ion-select-option value="Montag">Montag</ion-select-option>
                                 <ion-select-option value="Dienstag">Dienstag</ion-select-option>
                                 <ion-select-option value="Mittwoch">Mittwoch</ion-select-option>
@@ -93,14 +93,14 @@ class CreateCourseComponent extends PageMixin(LitElement){
                                 <ion-select-option value="Sonntag">Sonntag</ion-select-option>
                             </ion-select>
                         </ion-item>
-                        <ion-item lines="full">
+                        <ion-item>
                             <ion-label position="fixed">Startdatum</ion-label>
                             <ion-datetime-button datetime="startDate"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
-                                <ion-datetime presentation="date" id="startDate"></ion-datetime>
-                            </ng-template>
+                                <ng-template>
+                                    <ion-datetime class="force-black-font" presentation="date" id="startDate"></ion-datetime>
+                                </ng-template>
                             </ion-modal>
                         </ion-item>
 
@@ -109,9 +109,9 @@ class CreateCourseComponent extends PageMixin(LitElement){
                             <ion-datetime-button datetime="endDate"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
-                                <ion-datetime presentation="date" id="endDate"></ion-datetime>
-                            </ng-template>
+                                <ng-template>
+                                    <ion-datetime class="force-black-font" presentation="date" id="endDate"></ion-datetime>
+                                </ng-template>
                             </ion-modal>
                         </ion-item>
 
@@ -121,7 +121,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
                             <ion-modal [keepContentsMounted]="true">
                             <ng-template>
-                                <ion-datetime presentation="time" id="startTime"></ion-datetime>
+                                <ion-datetime class="force-black-font" presentation="time" id="startTime"></ion-datetime>
                             </ng-template>
                             </ion-modal>
                         </ion-item>
@@ -132,7 +132,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
                             <ion-modal [keepContentsMounted]="true">
                             <ng-template>
-                                <ion-datetime presentation="time" id="endTime"></ion-datetime>
+                                <ion-datetime class="force-black-font" presentation="time" id="endTime"></ion-datetime>
                             </ng-template>
                             </ion-modal>
                         </ion-item>
