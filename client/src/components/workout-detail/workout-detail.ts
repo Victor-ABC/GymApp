@@ -23,6 +23,8 @@ class HomeComponent extends PageMixin(LitElement) {
 
   @state() private exercises: object[] = [];
 
+  @state() tasks: object[] = []
+
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
@@ -35,8 +37,19 @@ class HomeComponent extends PageMixin(LitElement) {
       const workoutResponse = await httpClient.get('/workouts/' + this.id);
       this.workout = (await workoutResponse.json()).data; 
 
+      const taskResponse = await httpClient.get('/tasks');
+      this.tasks = (await taskResponse.json()).results;
+
       const response = await httpClient.get('/exercises/workout/' + this.id);
       this.exercises = (await response.json()).results; 
+  }
+
+  getNameByTaskId(taskId) {
+    return this.tasks.filter(task => task.id == taskId)[0].name;
+  }
+
+  getPicturesByTaskId(taskId) {
+    return this.tasks.filter(task => task.id == taskId)[0].pictures;
   }
 
   buildBody() {
@@ -44,18 +57,34 @@ class HomeComponent extends PageMixin(LitElement) {
       <ion-content class="ion-padding">
         <h1>Workout detail: ${this.workout.name}</h1>
 
+        <ion-card>
+        <ion-card-content>
+        <ion-list>
         ${repeat(
           this.exercises,
           (exercise, index) => html`
-          <ion-card>
-          <ion-card-content>
-              <ion-item>
-              <ion-label>${exercise.name}</ion-label>
-              </ion-item>
-          </ion-card-content>
-          </ion-card>                  
+
+          <ion-item>
+          <ion-thumbnail slot="start">
+
+          ${this.getPicturesByTaskId(exercise.taskId)!.length == 0
+            ? html` <ion-slide>
+                <img src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-slide>`
+            : html`        
+            <img src="${exercise.pictures[0]}" />
+            `
+            }
+          </ion-thumbnail>
+
+            <ion-label>${this.getNameByTaskId(exercise.taskId)}</ion-label>
+          </ion-item>
+              
           `
       )}
+      </ion-list>
+      </ion-card-content>
+      </ion-card>    
 
       <ion-row>
         <ion-col>

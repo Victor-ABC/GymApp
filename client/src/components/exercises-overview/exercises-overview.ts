@@ -56,7 +56,7 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
                     <ion-card-header>
                     <ion-row class="ion-justify-content-between ion-align-items-center">
                       <ion-col>
-                        <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
+                        <ion-card-title>Übungen:</ion-card-title>
                       </ion-col>
                       <ion-col size="auto">
                         <ion-button @click="${this.openCreateExercise}">
