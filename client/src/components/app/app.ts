@@ -69,6 +69,7 @@ class AppComponent extends LitElement {
     } else if (Capacitor.getPlatform() === 'web') {
       httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
     }
+  }
 
   protected firstUpdated(): void {
     console.log(this.ionRouter);
