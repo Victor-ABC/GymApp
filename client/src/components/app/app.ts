@@ -62,13 +62,13 @@ class AppComponent extends LitElement {
 
     this.currentRoute = this.routeItems[0];
 
-    if(Capacitor.isNativePlatform()) {
-
+    if(Capacitor.getPlatform() === 'android') {
       httpClient.init({ baseURL: `http://10.0.2.2:${port}/api/` });
-    } else {
+    } else if(Capacitor.getPlatform() === 'ios') {
+      httpClient.init({ baseURL: `http://127.0.0.1:${port}/api/` });
+    } else if (Capacitor.getPlatform() === 'web') {
       httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
     }
-  }
 
   protected firstUpdated(): void {
     console.log(this.ionRouter);
