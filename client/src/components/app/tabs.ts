@@ -47,13 +47,6 @@ class TabsComponent extends PageMixin(LitElement) {
                 <ion-icon name="home"></ion-icon>
                 <ion-label>Kurse</ion-label>
             </ion-tab-button>
-            ${authenticationService.isTrainer() ?
-            html`
-              <ion-tab-button tab="app-create-course" href="/course/create">
-                  <ion-icon name="home"></ion-icon>
-                  <ion-label>Kurse erstellen</ion-label>
-              </ion-tab-button>
-            `: html``}
         </ion-tab-bar>
         ` : html``
           }
