@@ -15,12 +15,12 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
-    if (!hasRequiredFields(req.body, ['name', 'workoutId', 'timeToRest', 'weight', 'repetitions'], errors)) {
+    if (!hasRequiredFields(req.body, ['taskId', 'workoutId', 'timeToRest', 'weight', 'repetitions'], errors)) {
         return sendErrorMessage(errors.join('\n'));
     }
 
     const exercies = await exerciseDAO.create({
-        name: req.body.name,
+        taskId: req.body.taskId,
         workoutId: req.body.workoutId,
         timeToRest: req.body.timeToRest,
         weight: req.body.weight,
@@ -38,13 +38,13 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name', 'workoutId', 'timeToRest', 'weight', 'repetitions'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'taskId', 'workoutId', 'timeToRest', 'weight', 'repetitions'], errors)) {
       return sendErrorMessage(errors.join('\n'));
   }
 
   const exercies = await exerciseDAO.update({
       id: req.body.id,
-      name: req.body.name,
+      taskId: req.body.taskId,
       workoutId: req.body.workoutId,
       timeToRest: req.body.timeToRest,
       weight: req.body.weight,

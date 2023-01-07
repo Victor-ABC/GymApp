@@ -1,5 +1,5 @@
 /* Autor: Pascal Thesing */
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, state, property, query } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
@@ -18,12 +18,19 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
     @property({ reflect: true }) exercies: object[] = [{}];
 
+    @state() tasks: object[] = [];
+
     protected createRenderRoot(): Element | ShadowRoot {
         return this;
     }
 
     render() {
         return this.buildBody();
+    }
+
+    async firstUpdated() {
+        const response = await httpClient.get('/tasks');
+        this.tasks = (await response.json()).results;
     }
 
 
@@ -50,9 +57,20 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
                     (exercise, index) => html`
                     <ion-card>
                     <ion-card-content>
+
+                    <ion-row>
+                    <img id="picture-${index}" src="" />
+                    </ion-row>
+
                         <ion-item>
                             <ion-label position="fixed">Übung</ion-label>
-                            <ion-input @input=${event => this.onInput(event, index)} type="text" required placeholder="Name angeben" id="name" value="${exercise.name}"></ion-input>
+                            <ion-select id="taskId" @ionChange=${event => this.onInputChange(event, index)} interface="action-sheet" placeholder="Übung wählen">
+                            ${repeat(
+                                this.tasks,
+                                task => html`
+                                    <ion-select-option value="${task.id}">${task.name}</ion-select-option>
+                            `)}
+                        </ion-select>
                         </ion-item>
                         <ion-item lines="none">
                             <ion-label position="fixed">Gewicht</ion-label>
@@ -101,8 +119,17 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
     onInput(event, index) {
         const inputEl = event.target as HTMLInputElement;
         this.exercies[index][inputEl.offsetParent.id] = inputEl.value;
+    }
 
-        console.log(this.exercies);
+    onInputChange(event, index) {
+        const inputEl = event.target as HTMLInputElement;
+        this.exercies[index][inputEl.id] = inputEl.value;
+
+        const element = this.tasks.filter(task => task.id === inputEl.value)[0];
+        const img = document.getElementById('picture-' + index);
+        if(img) {
+            img.src = element.pictures[0] ?? './noImage.png';
+        }
     }
 
     removeExercise(index: number) {
