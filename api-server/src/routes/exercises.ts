@@ -58,14 +58,14 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
     const exerciseDAO: GenericDAO<Exercise> = req.app.locals.exerciseDAO;
 
         const exercies = await exerciseDAO.findAll();
-        res.status(201).json({ results: exercies})
+        res.status(201).json(exercies)
 })
 
 router.get('/workout/:id', authService.authenticationMiddleware, async (req, res) => {
   const exerciseDAO: GenericDAO<Exercise> = req.app.locals.exerciseDAO;
 
       const exercies = await exerciseDAO.findAll({ workoutId: req.params.id });
-      res.status(201).json({ results: exercies})
+      res.status(201).json(exercies)
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {

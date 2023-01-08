@@ -1,14 +1,36 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Pascal Thesing (FH Münster) */
+
+import { ConnectionStatus, Network } from "@capacitor/network";
+import { Storage } from "@ionic/storage";
+import { v4 as uuidv4 } from 'uuid';
+import { notificationService } from "./notification";
 
 export interface HttpClientConfig {
   baseURL: string;
 }
 
+interface Request {
+  path: string,
+  requestOptions: string,
+}
+
+const REQUEST_KEY = 'Request';
+
 export class HttpClient {
   private config!: HttpClientConfig;
+  private storage!: Storage;
+  private isOffline: boolean = false;
 
   init(config: HttpClientConfig) {
     this.config = config;
+
+    Network.getStatus().then(async status => {
+      await this.onNetworkStatusChanged(status);
+    })
+
+    Network.addListener('networkStatusChange', async status => {
+      await this.onNetworkStatusChanged(status);
+    })
   }
 
   public get(url: string) {
@@ -37,10 +59,33 @@ export class HttpClient {
       method: method,
       credentials: 'include'
     };
+
     if (body) {
       requestOptions.body = JSON.stringify(body);
     }
-    const response = await fetch(this.config.baseURL + (url.startsWith('/') ? url.substring(1) : url), requestOptions);
+
+    const path = this.config.baseURL + (url.startsWith('/') ? url.substring(1) : url);
+
+    console.log(this.isOffline)
+
+    if(this.isOffline) {
+      let requests: Request[] = await this.getRequestArray() ?? [];
+      requests.push({
+        path: path,
+        requestOptions: requestOptions
+      });
+
+      await this.setRequestArray(requests);
+
+      return;
+    }
+
+    return this.doFetch(path, requestOptions);
+  }
+
+  async doFetch(path: string, requestOptions: string) {
+    const response = await fetch(path, requestOptions);
+
     if (response.ok) {
       return response;
     } else {
@@ -54,6 +99,42 @@ export class HttpClient {
       return Promise.reject({ message, statusCode: response.status });
     }
   }
+
+
+  private async onNetworkStatusChanged(status: ConnectionStatus) {
+    if(!this.storage) {
+      this.storage = new Storage();
+      await this.storage.create();  
+    }
+
+    this.isOffline = !status.connected;
+
+    if(!status.connected) {
+      notificationService.showNotification('Sie sind nun offline!', 'info')
+      return;
+    }
+
+    const requests: Request[] = [];
+
+    ((await this.getRequestArray()) ?? []).forEach(async (value: Request) => {
+      await this.doFetch(value.path, value.requestOptions)
+    })
+
+    await this.clearStorage();
+  }
+
+  private async getRequestArray(): Promise<Request[]> {
+    return await this.storage.get(REQUEST_KEY)
+  }
+
+  private async setRequestArray(requests: Request[]): Promise<void> {
+    return await this.storage.set(REQUEST_KEY, requests);
+  }
+
+  private async clearStorage(): Promise<void> {
+    return await this.storage.remove(REQUEST_KEY);
+  }
 }
+
 
 export const httpClient = new HttpClient();

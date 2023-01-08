@@ -9,9 +9,14 @@ import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { range } from 'lit/directives/range.js';
 import { isThisISOWeek } from 'date-fns';
+<<<<<<< HEAD
 import { IonItem, IonModal } from '@ionic/core/components';
 import { Exercise } from '../../interfaces.js';
 import { th } from 'date-fns/locale';
+=======
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+
+>>>>>>> 8df6612 (Add offline)
 
 @customElement('app-do-workout')
 class DoWorkoutComponent extends PageMixin(LitElement){
@@ -34,17 +39,13 @@ class DoWorkoutComponent extends PageMixin(LitElement){
     }
 
   async firstUpdated() {
-    const workoutResponse = await httpClient.get('/workouts/' + this.id);
-    this.workout = (await workoutResponse.json()).data; 
-
-  
     const taskResponse = await httpClient.get('/tasks');
     (await taskResponse.json()).results.forEach(element => {
         this.tasks[element.id] = element;
     })
 
-    const response = await httpClient.get('/exercises/workout/' + this.id);
-    this.exercises = (await response.json()).results; 
+    this.workout = await WorkoutSyncDao.findOne({id: this.id});
+    this.exercises = await ExerciseSyncDao.findAll({ workoutId: this.id });
 
     this.preFillResults();
 
@@ -242,11 +243,11 @@ class DoWorkoutComponent extends PageMixin(LitElement){
     }
 
     finishTraining() {
-        this.results.map((sets, index) => {
+        this.results.map(async (sets, index) => {
             const maxWeight = Math.max(...sets.map(o => o.weight));
             const maxRepetitions = Math.max(...sets.map(o => o.repetitions));
 
-            httpClient.patch('exercises/' + this.exercises[index].id, {...this.exercises[index], weight: maxWeight, repetitions: maxRepetitions});
+            await ExerciseSyncDao.update({...this.exercises[index], weight: maxWeight, repetitions: maxRepetitions});
         })
 
         router.navigate('/home')

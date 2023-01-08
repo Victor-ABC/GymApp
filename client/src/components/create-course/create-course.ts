@@ -8,6 +8,9 @@ import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import componentStyle from './create-course.css';
 
+
+import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
+
 interface Trainer {
     id: string;
     name: string;
@@ -40,9 +43,8 @@ class CreateCourseComponent extends PageMixin(LitElement){
     }
 
     async firstUpdated() {
-       const response = await httpClient.get('users/trainer');
-       this.trainer = (await response.json()).results;
-      }
+       this.trainer = await UserSyncDao.findAll({isTrainer: true})
+    }
 
     buildBody(){
         return html `
@@ -128,7 +130,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
                         <ion-item lines="none">
                             <ion-label position="fixed">Endzeit</ion-label>
-                            <ion-datetime-button datetime="endTime"></ion-datetime-button>
+                            <ion-datetime-button id="endTime" datetime="endTime"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
                             <ng-template>
@@ -164,7 +166,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
             };
 
             try {
-                await httpClient.post('courses', course);
+                await CourseSyncDao.create(course);
                 router.navigate('/course');
                 notificationService.showNotification(`Der Kurs ${course.name} wurde erfolgreich erstellt!` , "info");
             } catch (error) {

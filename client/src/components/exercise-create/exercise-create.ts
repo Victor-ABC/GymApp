@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { IonItem, IonSlides, IonText, IonTextarea } from '@ionic/core/components';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import componentStyle from './exercise-create.css';
+import { TaskSyncDao } from "./../../offline/sync-dao";
 
 
 @customElement('app-exercise-create')
@@ -71,8 +72,8 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
         taskType: this.taskType.value,
         muscle: this.muscle.value
       }
-
-      const response = await httpClient.post('/tasks', task);
+    
+      await TaskSyncDao.create(task);
       router.navigate('/exercises');
     }
   

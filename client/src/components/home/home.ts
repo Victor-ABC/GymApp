@@ -10,6 +10,7 @@ import { repeat } from 'lit/directives/repeat.js';
 
 import componentStyle from './home.css';
 import { Capacitor } from '@capacitor/core';
+import { MemberInCourseSyncDao, WorkoutSyncDao } from "./../../offline/sync-dao";
 
 interface User {
     name: string;
@@ -44,12 +45,8 @@ class HomeComponent extends PageMixin(LitElement) {
   async firstUpdated() {
       this.user = authenticationService.getUser();
 
-  
-      const responseBookings = await httpClient.get('/memberincourses');
-      this.myCourseBookings = (await responseBookings.json()).results;
-
-      const responseWorkouts = await httpClient.get('workouts');
-      this.myWorkouts = (await responseWorkouts.json()).results;
+      this.myCourseBookings = await MemberInCourseSyncDao.findAll();
+      this.myWorkouts = await WorkoutSyncDao.findAll();
   }
 
   protected createRenderRoot(): Element | ShadowRoot {
@@ -100,13 +97,14 @@ class HomeComponent extends PageMixin(LitElement) {
   }
 
   async deleteWorkout(workoutId: string) {
-    await httpClient.delete(`workouts/${workoutId}`);
+    await WorkoutSyncDao.delete(workoutId);
+    
     await this.firstUpdated();
     this.requestUpdate();
   }
 
   async deleteCourseBooking(bookingId: string) {
-    await httpClient.delete('/memberincourses/' + bookingId);
+    await MemberInCourseSyncDao.delete(bookingId);
     await this.firstUpdated();
     this.requestUpdate();
   }

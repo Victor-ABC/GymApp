@@ -56,14 +56,14 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
     const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
 
     const tasks = await taskDAO.findAll();
-    res.status(201).json({ results: tasks})
+    res.status(201).json(tasks)
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
   const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
   const task = await taskDAO.findOne({ id: req.params.id });
 
-  res.status(200).json({ data: task })
+  res.status(200).json(task)
 })
 
 
