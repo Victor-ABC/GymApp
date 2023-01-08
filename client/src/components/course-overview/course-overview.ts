@@ -7,7 +7,7 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { authenticationService } from '../../authenticationService.js';
-import componentStyle from './course-overview.css';
+import { Capacitor } from '@capacitor/core';
 
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
     - Übersicht aller angebotenen Kurse (Darstellung in Cards)
@@ -27,7 +27,6 @@ interface Course {
 
 @customElement('app-course-overview')
 class CourseOverviewComponent extends PageMixin(LitElement){
-    //static styles = [componentStyle];
 
     @state() private courses: Course[] = [];
 
@@ -46,8 +45,15 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-            <ion-content class="ion-padding">
-                <h1>Course Overview</h1>
+            <ion-content id="ion-padding">
+                <div id="heading-course-overview">
+                    <h1>Course Overview</h1>
+                    ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
+                        <ion-button id="create-course-button-course-overview" @click="${() => this.openCreateCourse()}">
+                            <ion-icon slot="icon-only" name="add"></ion-icon>
+                        </ion-button>
+                    ` : html``}
+                </div>
                 <div class="courses">
                     ${this.courses.length === 0 ?
                         html`Keine Kurse im System` : html`
@@ -112,6 +118,10 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     openCourse(courseId: string) {
         router.navigate(`course/${courseId}`);
+    }
+
+    openCreateCourse() {
+        router.navigate(`course/create`);
     }
 
     async deleteCourse(courseId: string) {

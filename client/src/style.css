@@ -39,3 +39,12 @@ body {
     width: 1200px;
   }
 }
+
+#heading-course-overview {
+  display: flex;
+  align-items: center; /* Vertical align the elements to the center */
+}
+
+#create-course-button-course-overview {
+  margin-left: auto; /* Push this element to the right */
+}
