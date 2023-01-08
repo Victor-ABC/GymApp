@@ -93,11 +93,6 @@ class HomeComponent extends PageMixin(LitElement) {
       </ion-row>
       <ion-row>
         <ion-col>
-            <ion-button color="secondary" type="button" expand="block">Training frotsetzen</ion-button>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
             <ion-button @click="${this.onEditTraining}" color="warning" type="button" expand="block">Training bearbeiten</ion-button>
         </ion-col>
       </ion-row>
