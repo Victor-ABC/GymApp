@@ -65,10 +65,8 @@ class HomeComponent extends PageMixin(LitElement) {
       <ion-content class="ion-padding">
         <ion-card>
             <ion-card-header>
-                <ion-card-title>Willkommen zurück ${this.user.name} <img src="data:image/png;base64, ${this.user.avatar}">
-                  ${authenticationService.isTrainer() ?
-                    html`(Trainer)` : html`(Kunde)`
-                  }
+                <ion-card-title>
+                  Willkommen zurück ${this.user.name} <ion-avatar class="userAvatar"><img src="data:image/png;base64, ${this.user.avatar}"></ion-avatar>
                 </ion-card-title> 
             </ion-card-header>
         </ion-card>

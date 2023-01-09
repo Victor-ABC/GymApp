@@ -50,6 +50,8 @@ class AppComponent extends LitElement {
     { title: 'Übung erstellen', routePath: '/exercises/create', authRequired: true, trainerRequired: true, component: 'app-exercise-create', nativeHeader: true, inBrowserHeader: false },
     { title: 'Übung editieren', routePath: '/exercises/edit/:id', authRequired: true, trainerRequired: true, component: 'app-exercise-edit', nativeHeader: true, inBrowserHeader: false },
 
+    
+    { title: 'Profil', routePath: '/profile', authRequired: true, trainerRequired: false, component: 'app-profile', nativeHeader: false, inBrowserHeader: true },
     { title: 'Abmelden', routePath: '/users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', nativeHeader: false, inBrowserHeader: true },
     { title: 'Konto erstellen', routePath: '/users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', nativeHeader: false , inBrowserHeader: true},
     { title: 'Anmelden', routePath: '/users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', nativeHeader: false, inBrowserHeader: true },

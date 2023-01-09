@@ -32,6 +32,8 @@ class TabsComponent extends PageMixin(LitElement) {
         </ion-tab>
         <ion-tab tab="app-create-course" component="app-create-course">
         </ion-tab>
+        <ion-tab tab="app-profile" component="app-profile">
+        </ion-tab>
         ${authenticationService.isAuthenticated() ?
             html`
             <ion-tab-bar slot="bottom">
@@ -40,12 +42,16 @@ class TabsComponent extends PageMixin(LitElement) {
                 <ion-label>Home</ion-label>
             </ion-tab-button>
             <ion-tab-button tab="app-chats" href="/chats/all">
-                <ion-icon name="home"></ion-icon>
+                <ion-icon name="chatbubble-outline"></ion-icon>
                 <ion-label>Chat</ion-label>
             </ion-tab-button>
             <ion-tab-button tab="app-course-overview" href="/course">
-                <ion-icon name="home"></ion-icon>
+                <ion-icon name="calendar-outline"></ion-icon>
                 <ion-label>Kurse</ion-label>
+            </ion-tab-button>
+            <ion-tab-button tab="app-profile" href="/profile">
+              <ion-icon name="person-outline"></ion-icon>
+              <ion-label>Profile</ion-label>
             </ion-tab-button>
         </ion-tab-bar>
         ` : html``

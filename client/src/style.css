@@ -56,3 +56,13 @@ body {
 #create-course-button-course-overview {
   margin-left: auto; /* Push this element to the right */
 }
+
+.userAvatar {
+  display: inline;
+}
+
+.userAvatar > img {
+  width: 1rem;
+  height: 1rem;
+  display: inline;
+}
