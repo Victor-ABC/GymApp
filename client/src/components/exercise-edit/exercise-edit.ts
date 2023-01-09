@@ -140,9 +140,9 @@ class ExerciseEditComponent extends PageMixin(LitElement){
                     </ion-item>
                     <ion-item>
                     <ion-label position="fixed">Muskel</ion-label>
-                    <ion-select interface="alert" placeholder="Art wählen" id="muscle">
-                        <ion-select-option value="cardio">Brust</ion-select-option>
-                        <ion-select-option value="weight">Beine</ion-select-option>
+                    <ion-select interface="alert" placeholder="Art wählen" id="muscle" value="${this.task?.muscle}">
+                    <ion-select-option value="Brust">Brust</ion-select-option>
+                    <ion-select-option value="Beine">Beine</ion-select-option>
                     </ion-select>
               </ion-item>
                     <ion-item>

@@ -3,6 +3,14 @@
   height: 50%;
 }
 
+.set {
+  border-right: 1px solid var(--ion-item-border-color, var(--ion-border-color, var(--ion-color-step-150, rgba(0, 0, 0, 0.13))));
+}
+
+.exercise-title {
+  text-align: center;
+}
+
 :root {
   --app-primary-color: #034da1;
   --app-error-color: #c5344e;
