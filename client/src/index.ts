@@ -33,4 +33,4 @@ import './components/course-bookings/course-bookings.ts';
 import './components/exercises-overview/exercises-overview.ts';
 import './components/exercise-create/exercise-create.ts';
 import './components/exercise-edit/exercise-edit.ts';
-
+import './components/profile/profile.ts';

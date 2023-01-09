@@ -111,7 +111,12 @@ class SignUpComponent extends PageMixin(LitElement) {
       };
       try {
         await httpClient.post('users', accountData);
-        router.navigate('/'); //todo: add starting page route
+        router.navigate('/home'); //todo: add starting page route
+
+        const child = document.querySelector('app-header') as LitElement;
+        if(child) {
+          child.requestUpdate();
+        }
       } catch (e) {
         notificationService.showNotification((e as Error).message , "error");
       }

@@ -87,6 +87,29 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
   res.status(201).json({ result: user})
 })
 
+router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  const errors: string[] = [];
+
+  const sendErrorMessage = (message: string) => {
+      res.status(400).json({ message });
+  };
+
+  if (!hasRequiredFields(req.body, ['id', 'name',  'email', 'password', 'isTrainer'], errors)) {
+      return sendErrorMessage(errors.join('\n'));
+  }
+
+  const user = await userDAO.update({
+      id: req.body.id,  
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      isTrainer: req.body.isTrainer,
+      avatar: req.body.avatar ?? null
+  })
+  res.status(201).json(user);
+});
+
 function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
   let hasErrors = false;
   requiredFields.forEach(fieldName => {

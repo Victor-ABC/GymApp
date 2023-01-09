@@ -67,7 +67,9 @@ class SignInComponent extends PageMixin(LitElement) {
         console.log("navigate");
         router.navigate('/home');
         const child = document.querySelector('app-header') as LitElement;
-        child.requestUpdate();
+        if(child) {
+          child.requestUpdate();
+        }
       } catch (e) {
         notificationService.showNotification((e as Error).message, 'error');
       }

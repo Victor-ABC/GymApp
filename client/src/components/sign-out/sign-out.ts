@@ -26,7 +26,9 @@ class SignOutComponent extends PageMixin(LitElement) {
       notificationService.showNotification('Sie wurden erfolgreich abgemeldet!' , "info");
       router.navigate('/users/sign-in');
       const child = document.querySelector('app-header') as LitElement;
-      child.requestUpdate();
+      if(child) {
+        child.requestUpdate();
+      }
     } catch (e) {
       notificationService.showNotification((e as Error).message , "error");
     }
