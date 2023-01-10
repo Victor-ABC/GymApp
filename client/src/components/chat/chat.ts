@@ -24,7 +24,8 @@ type Message = {
 @customElement('app-chat')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ChatComponent extends PageMixin(LitElement) {
-  @query('#text') private textInputElement!: HTMLIonInputElement;
+
+  @query('#text') private textInputElement!: HTMLInputElement;
   @query('#chat-list') private chatList!: HTMLIonListElement;
   @property() id = ''; //id of other user
   @property() createdAt = new Date().getTime();
@@ -35,8 +36,10 @@ class ChatComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
+
   async firstUpdated() {
     try {
+      this.textInputElement.addEventListener("keyup", (e) => e.key === "Enter" ? this.onEnter() : nothing);
       //this.messages = await ChatSyncDao.findOne({id: this.id});
       const response = await httpClient.get('/chat/' + this.id);
       this.messages = await response.json();
@@ -108,7 +111,7 @@ class ChatComponent extends PageMixin(LitElement) {
         <ion-card-title>${this.name}</ion-card-title>
         <ion-card-subtitle>${this.email}</ion-card-subtitle>
       </ion-card>
-      <ion-content style="height: 70%" color="grey">
+      <ion-content color="grey">
         <ion-list style="display: flex; flex-direction: column;" id="chat-list">
           ${this.messages
             .sort((a, b) => {
@@ -120,7 +123,6 @@ class ChatComponent extends PageMixin(LitElement) {
             .map(m => this.renderMessage(m, m.from === this.id))}
         </ion-list>
       </ion-content>
-      <ion-content> </ion-content>
       <ion-footer>
         <ion-row>
           <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
@@ -135,7 +137,10 @@ class ChatComponent extends PageMixin(LitElement) {
       <div>
         <ion-card style=${isLeft ? 'float:left;' : 'float:right;'}>
           <ion-row>
-            <ion-card-content> ${message!.content}</ion-card-content>
+            <ion-card-content> 
+          <b>${message!.content}</b>  
+            
+          </ion-card-content>
             <ion-card-content>
               <ion-row style="padding-top: 4px">
                 <small>${date(message.createdAt)}</small>
@@ -166,3 +171,4 @@ class ChatComponent extends PageMixin(LitElement) {
     }
   }
 }
+

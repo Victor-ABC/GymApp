@@ -55,7 +55,6 @@ class AppChatNewUsers extends PageMixin(LitElement) {
       try {
         const response = await httpClient.get('/chat/all/users');
         var allUsers = (await response.json());
-        console.log(allUsers);
         this.allUsers = allUsers;
         this.requestUpdate();
         await this.updateComplete;
