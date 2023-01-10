@@ -4,7 +4,6 @@ import { GenericDAO } from '../models/generic.dao.js';
 import { authService } from '../services/auth.service.js';
 import { Message } from '../models/users/message.js';
 import { User } from '../models/users/user.js';
-import e from 'express';
 
 const router = express.Router();
 
@@ -28,6 +27,7 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
 });
 
 router.get('/:other', authService.authenticationMiddleware, async (req, res) => {
+  console.log("HTTP-Request: Fetch all Messages of Chat!");
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   const idOfOtherUser = req.params.other;
   var messagesFromMe = await messageDAO.findAll({ from: res.locals.user.id, to: idOfOtherUser });
@@ -57,6 +57,7 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
 });
 
 router.get('/all/users', authService.authenticationMiddleware, async (req, res) => {
+  console.log("HTTP-Request: Fetch all Users!");
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   var allUsers = await userDAO.findAll();
