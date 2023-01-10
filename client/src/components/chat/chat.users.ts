@@ -54,7 +54,9 @@ class AppChatNewUsers extends PageMixin(LitElement) {
     if (this.allUsers.length == 0) {
       try {
         const response = await httpClient.get('/chat/all/users');
-        this.allUsers = (await response.json()).data;
+        var allUsers = (await response.json());
+        console.log(allUsers);
+        this.allUsers = allUsers;
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {

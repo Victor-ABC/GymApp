@@ -77,6 +77,7 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       }
     }
   }
+  console.log(newArray);
   res.json(newArray);
 });
 
