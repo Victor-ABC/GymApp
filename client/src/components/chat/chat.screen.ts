@@ -6,7 +6,7 @@ import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
-import { ChatSyncDao } from "./../../offline/sync-dao";
+import { ChatSyncDao } from './../../offline/sync-dao';
 import { httpClient } from '../../http-client.js';
 
 type User = {
@@ -33,21 +33,13 @@ class ChatScreen extends PageMixin(LitElement) {
   render() {
     return html`
       <ion-content class="ion-padding">
-        <h1>Chats</h1>
-        <ion-grid>
-          <ion-col>
-            <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
-          </ion-col>
-          <ion-col size="auto">
-            <ion-card>
-            <ion-item button href="/newchat" color="primary">
-              <ion-label>
-                <h2>new chat</h2>
-              </ion-label>
-            </ion-item>
-            </ion-card>
-          </ion-col>
-        </ion-grid>
+        <ion-row style="display: flex; flex-wrap: nowrap; justify-content: space-between;">
+          <h1>Chats</h1>
+          <ion-button style="border-radius: 50%;" href="/newchat">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-row>
+        <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
       </ion-content>
     `;
   }
@@ -57,8 +49,8 @@ class ChatScreen extends PageMixin(LitElement) {
       try {
         //this.chatPartners = await ChatSyncDao.findAll();
         const response = await httpClient.get('/chat/');
-        console.log("partners" + response);
-        this.chatPartners = (await response.json());
+        console.log('partners' + response);
+        this.chatPartners = await response.json();
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {
@@ -75,7 +67,10 @@ class ChatScreen extends PageMixin(LitElement) {
     //${title}
     return html`
       <ion-card>
-        <ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
+        <ion-item
+          button
+          href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}"
+        >
           <ion-label>
             <h2>${chatPartner.name}</h2>
             <p>Existiert seit: ${date(chatPartner.createdAt)}</p>

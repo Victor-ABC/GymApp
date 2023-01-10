@@ -10,7 +10,7 @@ import { PageMixin } from '../page.mixin.js';
 import { router } from '../../router/router.js';
 import date from '../../service/date.service.js';
 
-import { ChatSyncDao } from "./../../offline/sync-dao";
+import { ChatSyncDao } from './../../offline/sync-dao';
 
 type Message = {
   content: string;
@@ -39,7 +39,7 @@ class ChatComponent extends PageMixin(LitElement) {
     try {
       //this.messages = await ChatSyncDao.findOne({id: this.id});
       const response = await httpClient.get('/chat/' + this.id);
-      this.messages = (await response.json());
+      this.messages = await response.json();
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;
@@ -80,7 +80,7 @@ class ChatComponent extends PageMixin(LitElement) {
           m!.recieved = true;
           this.messages[this.messages.indexOf(m!)] = m;
           this.messages = [...this.messages];
-        } 
+        }
       }
       //N Messages read by other client
       if (data.readNotifications) {
@@ -120,16 +120,13 @@ class ChatComponent extends PageMixin(LitElement) {
             .map(m => this.renderMessage(m, m.from === this.id))}
         </ion-list>
       </ion-content>
-      <ion-content>
-        <ion-card style="display: flex; flex-grow: 2n">
-          <ion-item lines="full" full style="flex-grow: 1;">
-            <ion-label position="floating">Text</ion-label>
-            <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
-            <ion-note slot="error">Invalid Text</ion-note>
-          </ion-item>
-          <ion-button @click="${this.onEnter}" style="margin-top: 1%">send</ion-button>
-        </ion-card>
-      </ion-content>
+      <ion-content> </ion-content>
+      <ion-footer>
+        <ion-row>
+          <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
+          <ion-button @click="${this.onEnter}" style="margin-bottom: 5px">senden</ion-button>
+        </ion-row>
+      </ion-footer>
     `;
   }
 
