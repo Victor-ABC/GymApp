@@ -130,7 +130,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
                         <ion-item lines="none">
                             <ion-label position="fixed">Endzeit</ion-label>
-                            <ion-datetime-button id="endTime" datetime="endTime"></ion-datetime-button>
+                            <ion-datetime-button datetime="endTime"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
                             <ng-template>
