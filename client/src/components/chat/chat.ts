@@ -37,7 +37,9 @@ class ChatComponent extends PageMixin(LitElement) {
   }
   async firstUpdated() {
     try {
-      this.messages = await ChatSyncDao.findOne({id: this.id});
+      //this.messages = await ChatSyncDao.findOne({id: this.id});
+      const response = await httpClient.get('/chat/' + this.id);
+      this.messages = (await response.json());
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;

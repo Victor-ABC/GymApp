@@ -77,12 +77,10 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       }
     }
   }
-  console.log(newArray);
   res.json(newArray);
 });
 
 router.post('/', authService.authenticationMiddleware, async (req, res) => {
-  console.log("created message");
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   var newMessage = await messageDAO.create({
     content: req.body.content,

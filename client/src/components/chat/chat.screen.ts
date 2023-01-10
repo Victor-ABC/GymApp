@@ -7,6 +7,7 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
 import { ChatSyncDao } from "./../../offline/sync-dao";
+import { httpClient } from '../../http-client.js';
 
 type User = {
   name: string;
@@ -54,7 +55,10 @@ class ChatScreen extends PageMixin(LitElement) {
   async firstUpdated() {
     if (this.chatPartners.length == 0) {
       try {
-        this.chatPartners = await ChatSyncDao.findAll();
+        //this.chatPartners = await ChatSyncDao.findAll();
+        const response = await httpClient.get('/chat/');
+        console.log("partners" + response);
+        this.chatPartners = (await response.json());
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {
