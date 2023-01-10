@@ -6,6 +6,7 @@ import { GenericDAO } from './generic.dao.js';
 import { Storage } from "@ionic/storage";
 import { httpClient } from '../http-client.js';
 import { Storage } from "@ionic/storage";
+import { User } from '../interfaces.js';
 
 export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   private entities = new Map<string, T>();
@@ -126,4 +127,4 @@ export const ExerciseSyncDao = new SyncDAO('/exercises');
 export const CourseSyncDao = new SyncDAO('/courses');
 export const MemberInCourseSyncDao = new SyncDAO('/memberincourses');
 export const ChatSyncDao = new SyncDAO('/chat');
-export const UserSyncDao = new SyncDAO('/users');
+export const UserSyncDao = new SyncDAO<User>('/users');

@@ -49,7 +49,7 @@ class ChatScreen extends PageMixin(LitElement) {
       try {
         //this.chatPartners = await ChatSyncDao.findAll();
         const response = await httpClient.get('/chat/');
-        this.chatPartners = response.json();
+        this.chatPartners = await response.json();
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {
