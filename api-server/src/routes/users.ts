@@ -73,11 +73,10 @@ router.delete('/', authService.authenticationMiddleware, async (req, res) => {
   res.status(200).end();
 });
 
-router.get('/trainer', authService.authenticationMiddleware, async (req, res) => {
+router.get('/', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const filter: Partial<User> = { isTrainer: true };
-  const trainer = await userDAO.findAll(filter);
-  res.status(201).json({ results: trainer})
+  const users = await userDAO.findAll();
+  res.status(201).json(users)
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {

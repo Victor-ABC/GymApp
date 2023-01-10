@@ -9,6 +9,9 @@ import { repeat } from 'lit/directives/repeat.js';
 import { authenticationService } from '../../authenticationService.js';
 import { Capacitor } from '@capacitor/core';
 
+import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
+
+
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
     - Übersicht aller angebotenen Kurse (Darstellung in Cards)
     - Anmeldung/Abmeldung eines Nutzers für einen Kurs (Bspw. Button am Kurs "Anmelden"/"Abmelden")
@@ -31,8 +34,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
     @state() private courses: Course[] = [];
 
     async firstUpdated() {
-        const response = await httpClient.get('/courses');
-        this.courses = (await response.json()).results;
+        this.courses = await CourseSyncDao.findAll();
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -109,7 +111,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         }
 
         try {
-            await httpClient.post('/memberincourses', memberInCourse);
+            await MemberInCourseSyncDao.create(memberInCourse);
             notificationService.showNotification(`Der Kurs ${courseToBook.name} wurde erfolgreich gebucht!` , "info");
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
@@ -125,7 +127,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
     }
 
     async deleteCourse(courseId: string) {
-        await httpClient.delete('/courses/' + courseId);
+        await CourseSyncDao.delete(courseId);
         this.firstUpdated();
     }
 }

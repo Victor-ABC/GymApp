@@ -1,12 +1,12 @@
 import { LitElement, html } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import { httpClient } from '../../http-client.js';
 import { PageMixin } from '../page.mixin.js';
 import { format } from 'date-fns';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { authenticationService } from '../../authenticationService.js';
-import { User } from '../../interfaces.js';
+
+import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
 
 
 interface Course {
@@ -37,11 +37,8 @@ class CourseDetailComponent extends PageMixin(LitElement){
     @state() private trainer: Trainer = {};
 
     async firstUpdated() {
-        const response = await httpClient.get('/courses/' + this.id);
-        this.course = (await response.json()).course;
-
-        const trainerResponse = await httpClient.get('users/' + this.course.trainerId);
-        this.trainer = (await trainerResponse.json()).result;
+        this.course = await CourseSyncDao.findOne({id: this.id});
+        this.trainer = await UserSyncDao.findOne({id: this.course.trainerId})
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -108,7 +105,7 @@ class CourseDetailComponent extends PageMixin(LitElement){
         }
 
         try {
-            await httpClient.post('/memberincourses', memberInCourse);
+            await MemberInCourseSyncDao.create(memberInCourse);
             notificationService.showNotification(`Der Kurs ${courseToBook.name} wurde erfolgreich gebucht!` , "info");
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
@@ -116,7 +113,7 @@ class CourseDetailComponent extends PageMixin(LitElement){
     }
 
     async deleteCourse(courseId: string) {
-        await httpClient.delete('/courses/' + courseId);
+        await CourseSyncDao.delete(courseId);
         router.navigate(`course`);
     }
 

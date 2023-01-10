@@ -8,6 +8,7 @@ import { notificationService } from '../../notification.js';
 import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
 
 @customElement('app-edit-workout')
 class EditWorkoutComponent extends PageMixin(LitElement){
@@ -32,14 +33,11 @@ class EditWorkoutComponent extends PageMixin(LitElement){
     }
 
     async firstUpdated() {
-        const workoutResponse = await httpClient.get('/workouts/' + this.id);
-        this.workout = (await workoutResponse.json()).data; 
+        this.workout = await WorkoutSyncDao.findAll({id: this.id})
   
-        const taskResponse = await httpClient.get('/tasks');
-        this.tasks = (await taskResponse.json()).results;
+        this.tasks = await TaskSyncDao.findAll();
 
-        const response = await httpClient.get('/exercises/workout/' + this.id);
-        this.exercises = (await response.json()).results; 
+        this.exercises = await ExerciseSyncDao.findAll({ workoutId: this.id })
     }
 
 
@@ -153,7 +151,7 @@ class EditWorkoutComponent extends PageMixin(LitElement){
         const item = this.exercises.splice(index, 1);
 
         if(item.id) {
-            await httpClient.delete('exercises/' + item.id);
+            await ExerciseSyncDao.delete(item.id);
         }
 
         this.requestUpdate();
@@ -168,14 +166,14 @@ class EditWorkoutComponent extends PageMixin(LitElement){
     async submit() {
         if (this.isFormValid()) {}
 
-        const workoutResponse = await httpClient.patch('workouts/' + this.workout.id, this.workout);
+        const workoutResponse = await WorkoutSyncDao.update(this.workout);
 
         const workout = (await workoutResponse.json());
-        this.exercises.map(exercise => {
+        this.exercises.map(async exercise => {
             if(exercise.id) {
-                httpClient.patch('exercises/' + exercise.id , exercise);
+                await ExerciseSyncDao.update(exercise);
             } else {
-                httpClient.post('exercises', {...exercise, workoutId: this.workout.id});
+                await ExerciseSyncDao.create({...exercise, workoutId: this.workout.id});
             }
         })
 

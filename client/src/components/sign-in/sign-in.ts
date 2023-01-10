@@ -61,7 +61,7 @@ class SignInComponent extends PageMixin(LitElement) {
         email: this.emailElement.value,
         password: this.passwordElement.value
       };
-      try {
+      
         const user = await httpClient.post('/users/sign-in', authData);
         await authenticationService.storeUser(await user.json());
         console.log("navigate");
@@ -73,6 +73,7 @@ class SignInComponent extends PageMixin(LitElement) {
       } catch (e) {
         notificationService.showNotification((e as Error).message, 'error');
       }
+
     }
     else {
       console.log('Form is not valid');

@@ -10,6 +10,8 @@ import { IonHeader, IonRouter, RouteTree } from '@ionic/core/components';
 import { router } from '../../router/router.js';
 import { authenticationService, AuthenticationService } from '../../authenticationService.js';
 
+import { ChatSyncDao, CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao } from "../../offline/sync-dao";
+
 export type RouteItem = {
   title: string,
   component: string,
@@ -73,10 +75,16 @@ class AppComponent extends LitElement {
     }
   }
 
-  protected firstUpdated(): void {
-    console.log(this.ionRouter);
+  async firstUpdated(): Promise<void> {
     router.init(this.ionRouter);
 
+    await WorkoutSyncDao.init();
+    await TaskSyncDao.init();
+    await ExerciseSyncDao.init();
+    await CourseSyncDao.init();
+    await ChatSyncDao.init();
+    await MemberInCourseSyncDao.init();
+    await UserSyncDao.init();
   }
 
   protected createRenderRoot(): Element | ShadowRoot {

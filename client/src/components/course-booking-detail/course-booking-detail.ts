@@ -8,6 +8,8 @@ import { repeat } from 'lit/directives/repeat.js';
 import { authenticationService } from '../../authenticationService.js';
 import { Capacitor } from '@capacitor/core';
 
+import { MemberInCourseSyncDao, UserSyncDao } from "./../../offline/sync-dao";
+
 
 
 interface CourseBooking {
@@ -49,11 +51,8 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
 
 
     async firstUpdated() {
-        const responseBooking = await httpClient.get('/memberincourses/' + this.id);
-        this.coursebooking = (await responseBooking.json()).result;
-
-        const trainerResponse = await httpClient.get('users/' + this.coursebooking.trainerId);
-        this.trainer = (await trainerResponse.json()).result;
+        this.coursebooking = await MemberInCourseSyncDao.findOne({id: this.id})
+        this.trainer = await UserSyncDao.findOne({id: this.coursebooking.trainerId});
 
         const responseMember = await httpClient.get('memberincourses/member/' + this.coursebooking.id);
         this.member = (await responseMember.json()).result;
@@ -92,7 +91,7 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
     }
 
     async deleteCourseBooking(bookingId: string) {
-        await httpClient.delete('/memberincourses/' + bookingId);
+        await MemberInCourseSyncDao.delete(bookingId);
         router.navigate(`home`);
       }
 

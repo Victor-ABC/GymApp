@@ -1,13 +1,13 @@
 /* Autor: Pascal Thesing */
 import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, state, property, query } from 'lit/decorators.js';
-import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
 
 @customElement('app-create-workout')
 class CreateWorkoutComponent extends PageMixin(LitElement){
@@ -29,8 +29,7 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
     }
 
     async firstUpdated() {
-        const response = await httpClient.get('/tasks');
-        this.tasks = (await response.json()).results;
+        this.tasks = await TaskSyncDao.findAll();
     }
 
 
@@ -151,11 +150,10 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
             name: this.nameElement.value,
         };
 
-        const workoutResponse = await httpClient.post('workouts', workoutData);
+        const workout = await WorkoutSyncDao.create(workoutData);
 
-        const workout = (await workoutResponse.json());
-        this.exercies.map(exercise => {
-            httpClient.post('exercises', {...exercise, workoutId: workout.id});
+        this.exercies.map(async exercise => {
+            await ExerciseSyncDao.create({...exercise, workoutId: workout.id})
         })
 
         router.navigate('home');

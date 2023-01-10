@@ -8,6 +8,7 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js'
 import { authenticationService } from '../../authenticationService.js';
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { UserSyncDao } from '../../offline/sync-dao.js';
 
 @customElement('app-profile')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -156,7 +157,9 @@ class ProfileComponent extends PageMixin(LitElement) {
         avatar: this.avatar
       };
 
-        await httpClient.patch('users/' + accountData.id, accountData);
+      UserSyncDao.update(accountData);
+      authenticationService.storeUser(accountData);
+
         notificationService.showNotification('Das Profil wurde geupdated')
     } else {
       this.form.classList.add('was-validated');

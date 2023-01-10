@@ -6,7 +6,8 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { format } from 'date-fns';
+import { format, isThisSecond } from 'date-fns';
+import { TaskSyncDao } from "./../../offline/sync-dao";
 
 interface Exercise {
     id: string,
@@ -23,8 +24,7 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
     @state() private exercises: Exercise[] = [];
 
     async firstUpdated() {
-        const response = await httpClient.get('/tasks');
-        this.exercises = (await response.json()).results;
+        this.exercises = await TaskSyncDao.findAll() as unknown;
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -40,7 +40,7 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
     }
 
     async deleteExercise(id: string): Promise<void> {
-        await httpClient.delete(`tasks/${id}`);
+        await TaskSyncDao.delete(id);
         await this.firstUpdated();
         this.requestUpdate();
     }

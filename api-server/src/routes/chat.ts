@@ -8,7 +8,7 @@ import e from 'express';
 
 const router = express.Router();
 
-router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
+router.get('/', authService.authenticationMiddleware, async (req, res) => {
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   var messagesFromMe = await messageDAO.findAll({ from: res.locals.user.id });
@@ -24,7 +24,7 @@ router.get('/chats', authService.authenticationMiddleware, async (req, res) => {
   for (var p of partners) {
     users.push((await userDAO.findOne({ id: p }))!);
   }
-  res.json({ data: users });
+  res.json(users);
 });
 
 router.get('/:other', authService.authenticationMiddleware, async (req, res) => {
@@ -53,7 +53,7 @@ router.get('/:other', authService.authenticationMiddleware, async (req, res) => 
   }
   wsServer.sendReadNotification(idOfOtherUser, { readNotifications: id_of_read_messages });
   var result = [...messagesFromMe, ...new_messageToMe];
-  res.json({ data: result });
+  res.json(result);
 });
 
 router.get('/all/users', authService.authenticationMiddleware, async (req, res) => {
@@ -76,10 +76,10 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       }
     }
   }
-  res.json({ data: newArray });
+  res.json(newArray);
 });
 
-router.post('/new', authService.authenticationMiddleware, async (req, res) => {
+router.post('/', authService.authenticationMiddleware, async (req, res) => {
   console.log("created message");
   const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
   var newMessage = await messageDAO.create({

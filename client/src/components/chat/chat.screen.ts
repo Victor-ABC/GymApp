@@ -2,11 +2,11 @@
 
 import { LitElement, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
+import { ChatSyncDao } from "./../../offline/sync-dao";
 
 type User = {
   name: string;
@@ -54,8 +54,7 @@ class ChatScreen extends PageMixin(LitElement) {
   async firstUpdated() {
     if (this.chatPartners.length == 0) {
       try {
-        const response = await httpClient.get('/chat/chats');
-        this.chatPartners = (await response.json()).data;
+        this.chatPartners = await ChatSyncDao.findAll();
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {
@@ -89,7 +88,7 @@ class ChatScreen extends PageMixin(LitElement) {
         content: this.textInputElement.value!
       };
       this.textInputElement.value = null;
-      await httpClient.post('/chat/', data);
+      await ChatSyncDao.create(data);
     } catch (e) {
       notificationService.showNotification((e as Error).message, 'info');
     }

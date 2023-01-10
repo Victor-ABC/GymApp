@@ -10,6 +10,9 @@ import { notificationService } from '../../notification.js'
 import { repeat } from 'lit/directives/repeat.js';
 import { Capacitor } from '@capacitor/core';
 
+
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+
 import componentStyle from './workout-detail.css';
 
 @customElement('app-workout-detail')
@@ -34,14 +37,12 @@ class HomeComponent extends PageMixin(LitElement) {
   }
 
   async firstUpdated() {
-      const workoutResponse = await httpClient.get('/workouts/' + this.id);
-      this.workout = (await workoutResponse.json()).data; 
+      this.workout = await WorkoutSyncDao.findOne({id: this.id});
 
-      const taskResponse = await httpClient.get('/tasks');
-      this.tasks = (await taskResponse.json()).results;
+      this.tasks = await TaskSyncDao.findAll();
+      console.log(this.tasks);
 
-      const response = await httpClient.get('/exercises/workout/' + this.id);
-      this.exercises = (await response.json()).results; 
+      this.exercises = await ExerciseSyncDao.findAll(); 
   }
 
   getNameByTaskId(taskId) {
@@ -72,7 +73,7 @@ class HomeComponent extends PageMixin(LitElement) {
                 <img src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
               </ion-slide>`
             : html`        
-            <img src="${exercise.pictures[0]}" />
+            <img src="${this.getPicturesByTaskId(exercise.taskId)[0]}" />
             `
             }
           </ion-thumbnail>

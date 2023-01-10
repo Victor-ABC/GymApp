@@ -50,7 +50,7 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
         const workoutDAO: GenericDAO<Workout> = req.app.locals.workoutDAO;
 
         const workouts = await workoutDAO.findAll();
-        res.status(201).json({ results: workouts})
+        res.status(201).json(workouts)
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
