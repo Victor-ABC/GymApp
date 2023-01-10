@@ -46,12 +46,8 @@ class CourseDetailComponent extends PageMixin(LitElement){
     }
 
     render() {
-        return this.buildBody();
-    }
-
-    buildBody(){
         return html `
-            <ion-content class="ion-padding">
+            <ion-content>
                 <h1>Course Detail</h1>
                 <div class="course">
                     <ion-card>

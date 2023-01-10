@@ -19,8 +19,6 @@ interface Exercise {
 
 @customElement('app-exercise-overview')
 class ExerciseOverviewComponent extends PageMixin(LitElement){
-    //static styles = [componentStyle];
-
     @state() private exercises: Exercise[] = [];
 
     async firstUpdated() {
@@ -51,22 +49,17 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
 
     buildBody() {
         return html `
-            <ion-content class="ion-padding">
+            <ion-content>
+              <div class="header-overview">
+                <h1>Übungen</h1>
+                <ion-button @click="${this.openCreateExercise}">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
+                </ion-button>
+              </div>
                     <ion-card>
-                    <ion-card-header>
-                    <ion-row class="ion-justify-content-between ion-align-items-center">
-                      <ion-col>
-                        <ion-card-title>Übungen:</ion-card-title>
-                      </ion-col>
-                      <ion-col size="auto">
-                        <ion-button @click="${this.openCreateExercise}">
-                          <ion-icon slot="icon-only" name="add"></ion-icon>
-                        </ion-button>
-                      </ion-col>
-                    </ion-row>
-                  </ion-card-header>
-
                         <ion-card-content>
+                        ${this.exercises.length === 0 ?
+                          html`<div class="no-content">Keine Übungen im System</div>` : html`
                             <ion-list>
                             ${repeat(
                                 this.exercises,
@@ -107,6 +100,8 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
                                 `
                               )}
                             </ion-list>
+                            `}
+                            
                         </ion-card-content>
                     </ion-card>
             </ion-content>

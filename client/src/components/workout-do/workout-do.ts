@@ -5,17 +5,17 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
-import componentStyle from './create-workout.css';
+import componentStyle from './workout-create.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { range } from 'lit/directives/range.js';
 import { isThisISOWeek } from 'date-fns';
 import { IonItem, IonModal } from '@ionic/core/components';
 import { Exercise } from '../../interfaces.js';
 import { th } from 'date-fns/locale';
-import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "../../offline/sync-dao";
 
-@customElement('app-do-workout')
-class DoWorkoutComponent extends PageMixin(LitElement){
+@customElement('app-workout-do')
+class WorkoutDoComponent extends PageMixin(LitElement){
 
     @state() private workout: object = {};
 
@@ -28,10 +28,6 @@ class DoWorkoutComponent extends PageMixin(LitElement){
 
     protected createRenderRoot(): Element | ShadowRoot {
         return this;
-    }
-
-    render() {
-        return this.buildBody();
     }
 
   async firstUpdated() {
@@ -83,10 +79,9 @@ class DoWorkoutComponent extends PageMixin(LitElement){
         exercise.finished = true;
     }
 
-
-    buildBody(){
+    render() {
         return html`
-        <ion-content class="ion-padding">
+        <ion-content>
             <h1>Workout</h1>
 
             <ion-card>
@@ -156,9 +151,7 @@ class DoWorkoutComponent extends PageMixin(LitElement){
                         <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
                     </ion-button>
                     <ion-popover trigger="button-${index}" triggerAction="click">
-                    <ng-template>
-                      <ion-content class="ion-padding">${this.tasks[exercise.taskId].description}</ion-content>
-                    </ng-template>
+                      ${this.tasks[exercise.taskId].description}
                   </ion-popover>
 
 
@@ -179,7 +172,6 @@ class DoWorkoutComponent extends PageMixin(LitElement){
                 return html`<ion-slide><img class="uploadedImages" src="${exercisePicture}" /></ion-slide>`;
               })}
             </ion-slides>
-
 
                 ${repeat([...range(exercise.sets)], (setIndex) => html`
                     <ion-item>

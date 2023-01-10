@@ -14,7 +14,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
-    if (!hasRequiredFields(req.body, ['name'], errors)) {
+    if (!hasRequiredFields(req.body, ['name', 'createdBy'], errors)) {
         return sendErrorMessage(errors.join('\n'));
     }
 
@@ -34,7 +34,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'name', 'createdBy'], errors)) {
       return sendErrorMessage(errors.join('\n'));
   }
 

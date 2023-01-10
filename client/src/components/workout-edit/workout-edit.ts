@@ -5,13 +5,13 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
-import componentStyle from './create-workout.css';
+import componentStyle from './workout-create.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
-import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "../../offline/sync-dao";
 
-@customElement('app-edit-workout')
-class EditWorkoutComponent extends PageMixin(LitElement){
+@customElement('app-workout-edit')
+class WorkoutEditComponent extends PageMixin(LitElement){
 
 
     @query('form') private form!: HTMLFormElement;
@@ -43,7 +43,7 @@ class EditWorkoutComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-        <ion-content class="ion-padding">
+        <ion-content>
             <h1>Workout erstellen</h1>
 
             <form>

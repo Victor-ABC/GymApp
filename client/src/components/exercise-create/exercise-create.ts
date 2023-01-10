@@ -80,7 +80,7 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
 
     buildBody() {
         return html `
-        <ion-content class="ion-padding">
+        <ion-content">
         <h1>Übung erstellen</h1>
         <form>
             <ion-card>

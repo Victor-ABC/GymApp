@@ -25,11 +25,11 @@ export class HttpClient {
     this.config = config;
 
     Network.getStatus().then(async status => {
-      await this.onNetworkStatusChanged(status);
+      await this.onNetworkStatusChanged(status, false);
     })
 
     Network.addListener('networkStatusChange', async status => {
-      await this.onNetworkStatusChanged(status);
+      await this.onNetworkStatusChanged(status, true);
     })
   }
 
@@ -101,7 +101,7 @@ export class HttpClient {
   }
 
 
-  private async onNetworkStatusChanged(status: ConnectionStatus) {
+  private async onNetworkStatusChanged(status: ConnectionStatus, showNotification = false) {
     if(!this.storage) {
       this.storage = new Storage();
       await this.storage.create();  
@@ -112,6 +112,10 @@ export class HttpClient {
     if(!status.connected) {
       notificationService.showNotification('Sie sind nun offline!', 'info')
       return;
+    }
+
+    if(showNotification) {
+      notificationService.showNotification('Sie sind wieder online!', 'info')
     }
 
     const requests: Request[] = [];

@@ -63,12 +63,8 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
     }
 
     render() {
-        return this.buildBody();
-    }
-
-    buildBody(){
         return html `
-            <ion-content class="ion-padding">
+            <ion-content >
                 <h1>Meine Buchung</h1>
                 ${Capacitor.isNativePlatform() ? 
                     html`

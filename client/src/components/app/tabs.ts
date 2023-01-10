@@ -25,12 +25,12 @@ class TabsComponent extends PageMixin(LitElement) {
         </ion-tab>
         <ion-tab tab="app-course-overview" component="app-course-overview">
         </ion-tab>
-        <ion-tab tab="app-create-course" component="app-create-course">
+        <ion-tab tab="app-course-create" component="app-course-create">
         </ion-tab>
         <ion-tab tab="app-course-bookings" component="app-course-bookings">
         </ion-tab>
         </ion-tab>
-        <ion-tab tab="app-create-course" component="app-create-course">
+        <ion-tab tab="app-course-create" component="app-course-create">
         </ion-tab>
         <ion-tab tab="app-profile" component="app-profile">
         </ion-tab>

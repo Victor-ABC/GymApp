@@ -1,65 +1,51 @@
-/* Autor: Pascal Thesing (FH Münster) */
+/* Autor: Pascal Thesing */
 
 import { LitElement, html } from 'lit';
-import { customElement, state, query } from 'lit/decorators.js';
-import { PageMixin } from '../page.mixin.js';
-import { authenticationService } from '../../authenticationService.js';
-import { router } from '../../router/router.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
+import { router } from '../../router/router.js';
+import { PageMixin } from '../page.mixin.js';
+import { notificationService } from '../../notification.js'
+import { authenticationService } from '../../authenticationService.js';
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { MemberInCourseSyncDao, UserSyncDao, WorkoutSyncDao } from '../../offline/sync-dao.js';
+import { LitElement, html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thumbsUpSharp } from 'ionicons/icons';
 import { repeat } from 'lit/directives/repeat.js';
 
-import componentStyle from './home.css';
-import { Capacitor } from '@capacitor/core';
-import { MemberInCourseSyncDao, WorkoutSyncDao } from "./../../offline/sync-dao";
-
-interface User {
-    name: string;
-    email: string;
-    avatar: string | null
-}
-
-interface CourseBooking {
-  id: string;
-  courseId: string;
-  name: string;
-  dayOfWeek: string;
-  startTime: string;
-  bookingId: string;
-}
-
-interface Workout {
-    name: string
-}
-
-@customElement('app-home')
+@customElement('app-user-detail')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class HomeComponent extends PageMixin(LitElement) {
-  static styles = [componentStyle];
+class UserDetailComponent extends LitElement {
 
-  @state() private myWorkouts: Workout[] = [];
-  @state() private myCourseBookings: CourseBooking[] = [];
+    @state() private avatar!: string;
+  
+  
+    @state() private user: Object = {}
 
-
-  @state() private user: object = {};
-
-  async firstUpdated() {
-      this.user = authenticationService.getUser();
-
-      this.myCourseBookings = await MemberInCourseSyncDao.findAll();
-      this.myWorkouts = await WorkoutSyncDao.findAll({createdBy: this.user.id});
-  }
-
+    @state() private myWorkouts: Object[] = [];
+    @state() private myCourseBookings: Object[] = [];
+  
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
+  
+  async firstUpdated() {
+    this.user = await UserSyncDao.findOne({id: this.id});
+    this.avatar = this.user.avatar;
 
+    this.myCourseBookings = await MemberInCourseSyncDao.findAll();
+    this.myWorkouts = await WorkoutSyncDao.findAll({createdBy: this.id});
+
+  }
+  
   render() {
     return html`
       <ion-content>
         <ion-card>
             <ion-card-header>
                 <ion-card-title class="home-header">
-                  Willkommen zurück ${this.user.name} <ion-avatar class="userAvatar"><img src="${this.user.avatar ?? './avatar.png'}"></ion-avatar>
+                  User: ${this.user.name} <ion-avatar class="userAvatar"><img src="${this.avatar ?? './avatar.png'}"></ion-avatar>
                 </ion-card-title> 
             </ion-card-header>
         </ion-card>
@@ -70,12 +56,12 @@ class HomeComponent extends PageMixin(LitElement) {
             ${this.buildWorkoutContent()}
           `: html`
             <ion-grid class="home-grid">
-              <ion-row>
-                <ion-col class="home-col--left">
-                  ${this.buildCourseContent()}
-                </ion-col>
-                <ion-col class="home-col--right">
-                  ${this.buildWorkoutContent()}
+            <ion-row>
+              <ion-col class="home-col--left">
+                ${this.buildCourseContent()}
+              </ion-col>
+              <ion-col class="home-col--right">
+                ${this.buildWorkoutContent()}
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -84,34 +70,6 @@ class HomeComponent extends PageMixin(LitElement) {
     `;
   }
 
-  openCreateWorkout() {
-    router.navigate('workouts/create');
-  }
-
-  openCreateCourse() {
-    router.navigate('course');
-  }
-
-  async deleteWorkout(workoutId: string) {
-    await WorkoutSyncDao.delete(workoutId);
-    
-    await this.firstUpdated();
-    this.requestUpdate();
-  }
-
-  async deleteCourseBooking(bookingId: string) {
-    await MemberInCourseSyncDao.delete(bookingId);
-    await this.firstUpdated();
-    this.requestUpdate();
-  }
-
-  openWorkout(workoutId: string) {
-    router.navigate(`workouts/${workoutId}`);
-  }
-
-  openCourse(courseBookingId: string) {
-    router.navigate(`coursebookings/${courseBookingId}`);
-  }
 
   buildCourseContent() {
     return html`
@@ -119,12 +77,7 @@ class HomeComponent extends PageMixin(LitElement) {
         <ion-card-header>
           <ion-row class="ion-justify-content-between ion-align-items-center">
             <ion-col>
-              <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
-            </ion-col>
-            <ion-col size="auto">
-              <ion-button @click="${this.openCreateCourse}">
-                <ion-icon slot="icon-only" name="add"></ion-icon>
-              </ion-button>
+              <ion-card-title>Gebuchten Kurse:</ion-card-title>
             </ion-col>
           </ion-row>
         </ion-card-header>
@@ -176,7 +129,7 @@ class HomeComponent extends PageMixin(LitElement) {
         <ion-card-header>
           <ion-row class="ion-justify-content-between ion-align-items-center">
             <ion-col>
-              <ion-card-title>Deine Trainings:</ion-card-title>
+              <ion-card-title>Workouts:</ion-card-title>
             </ion-col>
             <ion-col size="auto">
               <ion-button @click="${this.openCreateWorkout}">
@@ -202,7 +155,7 @@ class HomeComponent extends PageMixin(LitElement) {
                   <ion-label>${workout.name}</ion-label>
 
                   <ion-button fill="clear" @click="${() => this.openWorkout(workout.id)}">
-                    Open
+                    Editieren
                   </ion-button>
                   <ion-button fill="clear" id="click-trigger-${workout.id}">
                     <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
@@ -231,4 +184,28 @@ class HomeComponent extends PageMixin(LitElement) {
     `
   }
 
+  openCreateWorkout() {
+    router.navigate('workouts/create/' + this.id);
+  }
+
+  async deleteWorkout(workoutId: string) {
+    await WorkoutSyncDao.delete(workoutId);
+    
+    await this.firstUpdated();
+    this.requestUpdate();
+  }
+
+  async deleteCourseBooking(bookingId: string) {
+    await MemberInCourseSyncDao.delete(bookingId);
+    await this.firstUpdated();
+    this.requestUpdate();
+  }
+
+  openWorkout(workoutId: string) {
+    router.navigate(`/workouts/edit/${workoutId}`);
+  }
+
+  openCourse(courseBookingId: string) {
+    router.navigate(`coursebookings/${courseBookingId}`);
+  }
 }

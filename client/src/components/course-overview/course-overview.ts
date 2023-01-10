@@ -42,25 +42,21 @@ class CourseOverviewComponent extends PageMixin(LitElement){
       }
 
     render() {
-        return this.buildBody();
-    }
-
-    buildBody(){
         return html `
-            <ion-content id="ion-padding">
-                <div id="heading-course-overview">
+            <ion-content>
+                <div class="header-overview">
                     <h1>Course Overview</h1>
                     ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
-                        <ion-button id="create-course-button-course-overview" @click="${() => this.openCreateCourse()}">
+                        <ion-button @click="${() => this.openCreateCourse()}">
                             <ion-icon slot="icon-only" name="add"></ion-icon>
                         </ion-button>
                     ` : html``}
                 </div>
                 <div class="courses">
+                <ion-card>
+                <ion-card-content>
                     ${this.courses.length === 0 ?
-                        html`Keine Kurse im System` : html`
-                        <ion-card>
-                        <ion-card-content>
+                        html`<div class="no-content">Keine Kurse vorhanden</div>` : html`
                             <ion-list>
                                 ${repeat(
                                     this.courses,
@@ -95,11 +91,10 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                     `
                                 )}
                             </ion-list>
-                        </ion-card-content>
-                    </ion-card>
                             `
                     }
-                    
+                    </ion-card-content>
+                    </ion-card>
                 </div>
             </ion-content>
         `;
