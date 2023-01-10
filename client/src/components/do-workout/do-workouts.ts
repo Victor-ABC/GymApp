@@ -9,14 +9,10 @@ import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { range } from 'lit/directives/range.js';
 import { isThisISOWeek } from 'date-fns';
-<<<<<<< HEAD
 import { IonItem, IonModal } from '@ionic/core/components';
 import { Exercise } from '../../interfaces.js';
 import { th } from 'date-fns/locale';
-=======
 import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
-
->>>>>>> 8df6612 (Add offline)
 
 @customElement('app-do-workout')
 class DoWorkoutComponent extends PageMixin(LitElement){
