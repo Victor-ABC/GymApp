@@ -5,7 +5,7 @@ import { customElement, query } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
-import { notificationService } from '../../notification.js'
+import { notificationService } from '../../notification.js';
 import { authenticationService } from '../../authenticationService.js';
 
 import componentStyle from './sign-in.css';
@@ -61,21 +61,19 @@ class SignInComponent extends PageMixin(LitElement) {
         email: this.emailElement.value,
         password: this.passwordElement.value
       };
-      
+      try {
         const user = await httpClient.post('/users/sign-in', authData);
         await authenticationService.storeUser(await user.json());
-        console.log("navigate");
+        console.log('navigate');
         router.navigate('/home');
         const child = document.querySelector('app-header') as LitElement;
-        if(child) {
+        if (child) {
           child.requestUpdate();
         }
       } catch (e) {
         notificationService.showNotification((e as Error).message, 'error');
       }
-
-    }
-    else {
+    } else {
       console.log('Form is not valid');
       this.form.classList.add('was-validated');
       return;
