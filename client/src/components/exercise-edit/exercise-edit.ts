@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { IonItem, IonSlides, IonText, IonTextarea } from '@ionic/core/components';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import componentStyle from './exercise-edit.css';
+import { TaskSyncDao } from "./../../offline/sync-dao";
 
 @customElement('app-exercise-edit')
 class ExerciseEditComponent extends PageMixin(LitElement){
@@ -22,12 +23,12 @@ class ExerciseEditComponent extends PageMixin(LitElement){
     @query('#imageSwiper') private imageSwiper!: IonSlides;
     @query('#description') private description!: IonText;
     @query('#taskType') private taskType!: HTMLIonSelectElement;
+    @query('#muscle') private muscle!: HTMLIonSelectElement;
     @query('#name') private name!: IonText;
 
     async firstUpdated() {
-      const tasksResponse = await httpClient.get('/tasks/' + this.id);
-      this.task = (await tasksResponse.json()).data; 
-
+      this.task = await TaskSyncDao.findOne({id: this.id});
+      console.log(this.task);
       this.exercisePictures = this.task.pictures;
     }
 
@@ -74,10 +75,12 @@ class ExerciseEditComponent extends PageMixin(LitElement){
         pictures: this.exercisePictures,
         name: this.name.value,
         taskType: this.taskType.value,
-        description: this.description.value
+        description: this.description.value,
+        muscle: this.muscle.value
       }
 
-      const response = await httpClient.patch('/tasks/' + this.id, task);
+      await TaskSyncDao.update(task);
+
       router.navigate('/exercises');
     }
   
@@ -136,6 +139,15 @@ class ExerciseEditComponent extends PageMixin(LitElement){
                         <ion-select-option value="weight">Gewicht heben</ion-select-option>
                     </ion-select>
                     </ion-item>
+                    <ion-item>
+                    <ion-label position="fixed">Muskel</ion-label>
+                    <ion-select interface="alert" placeholder="Art wählen" id="muscle" value="${this.task?.muscle}">
+
+                    <ion-select-option value="Brust">Brust</ion-select-option>
+                    <ion-select-option value="Beine">Beine</ion-select-option>
+
+                    </ion-select>
+              </ion-item>
                     <ion-item>
                         <ion-label position="fixed">Beschreibung</ion-label>
                         <ion-input type="text" required placeholder="Beschreibung vergeben" id="description" 

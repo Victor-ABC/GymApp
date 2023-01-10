@@ -1,12 +1,14 @@
 import { LitElement, html } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
-import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
 import componentStyle from './course-bookings.css';
+
+
+import { MemberInCourseSyncDao, UserSyncDao } from "./../../offline/sync-dao";
 
 interface BookedCourse {
     id: string;
@@ -38,8 +40,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
 
     async firstUpdated() {
         try {
-          const responseBookings = await httpClient.get('/memberincourses');
-          this.mycourses = (await responseBookings.json()).results;
+          this.mycourses = await MemberInCourseSyncDao.findAll();
         } catch (e) {
             if ((e as { statusCode: number }).statusCode === 401) {
               router.navigate('/users/sign-in');
@@ -114,9 +115,9 @@ class CourseBookingsComponent extends PageMixin(LitElement){
         `;
     }
 
-    removeCourse(courseToRemove: BookedCourse) {
+    async removeCourse(courseToRemove: BookedCourse) {
         try {
-            httpClient.delete('/memberincourses/' + courseToRemove.bookingId);
+            await MemberInCourseSyncDao.delete(courseToRemove.bookingId);
             window.location.reload();
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");

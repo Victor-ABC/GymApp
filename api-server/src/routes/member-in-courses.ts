@@ -70,7 +70,7 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
             bookedCourses.push(bookedCourse!);
         }
     }
-    res.json({ results: bookedCourses});
+    res.json(bookedCourses);
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
@@ -96,7 +96,7 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
             bookedCourse.bookingId = memberInCourse.id,
             bookedCourse.trainerId = course?.trainerId
     }
-    res.json({ result: bookedCourse});
+    res.json(bookedCourse);
 })
 
 router.get('/member/:id', authService.authenticationMiddleware, async (req, res) => {
@@ -114,7 +114,7 @@ router.get('/member/:id', authService.authenticationMiddleware, async (req, res)
             users.push(user);
         }
     }
-    res.json({ result: users});
+    res.json(users);
 })
 
 router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 

@@ -9,6 +9,8 @@ import { httpClient } from '../../http-client.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import componentStyle from './home.css';
+import { Capacitor } from '@capacitor/core';
+import { MemberInCourseSyncDao, WorkoutSyncDao } from "./../../offline/sync-dao";
 
 interface User {
     name: string;
@@ -43,12 +45,8 @@ class HomeComponent extends PageMixin(LitElement) {
   async firstUpdated() {
       this.user = authenticationService.getUser();
 
-  
-      const responseBookings = await httpClient.get('/memberincourses');
-      this.myCourseBookings = (await responseBookings.json()).results;
-
-      const responseWorkouts = await httpClient.get('workouts');
-      this.myWorkouts = (await responseWorkouts.json()).results;
+      this.myCourseBookings = await MemberInCourseSyncDao.findAll();
+      this.myWorkouts = await WorkoutSyncDao.findAll();
   }
 
   protected createRenderRoot(): Element | ShadowRoot {
@@ -64,128 +62,28 @@ class HomeComponent extends PageMixin(LitElement) {
       <ion-content class="ion-padding">
         <ion-card>
             <ion-card-header>
-                <ion-card-title>Willkommen zurück ${this.user.name} <img src="data:image/png;base64, ${this.user.avatar}">
-                ${authenticationService.isTrainer() ?
-                  html`(Trainer)` : html`(Kunde)`
-                }
+                <ion-card-title>
+                  Willkommen zurück ${this.user.name} <ion-avatar class="userAvatar"><img src="data:image/png;base64, ${this.user.avatar}"></ion-avatar>
                 </ion-card-title> 
             </ion-card-header>
-            <ion-card-content>
-            </ion-card-content>
         </ion-card>
 
-        
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-card>
-                  <ion-card-header>
-                    <ion-row class="ion-justify-content-between ion-align-items-center">
-                      <ion-col>
-                        <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
-                      </ion-col>
-                      <ion-col size="auto">
-                        <ion-button @click="${this.openCreateCourse}">
-                          <ion-icon slot="icon-only" name="add"></ion-icon>
-                        </ion-button>
-                      </ion-col>
-                    </ion-row>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <ion-list>
-                      ${repeat(
-                        this.myCourseBookings,
-                        course => course.id,
-                        course => html`
-                          <ion-item-sliding>
-                            <ion-item button="true">
-                              <ion-thumbnail slot="start">
-                                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                              </ion-thumbnail>
-                              <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
-
-                              <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
-                              <ion-button fill="clear" id="click-trigger-${course.bookingId}">
-                                <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
-                              </ion-button>
-                              <ion-popover trigger="click-trigger-${course.bookingId}" trigger-action="click" show-backdrop="false">
-                                <ion-list mode="ios">
-                                  <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
-                                </ion-list>
-                              </ion-popover>
-                            </ion-item>
-
-                            <ion-item-options side="end">
-                              <ion-item-option color="danger" @click="${() => this.deleteCourseBooking(course.bookingId)}">
-                                <ion-icon slot="icon-only" name="trash"></ion-icon>
-                              </ion-item-option>
-                            </ion-item-options>
-
-                          </ion-item-sliding>
-                        `
-                      )}
-                    </ion-list>
-                  </ion-card-content>
-              </ion-card>
-            </ion-col>
-            <ion-col>
-            <ion-card>
-        <ion-card-header>
-          <ion-row class="ion-justify-content-between ion-align-items-center">
-          <ion-col>
-          <ion-card-title>Deine Workouts:</ion-card-title>
-          </ion-col>
-          <ion-col size="auto">
-
-          <ion-button @click="${this.openCreateWorkout}">
-          <ion-icon slot="icon-only" name="add"></ion-icon>
-          </ion-button>
-          </ion-col>
-          </ion-row>
-        </ion-card-header>
-
-
-          <ion-card-content>
-          <ion-list>
-          ${repeat(
-            this.myWorkouts,
-            workout => workout.id,
-            workout => html`
-            <ion-item-sliding>
-              <ion-item button="true">
-                <ion-thumbnail slot="start">
-                  <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-                </ion-thumbnail>
-                <ion-label>${workout.name}</ion-label>
-
-                <ion-button fill="clear" @click="${() => this.openWorkout(workout.id)}">
-                  Open
-                </ion-button>
-                <ion-button fill="clear" id="click-trigger-${workout.id}">
-                  <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
-                </ion-button>
-                <ion-popover trigger="click-trigger-${workout.id}" trigger-action="click" show-backdrop="false">
-
-                  <ion-list mode="ios">
-                  <ion-item button="true" detail="false" @click="${() => this.deleteWorkout(workout.id)}" color="danger">Löschen</ion-item>
-                  </ion-list>
-
-                </ion-popover>
-              </ion-item>
-
-              <ion-item-options side="end">
-                <ion-item-option color="danger" @click="${() => this.deleteWorkout(workout.id)}">
-                  <ion-icon slot="icon-only" name="trash"></ion-icon>
-                </ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>                     
-            `
-        )}
-          </ion-card-content>
-        </ion-card>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+        ${Capacitor.isNativePlatform() ? 
+          html`
+            ${this.buildCourseContent()}
+            ${this.buildWorkoutContent()}
+          `: html`
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  ${this.buildCourseContent()}
+                </ion-col>
+                <ion-col>
+                  ${this.buildWorkoutContent()}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          `}
       </ion-content>
     `;
   }
@@ -199,13 +97,14 @@ class HomeComponent extends PageMixin(LitElement) {
   }
 
   async deleteWorkout(workoutId: string) {
-    await httpClient.delete(`workouts/${workoutId}`);
+    await WorkoutSyncDao.delete(workoutId);
+    
     await this.firstUpdated();
     this.requestUpdate();
   }
 
   async deleteCourseBooking(bookingId: string) {
-    await httpClient.delete('/memberincourses/' + bookingId);
+    await MemberInCourseSyncDao.delete(bookingId);
     await this.firstUpdated();
     this.requestUpdate();
   }
@@ -217,4 +116,116 @@ class HomeComponent extends PageMixin(LitElement) {
   openCourse(courseBookingId: string) {
     router.navigate(`coursebookings/${courseBookingId}`);
   }
+
+  buildCourseContent() {
+    return html`
+      <ion-card>
+        <ion-card-header>
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col>
+              <ion-card-title>Deine gebuchten Kurse:</ion-card-title>
+            </ion-col>
+            <ion-col size="auto">
+              <ion-button @click="${this.openCreateCourse}">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            ${repeat(
+              this.myCourseBookings,
+              course => course.id,
+              course => html`
+                <ion-item-sliding>
+                  <ion-item button="true">
+                    <ion-thumbnail slot="start">
+                      <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                    </ion-thumbnail>
+                    <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
+
+                    <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
+                    <ion-button fill="clear" id="click-trigger-${course.bookingId}">
+                      <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                    </ion-button>
+                    <ion-popover trigger="click-trigger-${course.bookingId}" trigger-action="click" show-backdrop="false">
+                      <ion-list mode="ios">
+                        <ion-item button="true" detail="false" @click="${() => this.deleteCourseBooking(course.bookingId)}" color="danger">Buchung stornieren</ion-item>
+                      </ion-list>
+                    </ion-popover>
+                  </ion-item>
+
+                  <ion-item-options side="end">
+                    <ion-item-option color="danger" @click="${() => this.deleteCourseBooking(course.bookingId)}">
+                      <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+
+                </ion-item-sliding>
+              `
+            )}
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    `
+  }
+
+  buildWorkoutContent() {
+    return html`
+      <ion-card>
+        <ion-card-header>
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col>
+              <ion-card-title>Deine Workouts:</ion-card-title>
+            </ion-col>
+            <ion-col size="auto">
+              <ion-button @click="${this.openCreateWorkout}">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-list>
+            ${repeat(
+              this.myWorkouts,
+              workout => workout.id,
+              workout => html`
+              <ion-item-sliding>
+                <ion-item button="true">
+                  <ion-thumbnail slot="start">
+                    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+                  </ion-thumbnail>
+                  <ion-label>${workout.name}</ion-label>
+
+                  <ion-button fill="clear" @click="${() => this.openWorkout(workout.id)}">
+                    Open
+                  </ion-button>
+                  <ion-button fill="clear" id="click-trigger-${workout.id}">
+                    <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
+                  </ion-button>
+                  <ion-popover trigger="click-trigger-${workout.id}" trigger-action="click" show-backdrop="false">
+
+                    <ion-list mode="ios">
+                    <ion-item button="true" detail="false" @click="${() => this.deleteWorkout(workout.id)}" color="danger">Löschen</ion-item>
+                    </ion-list>
+
+                  </ion-popover>
+                </ion-item>
+
+                <ion-item-options side="end">
+                  <ion-item-option color="danger" @click="${() => this.deleteWorkout(workout.id)}">
+                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>                     
+              `
+            )}
+        </ion-card-content>
+      </ion-card>
+    `
+  }
+
 }

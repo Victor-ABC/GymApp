@@ -8,12 +8,6 @@ import viteHtmlReplacePlugin from './vite-html-replace-plugin.js';
 export default defineConfig({
   plugins: [
     viteLitCssPlugin(),
-    {
-      ...viteHtmlReplacePlugin([
-        [`href="/"`, `href="/app/"`],
-      ]),
-      apply: 'build'
-    }
   ],
   server: { port: 8080 },
   css: {

@@ -10,6 +10,9 @@ import { notificationService } from '../../notification.js'
 import { repeat } from 'lit/directives/repeat.js';
 import { Capacitor } from '@capacitor/core';
 
+
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+
 import componentStyle from './workout-detail.css';
 
 @customElement('app-workout-detail')
@@ -23,6 +26,8 @@ class HomeComponent extends PageMixin(LitElement) {
 
   @state() private exercises: object[] = [];
 
+  @state() tasks: object[] = []
+
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
@@ -32,11 +37,20 @@ class HomeComponent extends PageMixin(LitElement) {
   }
 
   async firstUpdated() {
-      const workoutResponse = await httpClient.get('/workouts/' + this.id);
-      this.workout = (await workoutResponse.json()).data; 
+      this.workout = await WorkoutSyncDao.findOne({id: this.id});
 
-      const response = await httpClient.get('/exercises/workout/' + this.id);
-      this.exercises = (await response.json()).results; 
+      this.tasks = await TaskSyncDao.findAll();
+      console.log(this.tasks);
+
+      this.exercises = await ExerciseSyncDao.findAll(); 
+  }
+
+  getNameByTaskId(taskId) {
+    return this.tasks.filter(task => task.id == taskId)[0].name;
+  }
+
+  getPicturesByTaskId(taskId) {
+    return this.tasks.filter(task => task.id == taskId)[0].pictures;
   }
 
   buildBody() {
@@ -44,27 +58,38 @@ class HomeComponent extends PageMixin(LitElement) {
       <ion-content class="ion-padding">
         <h1>Workout detail: ${this.workout.name}</h1>
 
+        <ion-card>
+        <ion-card-content>
+        <ion-list>
         ${repeat(
           this.exercises,
           (exercise, index) => html`
-          <ion-card>
-          <ion-card-content>
-              <ion-item>
-              <ion-label>${exercise.name}</ion-label>
-              </ion-item>
-          </ion-card-content>
-          </ion-card>                  
+
+          <ion-item>
+          <ion-thumbnail slot="start">
+
+          ${this.getPicturesByTaskId(exercise.taskId)!.length == 0
+            ? html` <ion-slide>
+                <img src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-slide>`
+            : html`        
+            <img src="${this.getPicturesByTaskId(exercise.taskId)[0]}" />
+            `
+            }
+          </ion-thumbnail>
+
+            <ion-label>${this.getNameByTaskId(exercise.taskId)}</ion-label>
+          </ion-item>
+              
           `
       )}
+      </ion-list>
+      </ion-card-content>
+      </ion-card>    
 
       <ion-row>
         <ion-col>
             <ion-button @click="${this.doTraining}" color="primary" type="button" expand="block">Training starten</ion-button>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-            <ion-button color="secondary" type="button" expand="block">Training frotsetzen</ion-button>
         </ion-col>
       </ion-row>
       <ion-row>

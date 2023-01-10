@@ -8,7 +8,7 @@ export class InMemoryGenericDAO<T extends Entity> implements GenericDAO<T> {
   private entities = new Map<string, T>();
 
   public async create(partEntity: Omit<T, keyof Entity>) {
-    const entity = { ...partEntity, id: uuidv4(), createdAt: new Date().getTime() };
+    const entity = { ...partEntity, id: partEntity.id ?? uuidv4(), createdAt: new Date().getTime() };
     this.entities.set(entity.id, entity as T);
     return Promise.resolve(entity as T);
   }

@@ -15,7 +15,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
-    if (!hasRequiredFields(req.body, ['name',  'description', 'taskType'], errors)) {
+    if (!hasRequiredFields(req.body, ['name',  'description', 'taskType', 'muscle'], errors)) {
         return sendErrorMessage(errors.join('\n'));
     }
 
@@ -23,7 +23,8 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         name: req.body.name,
         description: req.body.description,
         pictures: req.body.pictures,
-        taskType: req.body.taskType
+        taskType: req.body.taskType,
+        muscle: req.body.muscle
     })
     res.status(201).json(task);
 });
@@ -36,7 +37,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name',  'description', 'taskType'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'name',  'description', 'taskType', 'muscle'], errors)) {
       return sendErrorMessage(errors.join('\n'));
   }
 
@@ -45,7 +46,8 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       pictures: req.body.pictures,
-      taskType: req.body.taskType
+      taskType: req.body.taskType,
+      muscle: req.body.muscle
   })
   res.status(201).json(task);
 });
@@ -54,14 +56,14 @@ router.get('/', authService.authenticationMiddleware, async (req, res) => {
     const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
 
     const tasks = await taskDAO.findAll();
-    res.status(201).json({ results: tasks})
+    res.status(201).json(tasks)
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
   const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
   const task = await taskDAO.findOne({ id: req.params.id });
 
-  res.status(200).json({ data: task })
+  res.status(200).json(task)
 })
 
 

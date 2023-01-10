@@ -1,13 +1,13 @@
 /* Autor: Pascal Thesing */
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, state, property, query } from 'lit/decorators.js';
-import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import componentStyle from './create-workout.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
 
 @customElement('app-create-workout')
 class CreateWorkoutComponent extends PageMixin(LitElement){
@@ -18,12 +18,18 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
     @property({ reflect: true }) exercies: object[] = [{}];
 
+    @state() tasks: object[] = [];
+
     protected createRenderRoot(): Element | ShadowRoot {
         return this;
     }
 
     render() {
         return this.buildBody();
+    }
+
+    async firstUpdated() {
+        this.tasks = await TaskSyncDao.findAll();
     }
 
 
@@ -50,9 +56,20 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
                     (exercise, index) => html`
                     <ion-card>
                     <ion-card-content>
+
+                    <ion-row>
+                    <img id="picture-${index}" src="" />
+                    </ion-row>
+
                         <ion-item>
                             <ion-label position="fixed">Übung</ion-label>
-                            <ion-input @input=${event => this.onInput(event, index)} type="text" required placeholder="Name angeben" id="name" value="${exercise.name}"></ion-input>
+                            <ion-select id="taskId" @ionChange=${event => this.onInputChange(event, index)} interface="action-sheet" placeholder="Übung wählen">
+                            ${repeat(
+                                this.tasks,
+                                task => html`
+                                    <ion-select-option value="${task.id}">${task.name}</ion-select-option>
+                            `)}
+                        </ion-select>
                         </ion-item>
                         <ion-item lines="none">
                             <ion-label position="fixed">Gewicht</ion-label>
@@ -101,8 +118,17 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
     onInput(event, index) {
         const inputEl = event.target as HTMLInputElement;
         this.exercies[index][inputEl.offsetParent.id] = inputEl.value;
+    }
 
-        console.log(this.exercies);
+    onInputChange(event, index) {
+        const inputEl = event.target as HTMLInputElement;
+        this.exercies[index][inputEl.id] = inputEl.value;
+
+        const element = this.tasks.filter(task => task.id === inputEl.value)[0];
+        const img = document.getElementById('picture-' + index);
+        if(img) {
+            img.src = element.pictures[0] ?? './noImage.png';
+        }
     }
 
     removeExercise(index: number) {
@@ -124,11 +150,10 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
             name: this.nameElement.value,
         };
 
-        const workoutResponse = await httpClient.post('workouts', workoutData);
+        const workout = await WorkoutSyncDao.create(workoutData);
 
-        const workout = (await workoutResponse.json());
-        this.exercies.map(exercise => {
-            httpClient.post('exercises', {...exercise, workoutId: workout.id});
+        this.exercies.map(async exercise => {
+            await ExerciseSyncDao.create({...exercise, workoutId: workout.id})
         })
 
         router.navigate('home');

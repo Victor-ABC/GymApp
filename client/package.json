@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "1.0.0",
-  "description": "task manager",
+  "description": "Gym+",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +13,6 @@
     "capsync": "npx cap sync"
   },
   "keywords": [],
-  "author": "Prof. Dr. Norman Lahme-Hütig (FH Münster)",
   "license": "ISC",
   "devDependencies": {
     "@capacitor/cli": "^4.6.0",
@@ -40,12 +39,15 @@
   },
   "dependencies": {
     "@capacitor/android": "^4.6.0",
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/camera": "^4.1.4",
     "@capacitor/core": "^4.6.0",
     "@capacitor/ios": "^4.6.1",
     "@capacitor/network": "^4.1.0",
     "@ionic/core": "^6.3.9",
+    "@ionic/storage": "^3.0.6",
     "date-fns": "^2.29.3",
+    "esbuild-windows-64": "^0.15.18",
     "ionicons": "^6.0.4",
     "lit": "^2.4.0"
   }

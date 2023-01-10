@@ -2,6 +2,7 @@
 
 import { User } from "./interfaces";
 import { CapacitorCookies } from "@capacitor/core";
+import { ChatSyncDao, CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao } from "./offline/sync-dao";
 
 const storageKey = 'USER_STORAGE_KEY';
 
@@ -36,6 +37,13 @@ export class AuthenticationService  {
   async storeUser(user: User) {
     localStorage.setItem(storageKey, JSON.stringify(user));
 
+    await WorkoutSyncDao.sync();
+    await TaskSyncDao.sync();
+    await ExerciseSyncDao.sync();
+    await CourseSyncDao.sync();
+    await ChatSyncDao.sync();
+    await MemberInCourseSyncDao.sync();
+    await UserSyncDao.sync();
   }
 }
 

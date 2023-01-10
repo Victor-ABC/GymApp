@@ -10,6 +10,8 @@ import { PageMixin } from '../page.mixin.js';
 import { router } from '../../router/router.js';
 import date from '../../service/date.service.js';
 
+import { ChatSyncDao } from "./../../offline/sync-dao";
+
 type Message = {
   content: string;
   from: string;
@@ -35,8 +37,7 @@ class ChatComponent extends PageMixin(LitElement) {
   }
   async firstUpdated() {
     try {
-      const response = await httpClient.get('/chat/' + this.id);
-      this.messages = (await response.json()).data;
+      this.messages = await ChatSyncDao.findOne({id: this.id});
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;
@@ -160,7 +161,7 @@ class ChatComponent extends PageMixin(LitElement) {
         content: this.textInputElement.value!
       };
       this.textInputElement.value = null;
-      await httpClient.post('/chat/new', data);
+      await ChatSyncDao.create(data);
     } catch (e) {
       notificationService.showNotification((e as Error).message, 'info');
     }

@@ -7,7 +7,10 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { authenticationService } from '../../authenticationService.js';
-import componentStyle from './course-overview.css';
+import { Capacitor } from '@capacitor/core';
+
+import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
+
 
 /* Basisklasse für die Kurse im Fitnessstudio. Hier sollen folgende Funktionen abgebildet werden:
     - Übersicht aller angebotenen Kurse (Darstellung in Cards)
@@ -27,13 +30,11 @@ interface Course {
 
 @customElement('app-course-overview')
 class CourseOverviewComponent extends PageMixin(LitElement){
-    //static styles = [componentStyle];
 
     @state() private courses: Course[] = [];
 
     async firstUpdated() {
-        const response = await httpClient.get('/courses');
-        this.courses = (await response.json()).results;
+        this.courses = await CourseSyncDao.findAll();
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -46,8 +47,15 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-            <ion-content class="ion-padding">
-                <h1>Course Overview</h1>
+            <ion-content id="ion-padding">
+                <div id="heading-course-overview">
+                    <h1>Course Overview</h1>
+                    ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
+                        <ion-button id="create-course-button-course-overview" @click="${() => this.openCreateCourse()}">
+                            <ion-icon slot="icon-only" name="add"></ion-icon>
+                        </ion-button>
+                    ` : html``}
+                </div>
                 <div class="courses">
                     ${this.courses.length === 0 ?
                         html`Keine Kurse im System` : html`
@@ -103,7 +111,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         }
 
         try {
-            await httpClient.post('/memberincourses', memberInCourse);
+            await MemberInCourseSyncDao.create(memberInCourse);
             notificationService.showNotification(`Der Kurs ${courseToBook.name} wurde erfolgreich gebucht!` , "info");
         } catch (error) {
             notificationService.showNotification((error as Error).message , "error");
@@ -114,8 +122,12 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         router.navigate(`course/${courseId}`);
     }
 
+    openCreateCourse() {
+        router.navigate(`course/create`);
+    }
+
     async deleteCourse(courseId: string) {
-        await httpClient.delete('/courses/' + courseId);
+        await CourseSyncDao.delete(courseId);
         this.firstUpdated();
     }
 }

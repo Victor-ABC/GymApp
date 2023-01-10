@@ -5,3 +5,7 @@ h1 {
   form {
     margin-top: 1rem;
   }
+
+  .force-black-font {
+    color: black !important;
+  }

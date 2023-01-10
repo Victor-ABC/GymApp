@@ -54,51 +54,41 @@ export default async function startDB(app: Express) {
  * @returns
  */
 const getDemoUser = async () => {
-  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
 
   return {
     name: 'demo',
     email: 'demo@demo.de',
     password: await bcrypt.hash('demo', 10),
     isTrainer: false,
-    avatar: fig
+    avatar: null
   };
 };
 
 const getTrainerUser = async () => {
-  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-
   return {
     name: 'Trainer',
     email: 'trainer@demo.de',
     password: await bcrypt.hash('demo', 10),
     isTrainer: true,
-    avatar: fig
   };
 };
 
 
 const getTimUser = async () => {
-  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-
   return {
     name: 'simon',
     email: 'simon@weis.de',
     password: await bcrypt.hash('demo', 10),
     isTrainer: false,
-    avatar: fig
   };
 };
 
 const getSimonUser = async () => {
-  const fig = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-
   return {
     name: 'tim',
     email: 'tim@kress.de',
     password: await bcrypt.hash('demo', 10),
     isTrainer: false,
-    avatar: fig
   };
 };
 

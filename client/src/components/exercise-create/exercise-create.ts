@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { IonItem, IonSlides, IonText, IonTextarea } from '@ionic/core/components';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import componentStyle from './exercise-create.css';
+import { TaskSyncDao } from "./../../offline/sync-dao";
 
 
 @customElement('app-exercise-create')
@@ -21,8 +22,8 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
     @query('#imageSwiper') private imageSwiper!: IonSlides;
     @query('#description') private description!: IonText;
     @query('#taskType') private taskType!: HTMLIonSelectElement;
+    @query('#muscle') private muscle!: HTMLIonSelectElement;
     @query('#name') private name!: IonText;
-
     async firstUpdated() {
     }
 
@@ -68,10 +69,11 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
         pictures: this.exercisePictures,
         name: this.name.value,
         description: this.description.value,
-        taskType: this.taskType.value
+        taskType: this.taskType.value,
+        muscle: this.muscle.value
       }
-
-      const response = await httpClient.post('/tasks', task);
+    
+      await TaskSyncDao.create(task);
       router.navigate('/exercises');
     }
   
@@ -129,6 +131,13 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
                                 <ion-select-option value="weight">Gewicht heben</ion-select-option>
                             </ion-select>
                       </ion-item>
+                      <ion-item>
+                      <ion-label position="fixed">Muskel</ion-label>
+                      <ion-select interface="alert" placeholder="Art wählen" id="muscle">
+                          <ion-select-option value="Brust">Brust</ion-select-option>
+                          <ion-select-option value="Beine">Beine</ion-select-option>
+                      </ion-select>
+                </ion-item>
                     <ion-item>
                         <ion-label position="fixed">Beschreibung</ion-label>
                         <ion-input type="text" required placeholder="Beschreibung vergeben" id="description"></ion-input>
