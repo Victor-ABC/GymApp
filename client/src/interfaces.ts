@@ -1,4 +1,6 @@
-export interface User {
+import { Entity } from "./offline/entity"
+
+export interface User extends Entity{
     name: string,
     email: string,
     isTrainer: boolean,

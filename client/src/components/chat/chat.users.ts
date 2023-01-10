@@ -7,6 +7,7 @@ import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
+import { UserSyncDao } from '../../offline/sync-dao.js';
 type User = {
   name: string;
   email: string;
@@ -54,7 +55,9 @@ class AppChatNewUsers extends PageMixin(LitElement) {
     if (this.allUsers.length == 0) {
       try {
         const response = await httpClient.get('/chat/all/users');
-        this.allUsers = (await response.json()).data;
+        //this.allUsers = await UserSyncDao.findAll();
+        var allUsers = (await response.json());
+        this.allUsers = allUsers;
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {

@@ -10,7 +10,7 @@ import { PageMixin } from '../page.mixin.js';
 import { router } from '../../router/router.js';
 import date from '../../service/date.service.js';
 
-import { ChatSyncDao } from "./../../offline/sync-dao";
+import { ChatSyncDao } from './../../offline/sync-dao';
 
 type Message = {
   content: string;
@@ -24,7 +24,8 @@ type Message = {
 @customElement('app-chat')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ChatComponent extends PageMixin(LitElement) {
-  @query('#text') private textInputElement!: HTMLIonInputElement;
+
+  @query('#text') private textInputElement!: HTMLInputElement;
   @query('#chat-list') private chatList!: HTMLIonListElement;
   @property() id = ''; //id of other user
   @property() createdAt = new Date().getTime();
@@ -35,9 +36,13 @@ class ChatComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
+
   async firstUpdated() {
     try {
-      this.messages = await ChatSyncDao.findOne({id: this.id});
+      this.textInputElement.addEventListener("keyup", (e) => e.key === "Enter" ? this.onEnter() : nothing);
+      //this.messages = await ChatSyncDao.findOne({id: this.id});
+      const response = await httpClient.get('/chat/' + this.id);
+      this.messages = await response.json();
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;
@@ -78,7 +83,7 @@ class ChatComponent extends PageMixin(LitElement) {
           m!.recieved = true;
           this.messages[this.messages.indexOf(m!)] = m;
           this.messages = [...this.messages];
-        } 
+        }
       }
       //N Messages read by other client
       if (data.readNotifications) {
@@ -106,7 +111,7 @@ class ChatComponent extends PageMixin(LitElement) {
         <ion-card-title>${this.name}</ion-card-title>
         <ion-card-subtitle>${this.email}</ion-card-subtitle>
       </ion-card>
-      <ion-content style="height: 70%" color="grey">
+      <ion-content color="grey">
         <ion-list style="display: flex; flex-direction: column;" id="chat-list">
           ${this.messages
             .sort((a, b) => {
@@ -118,16 +123,12 @@ class ChatComponent extends PageMixin(LitElement) {
             .map(m => this.renderMessage(m, m.from === this.id))}
         </ion-list>
       </ion-content>
-      <ion-content>
-        <ion-card style="display: flex; flex-grow: 2n">
-          <ion-item lines="full" full style="flex-grow: 1;">
-            <ion-label position="floating">Text</ion-label>
-            <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
-            <ion-note slot="error">Invalid Text</ion-note>
-          </ion-item>
-          <ion-button @click="${this.onEnter}" style="margin-top: 1%">send</ion-button>
-        </ion-card>
-      </ion-content>
+      <ion-footer>
+        <ion-row>
+          <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
+          <ion-button @click="${this.onEnter}" style="margin-bottom: 5px">senden</ion-button>
+        </ion-row>
+      </ion-footer>
     `;
   }
 
@@ -136,7 +137,10 @@ class ChatComponent extends PageMixin(LitElement) {
       <div>
         <ion-card style=${isLeft ? 'float:left;' : 'float:right;'}>
           <ion-row>
-            <ion-card-content> ${message!.content}</ion-card-content>
+            <ion-card-content> 
+          <b>${message!.content}</b>  
+            
+          </ion-card-content>
             <ion-card-content>
               <ion-row style="padding-top: 4px">
                 <small>${date(message.createdAt)}</small>
@@ -167,3 +171,4 @@ class ChatComponent extends PageMixin(LitElement) {
     }
   }
 }
+
