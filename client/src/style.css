@@ -1,6 +1,6 @@
 #standardUploadImage {
-  width: 50%;
-  height: 50%;
+  width: 25%;
+  height: 25%;
 }
 
 .set {
@@ -48,21 +48,66 @@ body {
   }
 }
 
-#heading-course-overview {
+.header-overview {
   display: flex;
   align-items: center; /* Vertical align the elements to the center */
 }
 
-#create-course-button-course-overview {
+.header-overview > ion-button {
   margin-left: auto; /* Push this element to the right */
 }
 
 .userAvatar {
   display: inline;
+  vertical-align: middle;
 }
 
 .userAvatar > img {
-  width: 1rem;
-  height: 1rem;
+  width: 2rem;
+  height: 2rem;
   display: inline;
+}
+
+.home-grid {
+  padding: 0;
+}
+
+.home-col--left {
+  margin-left: 0;
+  padding: 0;
+}
+
+.home-col--right {
+  margin-right: 0;
+  padding: 0;
+}
+
+.no-content {
+  text-align: center;
+}
+
+.home-header {
+  text-align: center;
+}
+
+.site-not-found {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+
+.site-not-found > div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.site-not-found > img {
+  width: 25%;
+  height: 25%
 }

@@ -4,13 +4,14 @@ import { customElement, state, property, query } from 'lit/decorators.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
-import componentStyle from './create-workout.css';
+import componentStyle from './workout-create.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
-import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
+import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "../../offline/sync-dao";
+import { authenticationService, AuthenticationService } from '../../authenticationService.js';
 
-@customElement('app-create-workout')
-class CreateWorkoutComponent extends PageMixin(LitElement){
+@customElement('app-workout-create')
+class WorkoutCreateComponent extends PageMixin(LitElement){
 
 
     @query('form') private form!: HTMLFormElement;
@@ -35,7 +36,7 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-        <ion-content class="ion-padding">
+        <ion-content>
             <h1>Workout erstellen</h1>
 
             <form>
@@ -148,6 +149,7 @@ class CreateWorkoutComponent extends PageMixin(LitElement){
 
         const workoutData = {
             name: this.nameElement.value,
+            createdBy: this.userId ?? authenticationService.getUser().id
         };
 
         const workout = await WorkoutSyncDao.create(workoutData);

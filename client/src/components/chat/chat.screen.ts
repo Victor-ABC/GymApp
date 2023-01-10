@@ -32,14 +32,24 @@ class ChatScreen extends PageMixin(LitElement) {
 
   render() {
     return html`
-      <ion-content class="ion-padding">
-        <ion-row style="display: flex; flex-wrap: nowrap; justify-content: space-between;">
+      <ion-content>
+        <div class="header-overview">
           <h1>Chats</h1>
-          <ion-button style="border-radius: 50%;" href="/newchat">
+          <ion-button href="/newchat">
             <ion-icon name="add"></ion-icon>
           </ion-button>
-        </ion-row>
-        <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+        </div>
+
+          ${this.chatPartners.length === 0 ?
+              html`
+              <ion-card>
+                <ion-card-content>
+                  <div class="no-content">Du hast momentan keine Chats</div>
+                </ion-card>
+              </ion-card-content>
+          ` : html`
+            <ion-list> ${this.chatPartners.map(chatPartner => this.buildChat(chatPartner))} </ion-list>
+          `}
       </ion-content>
     `;
   }
@@ -63,7 +73,6 @@ class ChatScreen extends PageMixin(LitElement) {
   }
 
   buildChat(chatPartner: User) {
-    //${title}
     return html`
       <ion-card>
         <ion-item

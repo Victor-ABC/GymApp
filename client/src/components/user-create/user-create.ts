@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Pascal Thesing */
 
 import { LitElement, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
@@ -9,10 +9,13 @@ import { notificationService } from '../../notification.js'
 import { authenticationService } from '../../authenticationService.js';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { UserSyncDao } from '../../offline/sync-dao.js';
+import { LitElement, html, nothing } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { thumbsUpSharp } from 'ionicons/icons';
 
-@customElement('app-profile')
+@customElement('app-user-create')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class ProfileComponent extends PageMixin(LitElement) {
+class UserCreateComponent extends LitElement {
 
     @query('#password')
     inputOfPasswordElement!: HTMLInputElement;
@@ -45,23 +48,15 @@ class ProfileComponent extends PageMixin(LitElement) {
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
-
-  render() {
-    return this.buildBody();
-  }
-
   async firstUpdated() {
-    this.user = authenticationService.getUser();
-    this.avatar = this.user.avatar;
-
     this.inputOfPasswordElement.addEventListener('input', () => {
       this.computeStrengthOfPasswordAgain();
     });
   }
 
-  buildBody() {
+  render() {
     return html`
-      <ion-content>
+      <ion-content">
       <form>
 
       ${this.avatar
@@ -86,11 +81,11 @@ class ProfileComponent extends PageMixin(LitElement) {
 
       <ion-item lines="full">
         <ion-label position="floating">Name</ion-label>
-        <ion-input value="${this.user.name}" type="text" required placeholder="Text eingeben" id="name"></ion-input>
+        <ion-input type="text" required placeholder="Text eingeben" id="name"></ion-input>
       </ion-item>
       <ion-item lines="full">
         <ion-label position="floating">Email</ion-label>
-        <ion-input value="${this.user.email}" type="email" required placeholder="Text eingeben" id="email"></ion-input>
+        <ion-input type="email" required placeholder="Text eingeben" id="email"></ion-input>
       </ion-item>
       <ion-item lines="full">
         <ion-label position="floating">Passwort</ion-label>
@@ -116,14 +111,10 @@ class ProfileComponent extends PageMixin(LitElement) {
       </ion-item>
       <ion-item>
         <ion-label>Trainer</ion-label>
-        <ion-toggle checked="${this.user.isTrainer}" id="is-trainer" slot="end"></ion-toggle>
+        <ion-toggle id="is-trainer" slot="end"></ion-toggle>
       </ion-item>
       <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Update Profile</ion-button>
     </form>
-
-        <ion-col>
-            <ion-button color="primary" type="button" @click="${this.signout}" expand="block">Abmelden</ion-button>
-        </ion-col>
       </ion-content>
     `;
   }

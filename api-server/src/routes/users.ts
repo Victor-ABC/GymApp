@@ -86,6 +86,12 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
   res.status(201).json({ result: user})
 })
 
+router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  await userDAO.delete(req.params.id);
+  res.status(200).end(); 
+})
+
 router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];

@@ -33,7 +33,7 @@ class SignInComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-      <ion-content class="ion-padding">
+      <ion-content>
         <h1>Anmelden</h1>
         <form novalidate onSubmit="submit">
           <ion-item lines="full">
@@ -47,7 +47,7 @@ class SignInComponent extends PageMixin(LitElement) {
           </ion-item>
           <ion-row>
             <ion-col>
-              <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Anmelden</ion-button>
+              <ion-button color="primary" type="submit" @click="${this.submit}" expand="block">Anmelden</ion-button>
             </ion-col>
           </ion-row>
         </form>
@@ -61,6 +61,7 @@ class SignInComponent extends PageMixin(LitElement) {
         email: this.emailElement.value,
         password: this.passwordElement.value
       };
+
       try {
         const user = await httpClient.post('/users/sign-in', authData);
         await authenticationService.storeUser(await user.json());

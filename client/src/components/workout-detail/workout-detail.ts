@@ -55,7 +55,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-      <ion-content class="ion-padding">
+      <ion-content>
         <h1>Workout detail: ${this.workout.name}</h1>
 
         <ion-card>

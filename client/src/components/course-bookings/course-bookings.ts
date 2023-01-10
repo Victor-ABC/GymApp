@@ -54,12 +54,8 @@ class CourseBookingsComponent extends PageMixin(LitElement){
     }
 
     render() {
-        return this.buildBody();
-    }
-
-    buildBody(){
        return html `
-            <ion-content class="ion-padding">
+            <ion-content>
                 <h1>Meine Buchungen</h1>
                 <div class="courses">
                     ${repeat(

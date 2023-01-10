@@ -98,14 +98,6 @@ class ChatComponent extends PageMixin(LitElement) {
   }
 
   render() {
-    return html`${when(
-      Capacitor.isNativePlatform(),
-      () => html`<ion-content>${this.buildBody()}</ion-content>`,
-      () => this.buildBody()
-    )}`;
-  }
-  //isleft = m.from === this.id
-  buildBody() {
     return html`
       <ion-card>
         <ion-card-title>${this.name}</ion-card-title>

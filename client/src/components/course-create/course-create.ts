@@ -6,18 +6,18 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
-import componentStyle from './create-course.css';
+import componentStyle from './course-create.css';
 
 
-import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
+import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "../../offline/sync-dao";
 
 interface Trainer {
     id: string;
     name: string;
 }
 
-@customElement('app-create-course')
-class CreateCourseComponent extends PageMixin(LitElement){
+@customElement('app-course-create')
+class CourseCreateComponent extends PageMixin(LitElement){
     static styles = [componentStyle];
 
     @query('form') private form!: HTMLFormElement;
@@ -48,7 +48,7 @@ class CreateCourseComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-        <ion-content class="ion-padding">
+        <ion-content>
             <h1>Kurs erstellen</h1>
             <form>
                 <ion-card>
