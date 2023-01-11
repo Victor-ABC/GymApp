@@ -36,6 +36,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     }
 
     const createdMemberInCourse = await memberInCourseDAO.create({
+        id: req.body.id,
         memberId: res.locals.user.id,
         courseId: req.body.courseId
     })

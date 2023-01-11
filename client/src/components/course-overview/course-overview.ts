@@ -113,12 +113,12 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         }
     }
 
-    openCourse(courseId: string) {
-        router.navigate(`/course/${courseId}`);
+    async openCourse(courseId: string) {
+        await router.navigate(`/course/detail/${courseId}`);
     }
 
-    openCreateCourse() {
-        router.navigate(`/course/create`);
+    async openCreateCourse() {
+        await router.navigate(`/course/create`);
     }
 
     async deleteCourse(courseId: string) {

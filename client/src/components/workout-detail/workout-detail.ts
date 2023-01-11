@@ -35,7 +35,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
       this.tasks = await TaskSyncDao.findAll();
 
-      this.exercises = await ExerciseSyncDao.findAll(); 
+      this.exercises = await ExerciseSyncDao.findAll({workoutId: this.id}); 
   }
 
   getNameByTaskId(taskId) {

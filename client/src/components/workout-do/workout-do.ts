@@ -30,16 +30,16 @@ class WorkoutDoComponent extends PageMixin(LitElement){
     }
 
   async firstUpdated() {
-    const taskResponse = await httpClient.get('/tasks');
-    (await taskResponse.json()).results.forEach(element => {
+    (await TaskSyncDao.findAll()).forEach(element => {
         this.tasks[element.id] = element;
     })
 
     this.workout = await WorkoutSyncDao.findOne({id: this.id});
     this.exercises = await ExerciseSyncDao.findAll({ workoutId: this.id });
 
-    this.preFillResults();
+    console.log(this.exercises);
 
+    this.preFillResults();
     }
 
     preFillResults() {

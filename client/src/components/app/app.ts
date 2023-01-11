@@ -44,7 +44,7 @@ class AppComponent extends LitElement {
 
     { title: 'Kurse', routePath: '/course', authRequired: true, trainerRequired: false, component: 'app-course-overview', nativeHeader: false, inBrowserHeader: true },
     { title: 'Kurs erstellen', routePath: '/course/create', authRequired: true, trainerRequired: true, component: 'app-course-create', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Kurs Info', routePath: '/course/:id', authRequired: true, trainerRequired: false, component: 'app-course-detail', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Kurs Info', routePath: '/course/detail/:id', authRequired: true, trainerRequired: false, component: 'app-course-detail', nativeHeader: true, inBrowserHeader: false },
     { title: 'Kursbuchung Info', routePath: '/coursebookings/:id', authRequired: true, trainerRequired: false, component: 'app-coursebooking-detail', nativeHeader: true, inBrowserHeader: false },
 
     { title: 'Workout erstellen', routePath: '/workouts/create', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeader: true, inBrowserHeader: false },
@@ -152,7 +152,6 @@ class AppComponent extends LitElement {
         <ion-route url="${route.routePath}" component="${route.component}" .componentProps="${route.props}"></ion-route>
         `;
       })}
-      
 
       ${Capacitor.isNativePlatform() ? html`
       <ion-route component="app-tabs">

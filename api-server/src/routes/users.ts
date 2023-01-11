@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
   }
 
   const createdUser = await userDAO.create({
+    id: req.body.id,
     avatar: req.body.avatar ?? null,
     name: req.body.name,
     email: req.body.email,

@@ -20,6 +20,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     }
 
     const exercies = await exerciseDAO.create({
+        id: req.body.id,
         taskId: req.body.taskId,
         workoutId: req.body.workoutId,
         timeToRest: req.body.timeToRest,

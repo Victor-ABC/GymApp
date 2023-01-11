@@ -18,9 +18,6 @@ import './components/workout-detail/workout-detail.ts';
 
 import './components/404-page/404-page.ts';
 
-import './components/course-detail/course-detail.ts';
-import './components/course-booking-detail/course-booking-detail.ts';
-
 import './components/sign-in/sign-in.ts';
 import './components/sign-out/sign-out.ts';
 import './components/sign-up/sign-up.ts';
@@ -32,6 +29,9 @@ import './components/chat/chat.users.ts';
 import './components/course-create/course-create.ts'; 
 import './components/course-overview/course-overview.ts';
 import './components/course-bookings/course-bookings.ts';
+import './components/course-detail/course-detail.ts';
+import './components/course-booking-detail/course-booking-detail.ts';
+
 
 import './components/exercises-overview/exercises-overview.ts';
 import './components/exercise-create/exercise-create.ts';
