@@ -9,17 +9,11 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js'
 import { repeat } from 'lit/directives/repeat.js';
 import { Capacitor } from '@capacitor/core';
-
-
 import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "./../../offline/sync-dao";
-
-import componentStyle from './workout-detail.css';
 
 @customElement('app-workout-detail')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class HomeComponent extends PageMixin(LitElement) {
-  static styles = componentStyle;
-
   @property() id = '';
 
   @state() private workout: object = {};
@@ -40,7 +34,6 @@ class HomeComponent extends PageMixin(LitElement) {
       this.workout = await WorkoutSyncDao.findOne({id: this.id});
 
       this.tasks = await TaskSyncDao.findAll();
-      console.log(this.tasks);
 
       this.exercises = await ExerciseSyncDao.findAll(); 
   }
@@ -55,7 +48,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
         <h1>Workout detail: ${this.workout.name}</h1>
 
         <ion-card>

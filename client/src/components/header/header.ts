@@ -5,6 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { authenticationService } from '../../authenticationService';
 import componentStyle from './header.css';
 import { RouteItem } from '../app/app';
+import { router } from '../../router/router';
 
 @customElement('app-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -25,28 +26,29 @@ class HeaderComponent extends LitElement {
       <span class="menu-button" @click="${this.toggleMenu}"></span>
       <ol ?open=${this.menuOpen}>
         ${this.routeItems.filter(routeItem => {
-          if(!authenticationService.isAuthenticated()){
-            return routeItem.inBrowserHeader == true && routeItem.authRequired == false
+          if(routeItem.authRequired !== authenticationService.isAuthenticated()) {
+            return false;
           }
-          else if(!authenticationService.isTrainer()){
-            return routeItem.inBrowserHeader == true && routeItem.authRequired == true && routeItem.trainerRequired == false
+
+          if(routeItem.trainerRequired == true && !authenticationService.isTrainer()) {
+            return false;
           }
-          else{
-            return routeItem.inBrowserHeader == true && routeItem.authRequired == true
-          }
+
+          return routeItem.inBrowserHeader;
         })
         .map(
-          routeItem => html`<li><a href="${routeItem.routePath}" @click=${this.closeMenu}>${routeItem.title}</a></li>`
+          routeItem => html`<li><a @click="${() => this.navigate(routeItem.routePath)}">${routeItem.title}</a></li>`
         )}
       </ol>
     `;
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  navigate(route) {
+    this.menuOpen = false;
+    router.navigate(route);
   }
 
-  closeMenu() {
-    this.menuOpen = false;
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 }

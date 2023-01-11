@@ -2,7 +2,7 @@
 
 import { Capacitor } from '@capacitor/core';
 import { LitElement, html, PropertyValueMap, nothing } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { httpClient } from '../../http-client.js';
 import { notificationService } from '../../notification.js';
@@ -10,7 +10,7 @@ import { PageMixin } from '../page.mixin.js';
 import { router } from '../../router/router.js';
 import date from '../../service/date.service.js';
 
-import { ChatSyncDao } from './../../offline/sync-dao';
+import { UserSyncDao, MassageSyncDao } from './../../offline/sync-dao';
 
 type Message = {
   content: string;
@@ -28,35 +28,30 @@ class ChatComponent extends PageMixin(LitElement) {
   @query('#text') private textInputElement!: HTMLInputElement;
   @query('#chat-list') private chatList!: HTMLIonListElement;
   @property() id = ''; //id of other user
-  @property() createdAt = new Date().getTime();
-  @property() email = '';
-  @property() name = '';
-  @property() messages: Array<Message> = [];
+  @state() messages: Array<Message> = [];
+  @state() user: Object = {}
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
   }
 
   async firstUpdated() {
-    try {
       this.textInputElement.addEventListener("keyup", (e) => e.key === "Enter" ? this.onEnter() : nothing);
-      //this.messages = await ChatSyncDao.findOne({id: this.id});
-      const response = await httpClient.get('/chat/' + this.id);
-      this.messages = await response.json();
+      this.user = await UserSyncDao.findOne({id: this.id});
+      this.messages = [...await MassageSyncDao.findAll({ to: this.id }), ...await MassageSyncDao.findAll({ from: this.id })]
+
       this.requestUpdate();
       this.setupWebSocket();
       await this.updateComplete;
-    } catch (e) {
-      if ((e as { statusCode: number }).statusCode === 401) {
-        router.navigate('/users/sign-in');
-      } else {
-        notificationService.showNotification((e as Error).message, 'error');
-      }
-    }
   }
 
   setupWebSocket() {
-    const webSocket = new WebSocket('ws://localhost:3000');
+    if(httpClient.isOffline) {
+      return;
+    }
+
+    const webSocket = Capacitor.getPlatform() === 'android' ? new WebSocket('ws://10.0.2.2:3000') : new WebSocket('ws://localhost:3000');
+
     webSocket.onmessage = event => {
       var data = JSON.parse(event.data);
       //new Message
@@ -70,7 +65,7 @@ class ChatComponent extends PageMixin(LitElement) {
         //Send path to tell other user, that message was recieved
         //this.id is the id of the user, we are writing witih (1 Chat = 1 Other User = His ID)
         if (this.id === data.newMessage.from) {
-          httpClient.patch('/chat/read', {
+          httpClient.patch('/messages/read', {
             id: data.newMessage.id,
             to: this.id
           });
@@ -100,9 +95,10 @@ class ChatComponent extends PageMixin(LitElement) {
   render() {
     return html`
       <ion-card>
-        <ion-card-title>${this.name}</ion-card-title>
-        <ion-card-subtitle>${this.email}</ion-card-subtitle>
-      </ion-card>
+        <ion-card-header>
+          <ion-card-title>${this.user.name} <ion-avatar class="userAvatar"><img src="${this.user.avatar ?? './avatar.png'}"></ion-avatar></ion-card-title>
+        </ion-card>
+      </ion-card-header>
       <ion-content color="grey">
         <ion-list style="display: flex; flex-direction: column;" id="chat-list">
           ${this.messages
@@ -151,16 +147,16 @@ class ChatComponent extends PageMixin(LitElement) {
   }
 
   async onEnter() {
-    try {
       const data = {
         to: this.id,
         content: this.textInputElement.value!
       };
       this.textInputElement.value = null;
-      await ChatSyncDao.create(data);
-    } catch (e) {
-      notificationService.showNotification((e as Error).message, 'info');
-    }
+      await MassageSyncDao.create(data);
+      const messages = this.messages;
+      messages.push(data);
+      this.messages = messages;
+      await this.requestUpdate();
   }
 }
 

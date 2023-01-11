@@ -3,7 +3,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Entity } from './entity.js';
 import { GenericDAO } from './generic.dao.js';
-import { Storage } from "@ionic/storage";
 import { httpClient } from '../http-client.js';
 import { Storage } from "@ionic/storage";
 import { User } from '../interfaces.js';
@@ -18,15 +17,21 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   async init(){
+    if(!this.storage) {
     this.storage = new Storage();
     await this.storage.create();
   }
+  }
 
   async sync() {
+    await this.init();
+
+    if(httpClient.isOffline) {
+      return;
+    }
+
     const response = await httpClient.get(this.route);
     const responseData = (await response.json());
-
-    console.log(responseData);
 
     const map: Map<string, T> = new Map();
 
@@ -38,6 +43,8 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   public async create(partEntity: Omit<T, keyof Entity>) {
+    await this.init();
+
     const entity = { ...partEntity, id: uuidv4(), createdAt: new Date().getTime() };
 
     const map = await this.getMap();
@@ -51,6 +58,8 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   public async findAll(entityFilter?: Partial<T>) {
+    await this.sync();
+
     const result = [] as T[];
 
     for (const entity of (await this.getMap()).values()) {
@@ -62,6 +71,8 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   public async findOne(entityFilter: Partial<T>) {
+    await this.sync();
+
     for (const entity of (await this.getMap()).values()) {
       if (this._matches(entity, entityFilter)) {
         return Promise.resolve(entity);
@@ -71,6 +82,8 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   public async update(entity: Partial<T> & Pick<Entity, 'id'>) {
+    await this.init();
+
     const map = await this.getMap();
 
     if (entity.id && map.has(entity.id)) {
@@ -88,6 +101,8 @@ export class SyncDAO<T extends Entity> implements GenericDAO<T> {
   }
 
   public async delete(id: string) {
+    await this.init();
+
     await httpClient.delete(this.route + '/' + id);
 
     const map = await this.getMap();
@@ -126,5 +141,5 @@ export const TaskSyncDao = new SyncDAO('/tasks');
 export const ExerciseSyncDao = new SyncDAO('/exercises');
 export const CourseSyncDao = new SyncDAO('/courses');
 export const MemberInCourseSyncDao = new SyncDAO('/memberincourses');
-export const ChatSyncDao = new SyncDAO('/chat');
 export const UserSyncDao = new SyncDAO<User>('/users');
+export const MassageSyncDao = new SyncDAO<User>('/messages');

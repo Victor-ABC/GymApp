@@ -6,8 +6,6 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
-import componentStyle from './course-create.css';
-
 
 import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "../../offline/sync-dao";
 
@@ -18,8 +16,6 @@ interface Trainer {
 
 @customElement('app-course-create')
 class CourseCreateComponent extends PageMixin(LitElement){
-    static styles = [componentStyle];
-
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
     @query('#description > input') private descriptionElement!: HTMLInputElement;
@@ -38,17 +34,13 @@ class CourseCreateComponent extends PageMixin(LitElement){
         return this;
     }
 
-    render() {
-        return this.buildBody();
-    }
-
     async firstUpdated() {
        this.trainer = await UserSyncDao.findAll({isTrainer: true})
     }
 
-    buildBody(){
+    render() {
         return html `
-        <ion-content>
+        <ion-content class="ion-padding">
             <h1>Kurs erstellen</h1>
             <form>
                 <ion-card>
@@ -100,9 +92,7 @@ class CourseCreateComponent extends PageMixin(LitElement){
                             <ion-datetime-button datetime="startDate"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                                <ng-template>
                                     <ion-datetime class="force-black-font" presentation="date" id="startDate"></ion-datetime>
-                                </ng-template>
                             </ion-modal>
                         </ion-item>
 
@@ -111,9 +101,7 @@ class CourseCreateComponent extends PageMixin(LitElement){
                             <ion-datetime-button datetime="endDate"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                                <ng-template>
                                     <ion-datetime class="force-black-font" presentation="date" id="endDate"></ion-datetime>
-                                </ng-template>
                             </ion-modal>
                         </ion-item>
 
@@ -122,10 +110,8 @@ class CourseCreateComponent extends PageMixin(LitElement){
                             <ion-datetime-button datetime="startTime"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
-                                <ion-datetime class="force-black-font" presentation="time" id="startTime"></ion-datetime>
-                            </ng-template>
-                            </ion-modal>
+                            <ion-datetime class="force-black-font" presentation="time" id="startTime"></ion-datetime>
+                    </ion-modal>
                         </ion-item>
 
                         <ion-item lines="none">
@@ -133,9 +119,7 @@ class CourseCreateComponent extends PageMixin(LitElement){
                             <ion-datetime-button datetime="endTime"></ion-datetime-button>
 
                             <ion-modal [keepContentsMounted]="true">
-                            <ng-template>
                                 <ion-datetime class="force-black-font" presentation="time" id="endTime"></ion-datetime>
-                            </ng-template>
                             </ion-modal>
                         </ion-item>
 
@@ -153,15 +137,16 @@ class CourseCreateComponent extends PageMixin(LitElement){
     }
 
     async submit() {
-        if (this.isFormValid()) {
+            const date = (new Date()).toISOString()
+
             const course = {
                 name: this.nameElement.value,
                 description: this.descriptionElement.value,
                 dayOfWeek: this.dayOfWeekElement.value,
-                startDate: this.startDateElement.value,
-                endDate: this.endDateElement.value,
-                startTime: this.startTimeElement.value,
-                endTime: this.endTimeElement.value,
+                startDate: this.startDateElement.value ?? date,
+                endDate: this.endDateElement.value ?? date,
+                startTime: this.startTimeElement.value ?? date,
+                endTime: this.endTimeElement.value ?? date,
                 trainerId: this.trainerElement.value
             };
 
@@ -172,7 +157,7 @@ class CourseCreateComponent extends PageMixin(LitElement){
             } catch (error) {
                 notificationService.showNotification((error as Error).message , "error");
             }
-        }
+        
     }
 
     isFormValid() {

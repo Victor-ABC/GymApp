@@ -6,8 +6,9 @@ import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
-import { ChatSyncDao } from './../../offline/sync-dao';
+import { MassageSyncDao } from './../../offline/sync-dao';
 import { httpClient } from '../../http-client.js';
+import { ChatSyncDao } from '../../offline/chat-sync-dao.js';
 
 type User = {
   name: string;
@@ -32,10 +33,10 @@ class ChatScreen extends PageMixin(LitElement) {
 
   render() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
         <div class="header-overview">
           <h1>Chats</h1>
-          <ion-button href="/newchat">
+          <ion-button @click="${this.newChat}">
             <ion-icon name="add"></ion-icon>
           </ion-button>
         </div>
@@ -54,21 +55,15 @@ class ChatScreen extends PageMixin(LitElement) {
     `;
   }
 
+  newChat() {
+    router.navigate('/newchat');
+  }
+
   async firstUpdated() {
-    if (this.chatPartners.length == 0) {
-      try {
-        //this.chatPartners = await ChatSyncDao.findAll();
-        const response = await httpClient.get('/chat/');
-        this.chatPartners = await response.json();
+    if (this.chatPartners.length == 0) { 
+        this.chatPartners = await ChatSyncDao.getAllChats() as User[];
         this.requestUpdate();
         await this.updateComplete;
-      } catch (e) {
-        if ((e as { statusCode: number }).statusCode === 401) {
-          router.navigate('/users/sign-in');
-        } else {
-          notificationService.showNotification((e as Error).message, 'error');
-        }
-      }
     }
   }
 
@@ -77,7 +72,7 @@ class ChatScreen extends PageMixin(LitElement) {
       <ion-card>
         <ion-item
           button
-          href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}"
+          @click="${() => this.createChat(chatPartner)}"
         >
           <ion-label>
             <h2>${chatPartner.name}</h2>
@@ -88,16 +83,7 @@ class ChatScreen extends PageMixin(LitElement) {
     `;
   }
 
-  async onEnter() {
-    try {
-      const data = {
-        to: 'Simon',
-        content: this.textInputElement.value!
-      };
-      this.textInputElement.value = null;
-      await ChatSyncDao.create(data);
-    } catch (e) {
-      notificationService.showNotification((e as Error).message, 'info');
-    }
+  createChat(chatPartner: User) {
+    router.navigate(`/chat/${chatPartner.id}}`)
   }
 }

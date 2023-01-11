@@ -40,7 +40,6 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         courseId: req.body.courseId
     })
 
-    console.log(`booked course: ${req.body.courseId} or user: ${res.locals.user.id}`)
     res.status(201).json(createdMemberInCourse);
 });
 

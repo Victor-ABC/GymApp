@@ -51,11 +51,11 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
 
 
     async firstUpdated() {
-        this.coursebooking = await MemberInCourseSyncDao.findOne({id: this.id})
+        this.coursebooking = await MemberInCourseSyncDao.findOne({bookingId: this.id})
         this.trainer = await UserSyncDao.findOne({id: this.coursebooking.trainerId});
 
         const responseMember = await httpClient.get('memberincourses/member/' + this.coursebooking.id);
-        this.member = (await responseMember.json()).result;
+        this.member = (await responseMember.json());
     }
 
     protected createRenderRoot(): Element | ShadowRoot {
@@ -64,7 +64,7 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
 
     render() {
         return html `
-            <ion-content >
+            <ion-content class="ion-padding">
                 <h1>Meine Buchung</h1>
                 ${Capacitor.isNativePlatform() ? 
                     html`

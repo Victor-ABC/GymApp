@@ -41,7 +41,7 @@ class UserDetailComponent extends LitElement {
   
   render() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
         <ion-card>
             <ion-card-header>
                 <ion-card-title class="home-header">

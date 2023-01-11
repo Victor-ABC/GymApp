@@ -1,15 +1,27 @@
 /* Autor: Pascal Thesing (FH Münster) */
 
 import { User } from "./interfaces";
-import { CapacitorCookies } from "@capacitor/core";
-import { ChatSyncDao, CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao } from "./offline/sync-dao";
+import { Storage } from "@ionic/storage";
+import { CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao, MassageSyncDao } from "./offline/sync-dao";
+import { useFakeTimers } from "sinon";
+import { router } from "./router/router";
+import { ChatSyncDao } from "./offline/chat-sync-dao";
 
 const storageKey = 'USER_STORAGE_KEY';
 
-export class AuthenticationService  {
+class AuthenticationService  {
+  public storage!: Storage;
+
+  private user!: string|null;
+
+  async init(): Promise<void> {
+      this.storage = new Storage();
+      await this.storage.create();  
+      this.user = await this.storage.get(storageKey);
+  }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(storageKey);
+    return !!this.user;
   }
 
   isTrainer() {
@@ -20,14 +32,17 @@ export class AuthenticationService  {
     }
   }
 
-  resetUserStorage() {
-    localStorage.removeItem(storageKey);
+  async resetUserStorage() {
+    await this.storage.remove(storageKey);
+    this.user = null;
   }
 
-  getUser(): User {
-    const user = localStorage.getItem(storageKey);
+  getUser(): Promise<User> {
+    const user = this.user;
 
     if(!user) {
+      router.navigate('/users/sign-in');
+      window.location.reload();
       throw Error('User was not set');
     }
 
@@ -35,7 +50,8 @@ export class AuthenticationService  {
   }
 
   async storeUser(user: User) {
-    localStorage.setItem(storageKey, JSON.stringify(user));
+    this.storage.set(storageKey, JSON.stringify(user));
+    this.user = JSON.stringify(user);
 
     await WorkoutSyncDao.sync();
     await TaskSyncDao.sync();
@@ -44,10 +60,9 @@ export class AuthenticationService  {
     await ChatSyncDao.sync();
     await MemberInCourseSyncDao.sync();
     await UserSyncDao.sync();
+    await MassageSyncDao.sync();
   }
 }
 
-let auth = new AuthenticationService();
-  
-export const authenticationService = auth;
-  
+
+export const authenticationService = new AuthenticationService();

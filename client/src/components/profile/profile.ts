@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Pascal Thesing (FH Münster) */
 
 import { LitElement, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
@@ -8,7 +8,6 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js'
 import { authenticationService } from '../../authenticationService.js';
 import { Camera, CameraResultType } from '@capacitor/camera';
-import { UserSyncDao } from '../../offline/sync-dao.js';
 
 @customElement('app-profile')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,12 +60,14 @@ class ProfileComponent extends PageMixin(LitElement) {
 
   buildBody() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
       <form>
 
       ${this.avatar
         ? html`
+        <ion-slide>
         <img class="uploadedImages" src="${this.avatar}" />
+        </ion-slide>
         `
         : html` <ion-slide>
             <img id="standardUploadImage" src="./standardUploadImage.png" />
@@ -121,9 +122,7 @@ class ProfileComponent extends PageMixin(LitElement) {
       <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Update Profile</ion-button>
     </form>
 
-        <ion-col>
-            <ion-button color="primary" type="button" @click="${this.signout}" expand="block">Abmelden</ion-button>
-        </ion-col>
+          <ion-button color="warning" type="button" @click="${this.signout}" expand="block">Abmelden</ion-button>
       </ion-content>
     `;
   }
@@ -142,9 +141,6 @@ class ProfileComponent extends PageMixin(LitElement) {
   }
 
   async submit() {
-    console.log('submit');
-    console.log(this.isFormValid());
-
     if (this.isFormValid()) {
       const accountData = {
         id: this.user.id,
@@ -156,9 +152,7 @@ class ProfileComponent extends PageMixin(LitElement) {
         avatar: this.avatar
       };
 
-      UserSyncDao.update(accountData);
-      authenticationService.storeUser(accountData);
-
+        await httpClient.patch('users/' + accountData.id, accountData);
         notificationService.showNotification('Das Profil wurde geupdated')
     } else {
       this.form.classList.add('was-validated');
