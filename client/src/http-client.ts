@@ -4,6 +4,8 @@ import { ConnectionStatus, Network } from "@capacitor/network";
 import { Storage } from "@ionic/storage";
 import { v4 as uuidv4 } from 'uuid';
 import { notificationService } from "./notification";
+import { ChatSyncDao } from "./offline/chat-sync-dao";
+import { CourseSyncDao, ExerciseSyncDao, MassageSyncDao, MemberInCourseSyncDao, TaskSyncDao, UserSyncDao, WorkoutSyncDao } from "./offline/sync-dao";
 
 export interface HttpClientConfig {
   baseURL: string;
@@ -19,7 +21,7 @@ const REQUEST_KEY = 'Request';
 export class HttpClient {
   private config!: HttpClientConfig;
   private storage!: Storage;
-  private isOffline: boolean = false;
+  public isOffline: boolean = false;
 
   init(config: HttpClientConfig) {
     this.config = config;
@@ -65,8 +67,6 @@ export class HttpClient {
     }
 
     const path = this.config.baseURL + (url.startsWith('/') ? url.substring(1) : url);
-
-    console.log(this.isOffline)
 
     if(this.isOffline) {
       let requests: Request[] = await this.getRequestArray() ?? [];

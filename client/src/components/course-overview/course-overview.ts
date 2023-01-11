@@ -43,7 +43,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
 
     render() {
         return html `
-            <ion-content>
+            <ion-content class="ion-padding">
                 <div class="header-overview">
                     <h1>Course Overview</h1>
                     ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
@@ -74,9 +74,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                                 </ion-button>
                                                 <ion-popover trigger="click-trigger-${course.id}" trigger-action="click" show-backdrop="false">
                                                     <ion-list mode="ios">
-                                                        <ion-item button="true" detail="false" @click="${() => this.bookCourse(course)}">Kurs buchen</ion-item>
+                                                        <ion-item button="true" color="primary" detail="false" @click="${() => this.bookCourse(course)}">Kurs buchen</ion-item>
                                                         ${authenticationService.isTrainer() ? html`
-                                                            <ion-item button="true" detail="false" @click="${() => this.deleteCourse(course.id)}">Kurs löschen</ion-item>
+                                                            <ion-item button="true" color="danger" detail="false" @click="${() => this.deleteCourse(course.id)}">Kurs löschen</ion-item>
                                                         ` : html``}
                                                     </ion-list>
                                                 </ion-popover>
@@ -114,11 +114,11 @@ class CourseOverviewComponent extends PageMixin(LitElement){
     }
 
     openCourse(courseId: string) {
-        router.navigate(`course/${courseId}`);
+        router.navigate(`/course/${courseId}`);
     }
 
     openCreateCourse() {
-        router.navigate(`course/create`);
+        router.navigate(`/course/create`);
     }
 
     async deleteCourse(courseId: string) {

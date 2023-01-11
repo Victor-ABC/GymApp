@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
   }
 
   const createdUser = await userDAO.create({
+    avatar: req.body.avatar ?? null,
     name: req.body.name,
     email: req.body.email,
     password: await bcrypt.hash(req.body.password, 10),
@@ -39,6 +40,13 @@ router.post('/', async (req, res) => {
   authService.createAndSetToken({ id: createdUser.id }, res);
   res.status(201).json(createdUser);
 });
+
+router.get('/', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+
+  const users = await userDAO.findAll();
+  res.status(201).json(users)
+})
 
 router.post('/sign-in', async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
@@ -73,10 +81,11 @@ router.delete('/', authService.authenticationMiddleware, async (req, res) => {
   res.status(200).end();
 });
 
-router.get('/', authService.authenticationMiddleware, async (req, res) => {
+router.get('/trainer', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const users = await userDAO.findAll();
-  res.status(201).json(users)
+  const filter: Partial<User> = { isTrainer: true };
+  const trainer = await userDAO.findAll(filter);
+  res.status(201).json({ results: trainer})
 })
 
 router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
@@ -84,12 +93,6 @@ router.get('/:id', authService.authenticationMiddleware, async (req, res) => {
   const filter: Partial<User> = { id: req.params.id };
   const user = await userDAO.findOne(filter);
   res.status(201).json({ result: user})
-})
-
-router.delete('/:id', authService.authenticationMiddleware, async (req, res) => { 
-  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  await userDAO.delete(req.params.id);
-  res.status(200).end(); 
 })
 
 router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {

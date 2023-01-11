@@ -9,14 +9,11 @@ import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
 import { IonItem, IonSlides, IonText, IonTextarea } from '@ionic/core/components';
 import { Camera, CameraResultType } from '@capacitor/camera';
-import componentStyle from './exercise-create.css';
 import { TaskSyncDao } from "./../../offline/sync-dao";
 
 
 @customElement('app-exercise-create')
 class ExerciseCreateComponent extends PageMixin(LitElement){
-    static styles = [componentStyle];
-
     @state() private exercisePictures: Array<string> = [];
 
     @query('#imageSwiper') private imageSwiper!: IonSlides;
@@ -30,10 +27,6 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
     protected createRenderRoot(): Element | ShadowRoot {
         return this;
       }
-
-    render() {
-        return this.buildBody();
-    }
 
     openCreateExercise(): void {
         router.navigate('exercises/create');
@@ -77,10 +70,9 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
       router.navigate('/exercises');
     }
   
-
-    buildBody() {
+    render() {
         return html `
-        <ion-content">
+        <ion-content class="ion-padding">
         <h1>Übung erstellen</h1>
         <form>
             <ion-card>

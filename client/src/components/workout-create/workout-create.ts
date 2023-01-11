@@ -4,7 +4,6 @@ import { customElement, state, property, query } from 'lit/decorators.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
-import componentStyle from './workout-create.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { isThisISOWeek } from 'date-fns';
 import { TaskSyncDao, WorkoutSyncDao, ExerciseSyncDao } from "../../offline/sync-dao";
@@ -12,7 +11,6 @@ import { authenticationService, AuthenticationService } from '../../authenticati
 
 @customElement('app-workout-create')
 class WorkoutCreateComponent extends PageMixin(LitElement){
-
 
     @query('form') private form!: HTMLFormElement;
     @query('#name > input') private nameElement!: HTMLInputElement;
@@ -36,7 +34,7 @@ class WorkoutCreateComponent extends PageMixin(LitElement){
 
     buildBody(){
         return html `
-        <ion-content>
+        <ion-content class="ion-padding">
             <h1>Workout erstellen</h1>
 
             <form>

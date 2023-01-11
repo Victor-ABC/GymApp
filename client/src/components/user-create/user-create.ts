@@ -56,7 +56,7 @@ class UserCreateComponent extends LitElement {
 
   render() {
     return html`
-      <ion-content">
+      <ion-content class="ion-padding">
       <form>
 
       ${this.avatar
@@ -133,9 +133,6 @@ class UserCreateComponent extends LitElement {
   }
 
   async submit() {
-    console.log('submit');
-    console.log(this.isFormValid());
-
     if (this.isFormValid()) {
       const accountData = {
         id: this.user.id,

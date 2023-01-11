@@ -7,7 +7,6 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch 'src/**' --ext 'ts,json' --exec node --no-warnings --loader ts-node/esm src/app.ts",
-    "create-tables": "node --no-warnings --loader ts-node/esm db/create-tables.ts",
     "lint": "eslint . --ext .ts",
     "test": "mocha",
     "e2e": "mocha --config e2e/.mocharc.json",

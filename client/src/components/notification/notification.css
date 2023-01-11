@@ -1,6 +1,6 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
-div {
+.notification {
   vertical-align: middle;
   border: solid rgba(0, 0, 0, 0.125) 1px;
   border-radius: 0.25rem;

@@ -65,7 +65,7 @@ async firstUpdated() {
 
 buildBody() {
   return html`
-    <ion-content>
+    <ion-content class="ion-padding">
     <form>
 
     ${this.avatar
@@ -142,9 +142,6 @@ async takePhoto() {
 }
 
 async submit() {
-  console.log('submit');
-  console.log(this.isFormValid());
-
   if (this.isFormValid()) {
     const accountData = {
       id: this.user.id,

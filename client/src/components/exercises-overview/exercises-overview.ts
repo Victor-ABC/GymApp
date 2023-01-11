@@ -29,10 +29,6 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
         return this;
       }
 
-    render() {
-        return this.buildBody();
-    }
-
     editExercise(id: string): void {
         router.navigate('exercises/edit/' + id);
     }
@@ -47,9 +43,9 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
         router.navigate('exercises/create');
     }
 
-    buildBody() {
+    render() {
         return html `
-            <ion-content>
+            <ion-content class="ion-padding">
               <div class="header-overview">
                 <h1>Übungen</h1>
                 <ion-button @click="${this.openCreateExercise}">

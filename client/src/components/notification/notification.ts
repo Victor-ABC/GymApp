@@ -19,7 +19,7 @@ class NotificationComponent extends LitElement {
   @property() type: 'error' | 'info' = 'info';
 
   render() {
-    return html` ${this.content ? html`<div class="${this.type}">${this.content}</div>` : nothing} `;
+    return html` ${this.content ? html`<div class="notification ${this.type}">${this.content}</div>` : nothing} `;
   }
 
   public showNotification(content = '', type: 'error' | 'info' = 'info') {

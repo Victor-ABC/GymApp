@@ -1,13 +1,5 @@
 /* Autor: Victor Corbet */
 
-h1 {
-  font-weight: lighter;
-}
-
-form {
-  margin-top: 1rem;
-}
-
 /*
   Password Validation on Client Side
   by Manipulating CSS-Variables via JS (TS)
@@ -40,15 +32,4 @@ form {
   color: var(--app-error-color);
   margin-top: 0.7rem;
   height: auto;
-}
-
-/* Images */
-ion-img, img {
-  margin: auto;
-  height: 100px;
-  width: 100px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 5px gray;
-  display: block;
 }

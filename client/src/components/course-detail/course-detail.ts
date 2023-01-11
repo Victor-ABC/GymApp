@@ -8,7 +8,6 @@ import { authenticationService } from '../../authenticationService.js';
 
 import { CourseSyncDao, UserSyncDao, MemberInCourseSyncDao } from "./../../offline/sync-dao";
 
-
 interface Course {
     id?: string;
     name?: string;
@@ -47,7 +46,7 @@ class CourseDetailComponent extends PageMixin(LitElement){
 
     render() {
         return html `
-            <ion-content>
+            <ion-content class="ion-padding">
                 <h1>Course Detail</h1>
                 <div class="course">
                     <ion-card>
@@ -83,9 +82,9 @@ class CourseDetailComponent extends PageMixin(LitElement){
                                 <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                             </ion-item>
                             <ion-item lines="none">
-                                <ion-button fill="outline" type="button" @click="${() => this.bookCourse(this.course!)}">Kurs buchen</ion-button>
+                                <ion-button type="button" @click="${() => this.bookCourse(this.course!)}">Kurs buchen</ion-button>
                                 ${authenticationService.isTrainer() ? html`
-                                    <ion-button fill="outline" color="danger" type="button" @click="${() => this.deleteCourse(this.course.id!)}">Kurs löschen</ion-button>
+                                    <ion-button color="danger" type="button" @click="${() => this.deleteCourse(this.course.id!)}">Kurs löschen</ion-button>
                             ` : html``}
                             </ion-item>
                         </ion-card-content>

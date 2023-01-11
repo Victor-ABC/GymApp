@@ -7,7 +7,7 @@ import { notificationService } from '../../notification.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import date from '../../service/date.service.js';
-import { UserSyncDao } from '../../offline/sync-dao.js';
+import { ChatSyncDao } from '../../offline/chat-sync-dao.js';
 type User = {
   name: string;
   email: string;
@@ -30,7 +30,7 @@ class AppChatNewUsers extends PageMixin(LitElement) {
 
   render() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
         <h1>Users</h1>
         <ion-list> ${this.allUsers.map(user => this.buildUsers(user))} </ion-list>
       </ion-content>
@@ -41,7 +41,7 @@ class AppChatNewUsers extends PageMixin(LitElement) {
     //${title}
     return html`
       <ion-card>
-        <ion-item button href="/chat/${chatPartner.id}/${chatPartner.createdAt}/${chatPartner.email}/${chatPartner.name}">
+        <ion-item button @click="${() => this.createChat(chatPartner)}">
           <ion-label>
             <h2>${chatPartner.name}</h2>
             <p>Existiert seit: ${date(chatPartner.createdAt)}</p>
@@ -51,13 +51,14 @@ class AppChatNewUsers extends PageMixin(LitElement) {
     `;
   }
 
+  createChat(chatPartner: User) {
+    router.navigate(`/chat/${chatPartner.id}`)
+  }
+
   async firstUpdated() {
     if (this.allUsers.length == 0) {
       try {
-        const response = await httpClient.get('/chat/all/users');
-        //this.allUsers = await UserSyncDao.findAll();
-        var allUsers = (await response.json());
-        this.allUsers = allUsers;
+        this.allUsers = await ChatSyncDao.getAllUsers() as User[];
         this.requestUpdate();
         await this.updateComplete;
       } catch (e) {

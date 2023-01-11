@@ -5,8 +5,6 @@ import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { format } from 'date-fns';
-import componentStyle from './course-bookings.css';
-
 
 import { MemberInCourseSyncDao, UserSyncDao } from "./../../offline/sync-dao";
 
@@ -25,8 +23,6 @@ interface BookedCourse {
 
 @customElement('app-course-bookings')
 class CourseBookingsComponent extends PageMixin(LitElement){
-    //static styles = [componentStyle]; 
-
     @state() private mycourses: BookedCourse[] = [];
 
     private dataReady: Boolean = false;
@@ -36,7 +32,6 @@ class CourseBookingsComponent extends PageMixin(LitElement){
           dataReady: {type: Boolean}
         };
     }
-
 
     async firstUpdated() {
         try {
@@ -55,7 +50,7 @@ class CourseBookingsComponent extends PageMixin(LitElement){
 
     render() {
        return html `
-            <ion-content>
+            <ion-content class="ion-padding">
                 <h1>Meine Buchungen</h1>
                 <div class="courses">
                     ${repeat(

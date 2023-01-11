@@ -5,7 +5,6 @@ import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import { notificationService } from '../../notification.js';
-import componentStyle from './workout-create.css';
 import { repeat } from 'lit/directives/repeat.js';
 import { range } from 'lit/directives/range.js';
 import { isThisISOWeek } from 'date-fns';
@@ -81,7 +80,7 @@ class WorkoutDoComponent extends PageMixin(LitElement){
 
     render() {
         return html`
-        <ion-content>
+        <ion-content class="ion-padding">
             <h1>Workout</h1>
 
             <ion-card>
@@ -211,12 +210,6 @@ class WorkoutDoComponent extends PageMixin(LitElement){
 
     onInput(event, index, setIndex) {
         const inputEl = event.target as HTMLInputElement;
-
-        console.log(inputEl.value);
-        console.log(index);
-        console.log(setIndex);
-        console.log(inputEl.offsetParent.id);
-        console.log(this.results);
 
         if(!this.results[index]) {
             this.results[index] = [];

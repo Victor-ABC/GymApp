@@ -53,7 +53,7 @@ class SignUpComponent extends PageMixin(LitElement) {
   
   render() {
     return html`
-    <ion-content>
+    <ion-content class="ion-padding">
       <h1>Registrieren</h1>
       <form>
         <ion-item lines="full">

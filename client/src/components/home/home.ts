@@ -7,8 +7,6 @@ import { authenticationService } from '../../authenticationService.js';
 import { router } from '../../router/router.js';
 import { httpClient } from '../../http-client.js';
 import { repeat } from 'lit/directives/repeat.js';
-
-import componentStyle from './home.css';
 import { Capacitor } from '@capacitor/core';
 import { MemberInCourseSyncDao, WorkoutSyncDao } from "./../../offline/sync-dao";
 
@@ -34,7 +32,6 @@ interface Workout {
 @customElement('app-home')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class HomeComponent extends PageMixin(LitElement) {
-  static styles = [componentStyle];
 
   @state() private myWorkouts: Workout[] = [];
   @state() private myCourseBookings: CourseBooking[] = [];
@@ -55,7 +52,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
   render() {
     return html`
-      <ion-content>
+      <ion-content class="ion-padding">
         <ion-card>
             <ion-card-header>
                 <ion-card-title class="home-header">

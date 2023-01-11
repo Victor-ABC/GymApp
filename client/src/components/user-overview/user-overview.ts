@@ -27,7 +27,7 @@ class UserOverviewComponent extends LitElement {
 
   render() {
     return html `
-        <ion-content>
+        <ion-content class="ion-padding">
             <div class="header-overview">
                 <h1>User-Übersicht</h1>
                 ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
