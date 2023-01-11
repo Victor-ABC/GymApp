@@ -18,8 +18,8 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         return sendErrorMessage(errors.join('\n'));
     }
 
-    
     const workout = await workoutDAO.create({
+        id: req.body.id,
         name: req.body.name,
         createdBy: res.locals.user.id
     })

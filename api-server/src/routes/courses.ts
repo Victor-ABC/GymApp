@@ -20,6 +20,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     }
 
     const createdCourse = await courseDAO.create({
+        id: req.body.id,
         name: req.body.name,
         description: req.body.description,
         dayOfWeek: req.body.dayOfWeek,

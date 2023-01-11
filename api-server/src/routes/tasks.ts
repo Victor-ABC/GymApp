@@ -20,6 +20,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     }
 
     const task = await taskDAO.create({
+        id: req.body.id,
         name: req.body.name,
         description: req.body.description,
         pictures: req.body.pictures,
