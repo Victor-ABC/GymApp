@@ -41,8 +41,6 @@ class AuthenticationService  {
     const user = this.user;
 
     if(!user) {
-      router.navigate('/users/sign-in');
-      window.location.reload();
       throw Error('User was not set');
     }
 
