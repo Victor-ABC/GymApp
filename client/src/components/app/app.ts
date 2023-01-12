@@ -21,7 +21,7 @@ export type RouteItem = {
   authRequired: boolean,
   trainerRequired: boolean,
   props?: { [key: string]: any },
-  nativeHeader: boolean,
+  nativeHeaderBackButton: boolean,
   inBrowserHeader: boolean
 }
 
@@ -35,38 +35,38 @@ class AppComponent extends LitElement {
   @query('#router') private ionRouter!: IonRouter;
 
   @state() private routeItems: RouteItem[] = [
-    { title: '404 Page', routePath: ':', authRequired: false, trainerRequired: false, component: 'app-404-page', nativeHeader: false, inBrowserHeader: false },
+    { title: '404 Page', routePath: ':', authRequired: false, trainerRequired: false, component: 'app-404-page', nativeHeaderBackButton: false, inBrowserHeader: false },
 
-    { title: 'Home', routePath: '/home', authRequired: true, trainerRequired: false, component: 'app-home', nativeHeader: false, inBrowserHeader: true },
+    { title: 'Home', routePath: '/home', authRequired: true, trainerRequired: false, component: 'app-home', nativeHeaderBackButton: false, inBrowserHeader: true },
 
-    { title: 'Chat', routePath: '/chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', nativeHeader: false, inBrowserHeader: true },
-    { title: 'Neuer Chat', routePath: '/newchat', authRequired: true, trainerRequired: false, component: 'app-chat-new-users', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Chat', routePath: '/chat/:id', authRequired: true, trainerRequired: false, component: 'app-chat', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Chat', routePath: '/chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', nativeHeaderBackButton: false, inBrowserHeader: true },
+    { title: 'Neuer Chat', routePath: '/newchat', authRequired: true, trainerRequired: false, component: 'app-chat-new-users', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Chat', routePath: '/chat/:id', authRequired: true, trainerRequired: false, component: 'app-chat', nativeHeaderBackButton: true, inBrowserHeader: false },
 
-    { title: 'Kurse', routePath: '/course', authRequired: true, trainerRequired: false, component: 'app-course-overview', nativeHeader: false, inBrowserHeader: true },
-    { title: 'Kurs erstellen', routePath: '/course/create', authRequired: true, trainerRequired: true, component: 'app-course-create', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Kurs Info', routePath: '/course/detail/:id', authRequired: true, trainerRequired: false, component: 'app-course-detail', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Kursbuchung Info', routePath: '/coursebookings/:id', authRequired: true, trainerRequired: false, component: 'app-coursebooking-detail', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Kurse', routePath: '/course', authRequired: true, trainerRequired: false, component: 'app-course-overview', nativeHeaderBackButton: false, inBrowserHeader: true },
+    { title: 'Kurs erstellen', routePath: '/course/create', authRequired: true, trainerRequired: true, component: 'app-course-create', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Kurs Info', routePath: '/course/detail/:id', authRequired: true, trainerRequired: false, component: 'app-course-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Kursbuchung Info', routePath: '/coursebookings/:id', authRequired: true, trainerRequired: false, component: 'app-coursebooking-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
 
-    { title: 'Workout erstellen', routePath: '/workouts/create', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Workout erstellen', routePath: '/workouts/create/:userId', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Workout durchführen', routePath: '/workouts/do/:id', authRequired: true, trainerRequired: false, component: 'app-workout-do', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Workout editieren', routePath: '/workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-workout-edit', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Workout details', routePath: '/workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Workout erstellen', routePath: '/workouts/create', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Workout erstellen', routePath: '/workouts/create/:userId', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Workout durchführen', routePath: '/workouts/do/:id', authRequired: true, trainerRequired: false, component: 'app-workout-do', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Workout editieren', routePath: '/workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-workout-edit', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Workout details', routePath: '/workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
 
-    { title: 'Übungen', routePath: '/exercises', authRequired: true, trainerRequired: true, component: 'app-exercise-overview', nativeHeader: false, inBrowserHeader: true },
-    { title: 'Übung erstellen', routePath: '/exercises/create', authRequired: true, trainerRequired: true, component: 'app-exercise-create', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Übung editieren', routePath: '/exercises/edit/:id', authRequired: true, trainerRequired: true, component: 'app-exercise-edit', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Übungen', routePath: '/exercises', authRequired: true, trainerRequired: true, component: 'app-exercise-overview', nativeHeaderBackButton: true, inBrowserHeader: true },
+    { title: 'Übung erstellen', routePath: '/exercises/create', authRequired: true, trainerRequired: true, component: 'app-exercise-create', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Übung editieren', routePath: '/exercises/edit/:id', authRequired: true, trainerRequired: true, component: 'app-exercise-edit', nativeHeaderBackButton: true, inBrowserHeader: false },
 
-    { title: 'Mitglieder', routePath: '/users', authRequired: true, trainerRequired: true, component: 'app-user-overview', nativeHeader: false, inBrowserHeader: true },
-    { title: 'Mitglied detials', routePath: '/users/detail/:id', authRequired: true, trainerRequired: false, component: 'app-user-detail', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Mitglied editieren', routePath: '/users/edit/:id', authRequired: true, trainerRequired: false, component: 'app-user-edit', nativeHeader: true, inBrowserHeader: false },
-    { title: 'Mitglied erstelen', routePath: '/users/create', authRequired: true, trainerRequired: false, component: 'app-user-create', nativeHeader: true, inBrowserHeader: false },
+    { title: 'Mitglieder', routePath: '/users', authRequired: true, trainerRequired: true, component: 'app-user-overview', nativeHeaderBackButton: false, inBrowserHeader: true },
+    { title: 'Mitglied detials', routePath: '/users/detail/:id', authRequired: true, trainerRequired: false, component: 'app-user-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Mitglied editieren', routePath: '/users/edit/:id', authRequired: true, trainerRequired: false, component: 'app-user-edit', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Mitglied erstelen', routePath: '/users/create', authRequired: true, trainerRequired: false, component: 'app-user-create', nativeHeaderBackButton: true, inBrowserHeader: false },
     
-    { title: 'Profil', routePath: '/profile', authRequired: true, trainerRequired: false, component: 'app-profile', nativeHeader: false, inBrowserHeader: false },
-    { title: 'Abmelden', routePath: '/users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', nativeHeader: false, inBrowserHeader: true },
-    { title: 'Konto erstellen', routePath: '/users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', nativeHeader: false , inBrowserHeader: true},
-    { title: 'Anmelden', routePath: '/users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', nativeHeader: false, inBrowserHeader: true },
+    { title: 'Profil', routePath: '/profile', authRequired: true, trainerRequired: false, component: 'app-profile', nativeHeaderBackButton: false, inBrowserHeader: false },
+    { title: 'Abmelden', routePath: '/users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', nativeHeaderBackButton: false, inBrowserHeader: true },
+    { title: 'Konto erstellen', routePath: '/users/sign-up', authRequired: false, trainerRequired: false, component: 'app-sign-up', nativeHeaderBackButton: true , inBrowserHeader: true},
+    { title: 'Anmelden', routePath: '/users/sign-in', authRequired: false, trainerRequired: false, component: 'app-sign-in', nativeHeaderBackButton: false, inBrowserHeader: true },
   ];
 
   constructor() {
@@ -179,16 +179,16 @@ class AppComponent extends LitElement {
 
     </ion-router>
 
-    ${(Capacitor.isNativePlatform() && this.currentRoute.nativeHeader) ? html`
       <ion-header id="header">
         <ion-toolbar>
-        <ion-button @click="${this.applyBackButtion}" id="backButton" slot="start" fill="clear">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-        </ion-button>
+        ${(Capacitor.isNativePlatform() && this.currentRoute.nativeHeaderBackButton) ? html`
+          <ion-button @click="${this.applyBackButtion}" id="backButton" slot="start" fill="clear">
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+        `:``}
           <ion-title>${this.currentRoute!.title}</ion-title>
         </ion-toolbar>
       </ion-header>
-    ` : ``}
 
     ${Capacitor.isNativePlatform()  ? html`
     <ion-content>
