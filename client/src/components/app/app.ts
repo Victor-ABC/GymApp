@@ -138,7 +138,7 @@ class AppComponent extends LitElement {
     <ion-router use-hash="false" id="router" @ionRouteWillChange="${this.setCurrentRoute}">
       ${!authenticationService.isAuthenticated() ? 
         html`
-          <ion-route-redirect from="*" to="users/sign-in"></ion-route-redirect>
+          <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         `:
         html`
         <ion-route-redirect from="/" to="home"></ion-route-redirect>
