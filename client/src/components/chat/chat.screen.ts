@@ -84,6 +84,6 @@ class ChatScreen extends PageMixin(LitElement) {
   }
 
   createChat(chatPartner: User) {
-    router.navigate(`/chat/${chatPartner.id}}`)
+    router.navigate(`/chat/${chatPartner.id}`)
   }
 }
