@@ -179,9 +179,10 @@ class AppComponent extends LitElement {
 
     </ion-router>
 
+    ${Capacitor.isNativePlatform() ? html `
       <ion-header id="header">
         <ion-toolbar>
-        ${(Capacitor.isNativePlatform() && this.currentRoute.nativeHeaderBackButton) ? html`
+        ${(this.currentRoute.nativeHeaderBackButton) ? html`
           <ion-button @click="${this.applyBackButtion}" id="backButton" slot="start" fill="clear">
             <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
           </ion-button>
@@ -189,6 +190,7 @@ class AppComponent extends LitElement {
           <ion-title>${this.currentRoute!.title}</ion-title>
         </ion-toolbar>
       </ion-header>
+    `: ``}
 
     ${Capacitor.isNativePlatform()  ? html`
     <ion-content>
