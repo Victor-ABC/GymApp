@@ -141,7 +141,7 @@ class WorkoutDoComponent extends PageMixin(LitElement){
                 ${this.tasks[exercise.taskId].name}
                 </ion-item>
 
-                <ion-modal id="model-${index}">
+                <ion-modal id="model-${index}" backdrop-dismiss="false">
                 <ion-content>
 
                 <ion-header>
@@ -194,14 +194,13 @@ class WorkoutDoComponent extends PageMixin(LitElement){
                             </ion-col>
                         </ion-row>
                     </ion-item>
-
-                    <ion-row>
-                    <ion-col>
-                        <ion-button @click="${event => this.finishExercise(event, index, exercise)}" color="primary" type="button" expand="block">Übung beenden</ion-button>
-                    </ion-col>
-                  </ion-row>
                     `
                 )}
+                <ion-row>
+                <ion-col>
+                    <ion-button @click="${event => this.finishExercise(event, index, exercise)}" color="primary" type="button" expand="block">Übung beenden</ion-button>
+                </ion-col>
+              </ion-row>
                 </ion-content>
 
                 </ion-modal>       
