@@ -73,8 +73,8 @@ class SignInComponent extends PageMixin(LitElement) {
     }
   }
 
-  signup() {
-    router.navigate('/users/sign-up');
+  async signup() {
+    await router.navigate('/users/sign-up');
   }
 
   isFormValid() {

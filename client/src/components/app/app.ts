@@ -12,6 +12,7 @@ import { authenticationService, AuthenticationService } from '../../authenticati
 import { CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao, MassageSyncDao } from "../../offline/sync-dao";
 import { NavigationHookResult } from '@ionic/core/dist/types/components/route/route-interface';
 import { ChatSyncDao } from '../../offline/chat-sync-dao.js';
+import { notificationService } from '../../notification.js';
 
 export type RouteItem = {
   title: string,
@@ -127,6 +128,19 @@ class AppComponent extends LitElement {
     this.ionRouter.back();
   }
 
+  async beforeEnter(route: RouteItem) {
+    if(!route.authRequired) {
+      return true;
+    }
+
+    if(!authenticationService.isAuthenticated()) {
+      notificationService.showNotification('Bitte loggen Sie sich ein.')
+      return { redirect: '/users/sign-in' };
+    }
+
+    return true;
+  }
+
   render() {
     return html` 
     <ion-app class="toast-wrapper">
@@ -138,18 +152,17 @@ class AppComponent extends LitElement {
     <ion-router use-hash="false" id="router" @ionRouteWillChange="${this.setCurrentRoute}">
       ${!authenticationService.isAuthenticated() ? 
         html`
-          <ion-route-redirect from="*" to="users/sign-in"></ion-route-redirect>
+          <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
         `:
         html`
         <ion-route-redirect from="/" to="home"></ion-route-redirect>
         ` 
       }
-      <ion-route-redirect from="/" to="users/sign-in"></ion-route-redirect>
       <ion-route url=":" component="app-404-page"></ion-route>
 
       ${this.routeItems.map(route => {
         return html`
-        <ion-route url="${route.routePath}" component="${route.component}" .componentProps="${route.props}"></ion-route>
+        <ion-route url="${route.routePath}" component="${route.component}" .componentProps="${route.props}" .beforeEnter=${() => this.beforeEnter(route)}></ion-route>
         `;
       })}
 
