@@ -11,6 +11,5 @@ export interface Task extends Entity {
     name: string,
     description: string,
     pictures: string[],
-    taskType: string,
     muscle: string
 }

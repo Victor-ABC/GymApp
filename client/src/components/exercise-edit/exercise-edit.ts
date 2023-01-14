@@ -18,9 +18,9 @@ class ExerciseEditComponent extends PageMixin(LitElement){
 
     @state() private task!: Object
 
+    @query('form') private form!: HTMLFormElement;
     @query('#imageSwiper') private imageSwiper!: IonSlides;
     @query('#description') private description!: IonText;
-    @query('#taskType') private taskType!: HTMLIonSelectElement;
     @query('#muscle') private muscle!: HTMLIonSelectElement;
     @query('#name') private name!: IonText;
 
@@ -63,11 +63,15 @@ class ExerciseEditComponent extends PageMixin(LitElement){
     }
 
     async submit() {
+      if (!this.isFormValid()) {
+        notificationService.showNotification("Bitte überprüfen Sie Ihre eingabe", 'info');
+        return;
+      }
+
       const task = {
         id: this.id,
         pictures: this.exercisePictures,
         name: this.name.value,
-        taskType: this.taskType.value,
         description: this.description.value,
         muscle: this.muscle.value
       }
@@ -75,6 +79,10 @@ class ExerciseEditComponent extends PageMixin(LitElement){
       await TaskSyncDao.update(task);
 
       router.navigate('/exercises');
+    }
+
+    isFormValid() {
+      return this.form.checkValidity();
     }
   
     render() {
@@ -125,19 +133,16 @@ class ExerciseEditComponent extends PageMixin(LitElement){
                         value="${this.task?.name}"></ion-input>
                     </ion-item>
                     <ion-item>
-                    <ion-label position="fixed">Art</ion-label>
-                    <ion-select interface="alert" placeholder="Art wählen" id="taskType" value="${this.task?.taskType}">
-                        <ion-select-option value="cardio">Cardio</ion-select-option>
-                        <ion-select-option value="weight">Gewicht heben</ion-select-option>
-                    </ion-select>
-                    </ion-item>
-                    <ion-item>
                     <ion-label position="fixed">Muskel</ion-label>
                     <ion-select interface="alert" placeholder="Art wählen" id="muscle" value="${this.task?.muscle}">
-
-                    <ion-select-option value="Brust">Brust</ion-select-option>
-                    <ion-select-option value="Beine">Beine</ion-select-option>
-
+                      <ion-select-option value="Brust">Brust</ion-select-option>
+                      <ion-select-option value="Rücken">Rücken</ion-select-option>
+                      <ion-select-option value="Gesäß">Gesäß</ion-select-option>
+                      <ion-select-option value="Oberschenkel">Oberschenkel</ion-select-option>
+                      <ion-select-option value="Waden">Waden</ion-select-option>
+                      <ion-select-option value="Schultern">Schultern</ion-select-option>
+                      <ion-select-option value="Trizeps">Trizeps</ion-select-option>
+                      <ion-select-option value="Bizeps">Bizeps</ion-select-option>
                     </ion-select>
               </ion-item>
                     <ion-item>
@@ -149,7 +154,7 @@ class ExerciseEditComponent extends PageMixin(LitElement){
             </ion-card>
             <ion-row>
             <ion-col>
-                <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Workout erstellen</ion-button>
+                <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Übung erstellen</ion-button>
             </ion-col>
         </ion-row>
           </form?

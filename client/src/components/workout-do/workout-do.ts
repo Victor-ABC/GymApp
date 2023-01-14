@@ -37,8 +37,6 @@ class WorkoutDoComponent extends PageMixin(LitElement){
     this.workout = await WorkoutSyncDao.findOne({id: this.id});
     this.exercises = await ExerciseSyncDao.findAll({ workoutId: this.id });
 
-    console.log(this.exercises);
-
     this.preFillResults();
     }
 
@@ -67,7 +65,7 @@ class WorkoutDoComponent extends PageMixin(LitElement){
         modal.isOpen = false
     }
 
-    finishExercise(event: PointerEvent, index: number, exercise: object) {
+    async finishExercise(event: PointerEvent, index: number, exercise: object) {
         const modal = document.getElementById('model-' + index) as IonModal;
         modal.isOpen = false
 
@@ -76,6 +74,8 @@ class WorkoutDoComponent extends PageMixin(LitElement){
         item.lines = "none";
 
         exercise.finished = true;
+
+        await this.setWorkoutData();
     }
 
     render() {
@@ -222,15 +222,19 @@ class WorkoutDoComponent extends PageMixin(LitElement){
         this.results[index][setIndex][inputEl.offsetParent.id] = inputEl.value;
     }
 
-    finishTraining() {
-        this.results.map(async (sets, index) => {
+    async setWorkoutData() {
+        await this.results.map(async (sets, index) => {
             const maxWeight = Math.max(...sets.map(o => o.weight));
             const maxRepetitions = Math.max(...sets.map(o => o.repetitions));
 
             await ExerciseSyncDao.update({...this.exercises[index], weight: maxWeight, repetitions: maxRepetitions});
         })
+    }
 
-        router.navigate('/home')
+    async finishTraining() {
+        await this.setWorkoutData();
+
+        await router.navigate('/home')
     }
 }
 

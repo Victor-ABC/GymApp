@@ -27,6 +27,10 @@ export class ChatSyncDAO<T extends Entity>{
   async sync() {
     await this.init();
 
+    if(httpClient.isOffline) {
+      return
+    }
+
     await this.setRouteData(this.route);
     await this.setRouteData(this.route + '/all/users');
   }
@@ -45,7 +49,7 @@ export class ChatSyncDAO<T extends Entity>{
   }
 
   public async getAllUsers() {
-    await this.init();
+    await this.sync();
 
     const result = [] as T[];
 
@@ -56,7 +60,7 @@ export class ChatSyncDAO<T extends Entity>{
   }
 
   public async getAllChats() {
-    await this.init();
+    await this.sync();
 
     const result = [] as T[];
 
