@@ -137,6 +137,11 @@ class CourseCreateComponent extends PageMixin(LitElement){
     }
 
     async submit() {
+        if (!this.isFormValid()) {
+            notificationService.showNotification("Bitte überprüfen Sie Ihre eingabe", 'info');
+            return;
+          }
+
             const date = (new Date()).toISOString()
 
             const course = {

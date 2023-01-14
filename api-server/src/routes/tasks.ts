@@ -15,7 +15,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         res.status(400).json({ message });
     };
 
-    if (!hasRequiredFields(req.body, ['name',  'description', 'taskType', 'muscle'], errors)) {
+    if (!hasRequiredFields(req.body, ['name',  'description', 'muscle'], errors)) {
         return sendErrorMessage(errors.join('\n'));
     }
 
@@ -24,7 +24,6 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
         name: req.body.name,
         description: req.body.description,
         pictures: req.body.pictures,
-        taskType: req.body.taskType,
         muscle: req.body.muscle
     })
     res.status(201).json(task);
@@ -38,7 +37,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name',  'description', 'taskType', 'muscle'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'name',  'description', 'muscle'], errors)) {
       return sendErrorMessage(errors.join('\n'));
   }
 
@@ -47,7 +46,6 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       pictures: req.body.pictures,
-      taskType: req.body.taskType,
       muscle: req.body.muscle
   })
   res.status(201).json(task);

@@ -47,7 +47,7 @@
     "@ionic/core": "^6.3.9",
     "@ionic/storage": "^3.0.6",
     "date-fns": "^2.29.3",
-    "esbuild-windows-64": "^0.15.18",
+    "esbuild": "^0.17.0",
     "ionicons": "^6.0.4",
     "lit": "^2.4.0"
   }

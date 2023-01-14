@@ -55,7 +55,7 @@ render() {
 }
 
 async firstUpdated() {
-  this.user = UserSyncDao.findOne({id: this.id});
+  this.user = await UserSyncDao.findOne({id: this.id});
   this.avatar = this.user.avatar;
 
   this.inputOfPasswordElement.addEventListener('input', () => {

@@ -39,8 +39,6 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#password-check > input') private passwordCheckElement!: HTMLInputElement;
 
-  @query('#is-trainer') private isTrainerCheckboxElement!: HTMLIonToggleElement;
-
   async firstUpdated() {
     this.inputOfPasswordElement.addEventListener('input', () => {
       this.computeStrengthOfPasswordAgain();
@@ -86,10 +84,6 @@ class SignUpComponent extends PageMixin(LitElement) {
           <ion-label position="floating">Passwort-check</ion-label>
           <ion-input type="password" required laceholder="Text eingeben" id="password-check"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label>Trainer</ion-label>
-          <ion-toggle id="is-trainer" slot="end"></ion-toggle>
-        </ion-item>
         <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Registrieren</ion-button>
       </form>
     </ion-content>
@@ -103,7 +97,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         email: this.emailElement.value,
         password: this.passwordElement.value,
         passwordCheck: this.passwordCheckElement.value,
-        isTrainer: this.isTrainerCheckboxElement.checked
+        isTrainer: false
       };
       try {
         await httpClient.post('users', accountData);

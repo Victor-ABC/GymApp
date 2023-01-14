@@ -115,10 +115,6 @@ class ProfileComponent extends PageMixin(LitElement) {
         <ion-label position="floating">Passwort-check</ion-label>
         <ion-input type="password" required laceholder="Text eingeben" id="password-check"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label>Trainer</ion-label>
-        <ion-toggle checked="${this.user.isTrainer}" id="is-trainer" slot="end"></ion-toggle>
-      </ion-item>
       <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Update Profile</ion-button>
     </form>
 
@@ -148,7 +144,7 @@ class ProfileComponent extends PageMixin(LitElement) {
         email: this.emailElement.value,
         password: this.passwordElement.value,
         passwordCheck: this.passwordCheckElement.value,
-        isTrainer: this.isTrainerCheckboxElement.checked,
+        isTrainer: this.user.isTrainer,
         avatar: this.avatar
       };
 

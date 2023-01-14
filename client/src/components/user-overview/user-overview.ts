@@ -8,6 +8,7 @@ import { AuthenticationService, authenticationService } from '../../authenticati
 import { UserSyncDao } from '../../offline/sync-dao';
 import { router } from '../../router/router';
 import { repeat } from 'lit/directives/repeat.js';
+import { IonPopover } from '@ionic/core/components';
 
 @customElement('app-user-overview')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,10 +61,10 @@ class UserOverviewComponent extends LitElement {
                                             <ion-button fill="clear" id="click-trigger-${index}">
                                                 <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
                                             </ion-button>
-                                            <ion-popover trigger="click-trigger-${index}" trigger-action="click">
+                                            <ion-popover trigger="click-trigger-${index}" id="popover-${index}" trigger-action="click">
                                                 <ion-list mode="ios">
-                                                        <ion-item button="true" color="danger" detail="false" @click="${() => this.deleteUser(user.id)}">User löschen</ion-item>
-                                                        <ion-item button="true" color="warning" detail="false" @click="${() => this.editUser(user.id)}">User editieren</ion-item>
+                                                        <ion-item button="true" color="danger" detail="false" @click="${() => this.deleteUser(user.id, index)}">User löschen</ion-item>
+                                                        <ion-item button="true" color="warning" detail="false" @click="${() => this.editUser(user.id, index)}">User editieren</ion-item>
                                                 </ion-list>
                                             </ion-popover>
                                         </ion-item>
@@ -89,12 +90,16 @@ class UserOverviewComponent extends LitElement {
     `;
 }
 
-openUser(userId: string) {
+openUser(userId: string, index: string) {
     router.navigate(`users/detail/${userId}`);
+    const popover = document.getElementById('popover-' + index) as IonPopover;
+    popover.dismiss();
 }
 
-editUser(userId: string) {
+editUser(userId: string, index: string) {
   router.navigate(`users/edit/${userId}`);
+  const popover = document.getElementById('popover-' + index) as IonPopover;
+  popover.dismiss();
 }
 
 openCreateUser() {
