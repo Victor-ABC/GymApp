@@ -5,10 +5,6 @@
   by Manipulating CSS-Variables via JS (TS)
   */
 
-* {
-  max-width: 500px;
-}
-
 .password-strength {
   width: 100%;
   border: 1px solid lightgrey;

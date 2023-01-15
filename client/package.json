@@ -7,6 +7,9 @@
   "scripts": {
     "start": "vite --open",
     "start-without-open": "vite --host",
+    "serve": "vite build && cap sync",
+    "android": "vite build && cap sync && cap open android",
+    "preview": "vite build && vite preview --port 8080",
     "build": "vite build",
     "lint": "eslint . --ext .ts",
     "open-studio": "npx cap open android",
@@ -35,7 +38,8 @@
     "sinon": "^14.0.1",
     "ts-node": "^10.9.1",
     "uuid": "^9.0.0",
-    "vite": "^3.2.4"
+    "vite": "^3.2.4",
+    "vite-plugin-pwa": "^0.14.1"
   },
   "dependencies": {
     "@capacitor/android": "^4.6.0",

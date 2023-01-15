@@ -6,6 +6,7 @@ node_modules/
 # Generierte Dateien
 coverage/
 dist/
+dev-dist/
 
 # Mac only
 .DS_Store
