@@ -8,6 +8,7 @@ import { router } from '../../router/router.js';
 import { PageMixin } from '../page.mixin.js';
 import componentStyle from './sign-up.css';
 import { notificationService } from '../../notification.js'
+import { authenticationService } from '../../authenticationService.js';
 
 type CustomError = {
   errorMessage: string;
@@ -100,7 +101,8 @@ class SignUpComponent extends PageMixin(LitElement) {
         isTrainer: false
       };
       try {
-        await httpClient.post('users', accountData);
+        const user = await httpClient.post('users', accountData);
+        await authenticationService.storeUser(await user.json());
         router.navigate('/home'); //todo: add starting page route
 
         const child = document.querySelector('app-header') as LitElement;
