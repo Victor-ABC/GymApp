@@ -57,10 +57,16 @@ export class HttpClient {
   }
 
   private async createFetch(method: string, url: string, body?: unknown) {
-    const requestOptions: RequestInit = {
-      headers: { 'Content-Type': 'application/json; charset=utf-8', authentication: (await this.storage.get(JWT_KEY)) ?? null },
+    const jwt = (await this.storage.get(JWT_KEY)) ?? null;
+    
+    let requestOptions: RequestInit = {
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
       method: method,
-    };
+      };
+
+    if(jwt) {
+      requestOptions.headers['jwt'] = (await this.storage.get(JWT_KEY)) ?? null;
+    }
 
     if (body) {
       requestOptions.body = JSON.stringify(body);
@@ -85,10 +91,9 @@ export class HttpClient {
 
   async doFetch(path: string, requestOptions: string) {
     const response = await fetch(path, requestOptions);
-
     if (response.ok) {
-      if(response.headers.has('authentication'))      {
-        await this.storage.set(JWT_KEY, response.headers.get('authentication'));
+      if(response.headers.has('jwt')) {
+        await this.storage.set(JWT_KEY, response.headers.get('jwt'));
       }
 
       return response;
