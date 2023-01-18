@@ -10,7 +10,7 @@ class AuthService {
     if (res.locals.user) {
       next();
     } else {
-      const token = req.cookies['jwt-token'] || '';
+      const token = req.headers.authorization || '';
       try {
         res.locals.user = jwt.verify(token, SECRET);
         next();
@@ -22,7 +22,7 @@ class AuthService {
 
   createAndSetToken(userClaimSet: Record<string, unknown>, res: Response) {
     const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '1h' });
-    res.cookie('jwt-token', token, { httpOnly: false });
+    res.setHeader('authorization', token);
   }
 
   verifyToken(token: string) {

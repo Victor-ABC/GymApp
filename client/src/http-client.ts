@@ -17,6 +17,7 @@ interface Request {
 }
 
 const REQUEST_KEY = 'Request';
+const JWT_KEY = 'jwt-token';
 
 export class HttpClient {
   private config!: HttpClientConfig;
@@ -57,9 +58,8 @@ export class HttpClient {
 
   private async createFetch(method: string, url: string, body?: unknown) {
     const requestOptions: RequestInit = {
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      headers: { 'Content-Type': 'application/json; charset=utf-8', authentication: (await this.storage.get(JWT_KEY)) ?? null },
       method: method,
-      credentials: 'include'
     };
 
     if (body) {
@@ -87,6 +87,10 @@ export class HttpClient {
     const response = await fetch(path, requestOptions);
 
     if (response.ok) {
+      if(response.headers.has('authentication'))      {
+        await this.storage.set(JWT_KEY, response.headers.get('authentication'));
+      }
+
       return response;
     } else {
       let message = await response.text();

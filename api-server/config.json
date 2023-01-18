@@ -8,8 +8,7 @@
       "database": "taskman",
       "password": "wifhm",
       "port": {
-        "mongodb": 27017,
-        "psql": 5432
+        "mongodb": 27017
       }
     }
   }
