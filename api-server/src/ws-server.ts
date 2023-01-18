@@ -1,10 +1,10 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { IncomingMessage, Server } from 'node:http';
-import cookie from 'cookie';
 import WebSocket from 'ws';
 import { User } from './models/users/user.js';
 import { authService } from './services/auth.service.js';
+import url from 'url';
 
 interface WebSocketExt extends WebSocket {
   isAlive: boolean;
@@ -65,7 +65,8 @@ class WebSocketServer {
   }
 
   private async validateConnection(ws: WebSocketExt, req: IncomingMessage) {
-    const token = cookie.parse(req.headers.cookie as string)['jwt-token'];
+    const params = url.parse(req.url, true).query;
+    const token = params.jwt || ''
     try {
       ws.claimsSet = authService.verifyToken(token) as Partial<User>;
       return true;
@@ -79,7 +80,6 @@ class WebSocketServer {
       this.wss.clients.forEach(client => {
         const ws = client as WebSocketExt;
         if (!ws.isAlive) {
-          console.log("deleted WebSocket Connection");
           return ws.terminate();
         }
         ws.isAlive = false;

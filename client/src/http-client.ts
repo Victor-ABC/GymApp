@@ -56,6 +56,15 @@ export class HttpClient {
     return this.createFetch('DELETE', url);
   }
 
+  public async getJwt(): Promise<string|null> {
+    if(!this.storage) {
+      this.storage = new Storage();
+      await this.storage.create();  
+    }
+
+    return (await this.storage.get(JWT_KEY)) ?? null
+  }
+
   private async createFetch(method: string, url: string, body?: unknown) {
     const jwt = (await this.storage.get(JWT_KEY)) ?? null;
     

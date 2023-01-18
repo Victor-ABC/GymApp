@@ -1,7 +1,6 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import express, { Express } from 'express';
-import cookieParser from 'cookie-parser';
 import http from 'node:http';
 import https from 'node:https';
 import path from 'node:path';
@@ -28,7 +27,6 @@ function configureApp(app: Express) {
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   app.use(express.json());
-  app.use(cookieParser());
   app.use(corsService.corsMiddleware);
   app.use('/api/users', users);
   app.use('/api/workouts', workouts);
