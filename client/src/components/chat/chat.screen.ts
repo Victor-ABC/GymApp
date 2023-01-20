@@ -35,7 +35,10 @@ class ChatScreen extends PageMixin(LitElement) {
     return html`
       <ion-content class="ion-padding">
         <div class="header-overview">
-          <h1>Chats</h1>
+        ${!Capacitor.isNativePlatform() ? html`
+        <h1>Chats</h1>
+    ` : null }
+
           <ion-button @click="${this.newChat}">
             <ion-icon name="add"></ion-icon>
           </ion-button>

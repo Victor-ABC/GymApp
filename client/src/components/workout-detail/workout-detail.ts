@@ -49,7 +49,9 @@ class HomeComponent extends PageMixin(LitElement) {
   buildBody() {
     return html`
       <ion-content class="ion-padding">
-        <h1>Workout detail: ${this.workout.name}</h1>
+      ${!Capacitor.isNativePlatform() ? html`
+      <h1>Workout detail: ${this.workout.name}</h1>
+    ` : null }
 
         <ion-card>
         <ion-card-content>

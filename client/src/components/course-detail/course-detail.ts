@@ -47,7 +47,10 @@ class CourseDetailComponent extends PageMixin(LitElement){
     render() {
         return html `
             <ion-content class="ion-padding">
-                <h1>Course Detail</h1>
+            ${!Capacitor.isNativePlatform() ? html`
+            <h1>Course Detail</h1>
+        ` : null }
+
                 <div class="course">
                     <ion-card>
                         <ion-card-header>

@@ -41,7 +41,10 @@ class CourseCreateComponent extends PageMixin(LitElement){
     render() {
         return html `
         <ion-content class="ion-padding">
-            <h1>Kurs erstellen</h1>
+        ${!Capacitor.isNativePlatform() ? html`
+        <h1>Kurs erstellen</h1>
+    ` : null }
+
             <form>
                 <ion-card>
                     <ion-card-header>

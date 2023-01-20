@@ -42,7 +42,9 @@ class WorkoutEditComponent extends PageMixin(LitElement){
     buildBody(){
         return html `
         <ion-content class="ion-padding">
-            <h1>Workout erstellen</h1>
+        ${!Capacitor.isNativePlatform() ? html`
+        <h1>Workout editieren</h1>
+      ` : null }
 
             <form>
                 <ion-card class="workoutcard">

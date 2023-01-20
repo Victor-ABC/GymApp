@@ -66,6 +66,10 @@ async firstUpdated() {
 buildBody() {
   return html`
     <ion-content class="ion-padding">
+    ${!Capacitor.isNativePlatform() ? html`
+    <h1>User editieren</h1>
+  ` : null }
+
     <form>
 
     ${this.avatar

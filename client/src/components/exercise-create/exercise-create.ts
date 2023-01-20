@@ -81,7 +81,10 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
     render() {
         return html `
         <ion-content class="ion-padding">
+        ${!Capacitor.isNativePlatform() ? html`
         <h1>Übung erstellen</h1>
+      ` : null }
+
         <form>
             <ion-card>
                 <ion-card-content>

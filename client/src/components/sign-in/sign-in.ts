@@ -31,7 +31,9 @@ class SignInComponent extends PageMixin(LitElement) {
   buildBody() {
     return html`
       <ion-content class="ion-padding">
-        <h1>Anmelden</h1>
+      ${!Capacitor.isNativePlatform() ? html`
+      <h1>Anmelden</h1>
+  ` : null }
         <form novalidate onSubmit="submit">
           <ion-item lines="full">
             <ion-label position="floating">Email</ion-label>
