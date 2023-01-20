@@ -45,7 +45,9 @@ class CourseOverviewComponent extends PageMixin(LitElement){
         return html `
             <ion-content class="ion-padding">
                 <div class="header-overview">
+                ${!Capacitor.isNativePlatform() ? html`
                     <h1>Course Overview</h1>
+                ` : null }
                     ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
                         <ion-button @click="${() => this.openCreateCourse()}">
                             <ion-icon slot="icon-only" name="add"></ion-icon>

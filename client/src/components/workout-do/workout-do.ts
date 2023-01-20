@@ -81,7 +81,9 @@ class WorkoutDoComponent extends PageMixin(LitElement){
     render() {
         return html`
         <ion-content class="ion-padding">
-            <h1>Workout</h1>
+        ${!Capacitor.isNativePlatform() ? html`
+        <h1>Workout</h1>
+      ` : null }
 
             <ion-card>
             <ion-card-content>

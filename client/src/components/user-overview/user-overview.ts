@@ -30,7 +30,9 @@ class UserOverviewComponent extends LitElement {
     return html `
         <ion-content class="ion-padding">
             <div class="header-overview">
-                <h1>User-Übersicht</h1>
+            ${!Capacitor.isNativePlatform() ? html`
+            <h1>User-Übersicht</h1>
+          ` : null }
                 ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
                     <ion-button @click="${() => this.openCreateUser()}">
                         <ion-icon slot="icon-only" name="add"></ion-icon>

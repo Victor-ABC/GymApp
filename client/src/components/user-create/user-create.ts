@@ -57,6 +57,10 @@ class UserCreateComponent extends LitElement {
   render() {
     return html`
       <ion-content class="ion-padding">
+      ${!Capacitor.isNativePlatform() ? html`
+      <h1>User erstelen</h1>
+    ` : null }
+
       <form>
 
       ${this.avatar
