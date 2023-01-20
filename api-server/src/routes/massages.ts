@@ -55,6 +55,7 @@ router.post('/', authService.authenticationMiddleware, async (req, res) => {
     to: req.body.to,
     recieved: false
   });
+
   wsServer.sendChatMessage(res.locals.user.id, req.body.to, { newMessage: newMessage });
 });
 

@@ -41,16 +41,27 @@ class ChatComponent extends PageMixin(LitElement) {
       this.messages = [...await MassageSyncDao.findAll({ to: this.id }), ...await MassageSyncDao.findAll({ from: this.id })]
 
       this.requestUpdate();
-      this.setupWebSocket();
+      await this.setupWebSocket();
       await this.updateComplete;
   }
 
-  setupWebSocket() {
+  async setupWebSocket() {
     if(httpClient.isOffline) {
       return;
     }
 
-    const webSocket = Capacitor.getPlatform() === 'android' ? new WebSocket('ws://10.0.2.2:3000') : new WebSocket('ws://localhost:3000');
+    const jwt = await httpClient.getJwt()
+
+    let webSocket = null;
+
+    if(Capacitor.getPlatform() === 'android') {
+      webSocket = new WebSocket('ws://10.0.2.2:3000/?jwt=' + jwt);
+    } else if(Capacitor.getPlatform() === 'ios') {
+
+      webSocket = new WebSocket('ws://127.0.0.1:3000/?jwt=' + jwt);
+    } else {
+      webSocket = new WebSocket('ws://localhost:3000?jwt=' + jwt);
+    }
 
     webSocket.onmessage = event => {
       var data = JSON.parse(event.data);

@@ -17,6 +17,7 @@ interface Request {
 }
 
 const REQUEST_KEY = 'Request';
+const JWT_KEY = 'jwt-token';
 
 export class HttpClient {
   private config!: HttpClientConfig;
@@ -55,12 +56,26 @@ export class HttpClient {
     return this.createFetch('DELETE', url);
   }
 
+  public async getJwt(): Promise<string|null> {
+    if(!this.storage) {
+      this.storage = new Storage();
+      await this.storage.create();  
+    }
+
+    return (await this.storage.get(JWT_KEY)) ?? null
+  }
+
   private async createFetch(method: string, url: string, body?: unknown) {
-    const requestOptions: RequestInit = {
+    const jwt = (await this.storage.get(JWT_KEY)) ?? null;
+    
+    let requestOptions: RequestInit = {
       headers: { 'Content-Type': 'application/json; charset=utf-8' },
       method: method,
-      credentials: 'include'
-    };
+      };
+
+    if(jwt) {
+      requestOptions.headers['jwt'] = (await this.storage.get(JWT_KEY)) ?? null;
+    }
 
     if (body) {
       requestOptions.body = JSON.stringify(body);
@@ -85,8 +100,11 @@ export class HttpClient {
 
   async doFetch(path: string, requestOptions: string) {
     const response = await fetch(path, requestOptions);
-
     if (response.ok) {
+      if(response.headers.has('jwt')) {
+        await this.storage.set(JWT_KEY, response.headers.get('jwt'));
+      }
+
       return response;
     } else {
       let message = await response.text();
