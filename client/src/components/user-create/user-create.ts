@@ -12,6 +12,7 @@ import { UserSyncDao } from '../../offline/sync-dao.js';
 import { LitElement, html, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { thumbsUpSharp } from 'ionicons/icons';
+import { Router } from '@ionic/core/dist/types/components/router/router.js';
 
 @customElement('app-user-create')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -135,7 +136,6 @@ class UserCreateComponent extends LitElement {
   async submit() {
     if (this.isFormValid()) {
       const accountData = {
-        id: this.user.id,
         name: this.nameElement.value,
         email: this.emailElement.value,
         password: this.passwordElement.value,
@@ -144,9 +144,9 @@ class UserCreateComponent extends LitElement {
         avatar: this.avatar
       };
 
-      UserSyncDao.create(accountData);
-
-        notificationService.showNotification('Der User wurde erstellt')
+      await UserSyncDao.create(accountData);
+      notificationService.showNotification('Der User wurde erstellt')
+      router.navigate('/users');
     } else {
 
       notificationService.showNotification('Bitte überprüfen Sie Ihre eingaben', "info")
