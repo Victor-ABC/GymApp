@@ -111,10 +111,6 @@ async function startMongoDB(app: Express) {
   const client = await connectToMongoDB();
   const db = client.db('Gym');
   app.locals.userDAO = new MongoGenericDAO<User>(db, 'users');
-  (app.locals.userDAO as MongoGenericDAO<User>).create(await getDemoUser());
-  (app.locals.userDAO as MongoGenericDAO<User>).create(await getTrainerUser());
-  (app.locals.userDAO as MongoGenericDAO<User>).create(await getTimUser());
-  (app.locals.userDAO as MongoGenericDAO<User>).create(await getSimonUser());
   app.locals.courseDAO = new MongoGenericDAO<Course>(db, 'course');
   app.locals.memberInCourseDAO = new MongoGenericDAO<MemberInCourse>(db, 'memberInCourse');
   app.locals.workoutDAO = new MongoGenericDAO<Workout>(db, 'workouts');
