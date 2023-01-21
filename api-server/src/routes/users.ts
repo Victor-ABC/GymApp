@@ -73,13 +73,11 @@ router.delete('/sign-out', (req, res) => {
   res.status(200).end();
 });
 
-router.delete('/', authService.authenticationMiddleware, async (req, res) => {
+router.delete('/:id', authService.authenticationMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
 
-  userDAO.delete(res.locals.user.id);
-
-  authService.removeToken(res);
-  res.status(200).end();
+  await userDAO.delete(req.params.id); 
+   res.status(200).end(); 
 });
 
 router.get('/trainer', authService.authenticationMiddleware, async (req, res) => {

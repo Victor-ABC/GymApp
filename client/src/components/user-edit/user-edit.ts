@@ -160,6 +160,7 @@ async submit() {
     UserSyncDao.update(accountData);
 
     notificationService.showNotification('Das Profil wurde geupdated')
+    router.navigate('/users');
   } else {
     notificationService.showNotification('Bitte überprüfen Sie ihre eingaben.')
     this.form.classList.add('was-validated');

@@ -108,8 +108,11 @@ openCreateUser() {
     router.navigate(`users/create`);
 }
 
-async deleteUser(userId: string) {
+async deleteUser(userId: string, index: string) {
     await UserSyncDao.delete(userId);
+
+    const popover = document.getElementById('popover-' + index) as IonPopover;
+    popover.dismiss();
     this.firstUpdated();
 }
 }
