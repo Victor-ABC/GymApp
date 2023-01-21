@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: await bcrypt.hash(req.body.password, 10),
-    isTrainer: req.body.isTrainer
+    isTrainer: req.body.isTrainer ?? false
   });
   authService.createAndSetToken({ id: createdUser.id }, res);
   res.status(201).json(createdUser);
@@ -104,7 +104,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name',  'email', 'password', 'isTrainer'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'name',  'email', 'password'], errors)) {
       return sendErrorMessage(errors.join('\n'));
   }
 
@@ -113,7 +113,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
-      isTrainer: req.body.isTrainer,
+      isTrainer: req.body.isTrainer ?? false,
       avatar: req.body.avatar ?? null
   })
   res.status(201).json(user);

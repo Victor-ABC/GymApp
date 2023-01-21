@@ -109,7 +109,7 @@ async function startInMemoryDB(app: Express) {
 
 async function startMongoDB(app: Express) {
   const client = await connectToMongoDB();
-  const db = client.db('taskman');
+  const db = client.db('Gym');
   app.locals.userDAO = new MongoGenericDAO<User>(db, 'users');
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getDemoUser());
   (app.locals.userDAO as MongoGenericDAO<User>).create(await getTrainerUser());
@@ -127,8 +127,7 @@ async function startMongoDB(app: Express) {
 async function connectToMongoDB() {
   const url = `mongodb://${config.db.connect.host}:${config.db.connect.port.mongodb}`;
   const client = new MongoClient(url, {
-    auth: { username: config.db.connect.user, password: config.db.connect.password },
-    authSource: config.db.connect.database
+    auth: { username: config.db.connect.user, password: config.db.connect.password }
   });
   try {
     await client.connect();
