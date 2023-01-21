@@ -117,7 +117,7 @@ class UserCreateComponent extends LitElement {
         <ion-label>Trainer</ion-label>
         <ion-toggle id="is-trainer" slot="end"></ion-toggle>
       </ion-item>
-      <ion-button color="primary" type="button" @click="${this.submit}" expand="block">Update Profile</ion-button>
+      <ion-button color="primary" type="button" @click="${this.submit}" expand="block">User erstellen</ion-button>
     </form>
       </ion-content>
     `;
@@ -148,10 +148,12 @@ class UserCreateComponent extends LitElement {
         avatar: this.avatar
       };
 
-      UserSyncDao.update(accountData);
+      UserSyncDao.create(accountData);
 
-        notificationService.showNotification('Das Profil wurde geupdated')
+        notificationService.showNotification('Der User wurde erstellt')
     } else {
+
+      notificationService.showNotification('Bitte überprüfen Sie Ihre eingaben', "info")
       this.form.classList.add('was-validated');
     }
   }
