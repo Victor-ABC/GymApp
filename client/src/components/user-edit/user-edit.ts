@@ -102,7 +102,7 @@ buildBody() {
     </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">Passwort</ion-label>
-      <ion-input type="password" required id="password" placeholder="Text eingeben"></ion-input>
+      <ion-input type="password" id="password" placeholder="Text eingeben"></ion-input>
     </ion-item>
     <ion-progress-bar id="password-progress"></ion-progress-bar>
     <ion-list id="problems" class="problems">
@@ -120,7 +120,7 @@ buildBody() {
     </ion-list>
     <ion-item lines="full">
       <ion-label position="floating">Passwort-check</ion-label>
-      <ion-input type="password" required laceholder="Text eingeben" id="password-check"></ion-input>
+      <ion-input type="password" laceholder="Text eingeben" id="password-check"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Trainer</ion-label>
@@ -147,21 +147,21 @@ async takePhoto() {
 
 async submit() {
   if (this.isFormValid()) {
-    const accountData = {
+    let accountData = {
       id: this.user.id,
       name: this.nameElement.value,
       email: this.emailElement.value,
-      password: this.passwordElement.value,
+      password: !!this.passwordElement.value ? this.passwordElement.value : this.user.password,
       passwordCheck: this.passwordCheckElement.value,
-      isTrainer: this.isTrainerCheckboxElement.checked,
-      avatar: this.avatar
+      isTrainer: !!this.isTrainerCheckboxElement.checked ? this.isTrainerCheckboxElement.checked : this.user.isTrainer,
+      avatar: this.avatar 
     };
 
     UserSyncDao.update(accountData);
-    authenticationService.storeUser(accountData);
 
-      notificationService.showNotification('Das Profil wurde geupdated')
+    notificationService.showNotification('Das Profil wurde geupdated')
   } else {
+    notificationService.showNotification('Bitte überprüfen Sie ihre eingaben.')
     this.form.classList.add('was-validated');
   }
 }

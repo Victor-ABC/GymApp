@@ -149,7 +149,6 @@ class UserCreateComponent extends LitElement {
       };
 
       UserSyncDao.update(accountData);
-      authenticationService.storeUser(accountData);
 
         notificationService.showNotification('Das Profil wurde geupdated')
     } else {
