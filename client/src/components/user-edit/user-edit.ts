@@ -1,4 +1,4 @@
-/* Autor: Pascal Thesing */
+/* Autor: Henrik Bruns */
 
 import { LitElement, html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';

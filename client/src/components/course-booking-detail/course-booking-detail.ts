@@ -1,3 +1,5 @@
+/* Autor: Henrik Bruns */
+
 import { LitElement, html } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
@@ -9,8 +11,6 @@ import { authenticationService } from '../../authenticationService.js';
 import { Capacitor } from '@capacitor/core';
 
 import { MemberInCourseSyncDao, UserSyncDao } from "./../../offline/sync-dao";
-
-
 
 interface CourseBooking {
     id?: string;

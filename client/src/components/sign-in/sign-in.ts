@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Victor Corbet */
 
 import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, query } from 'lit/decorators.js';

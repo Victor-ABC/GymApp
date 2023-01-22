@@ -1,4 +1,6 @@
+/* Autor: Henrik Bruns */
 /* Autor: Pascal Thesing */
+/* Autor: Victor Corbet */
 
 import { v4 as uuidv4 } from 'uuid';
 import { Entity } from './entity.js';

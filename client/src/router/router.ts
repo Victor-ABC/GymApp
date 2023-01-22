@@ -1,4 +1,4 @@
-/* Autor: Pascal Thesing (FH Münster) */
+/* Autor: Henrik Bruns */
 
 import { IonRouter } from '@ionic/core/components';
 import { html } from 'lit';

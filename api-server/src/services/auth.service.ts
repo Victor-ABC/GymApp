@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Henrik Bruns */
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
