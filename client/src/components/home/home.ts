@@ -135,8 +135,7 @@ class HomeComponent extends PageMixin(LitElement) {
               course => html`
                 <ion-item-sliding>
                   <ion-item button="true">
-                    <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
-
+                      <ion-label class="ion-text-wrap">${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
                     <ion-button fill="clear" @click="${() => this.openCourse(course.bookingId)}">Open</ion-button>
                     <ion-button fill="clear" id="click-trigger-${course.bookingId}">
                       <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>
@@ -182,7 +181,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
         <ion-card-content>
         ${this.myWorkouts.length === 0 ?
-          html`<div class="no-content">Du hast momentan keine Training gebucht</div>` : html`
+          html`<div class="no-content">Du hast momentan keine Training</div>` : html`
           <ion-list>
             ${repeat(
               this.myWorkouts,
@@ -190,8 +189,7 @@ class HomeComponent extends PageMixin(LitElement) {
               workout => html`
               <ion-item-sliding>
                 <ion-item button="true">
-                  <ion-label>${workout.name}</ion-label>
-
+                  <ion-label class="ion-text-wrap">${workout.name}</ion-label>
                   <ion-button fill="clear" @click="${() => this.openWorkout(workout.id)}">
                     Open
                   </ion-button>

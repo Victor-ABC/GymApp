@@ -46,7 +46,7 @@ class WorkoutCreateComponent extends PageMixin(LitElement){
                     </ion-card-header>
                     <ion-card-content>
                         <ion-item>
-                            <ion-label position="fixed">Workoutname:</ion-label>
+                            <ion-label position="fixed">Name:</ion-label>
                             <ion-input type="text" required placeholder="Name vergeben" id="name"></ion-input>
                         </ion-item>
                     </ion-card-content>
@@ -81,7 +81,7 @@ class WorkoutCreateComponent extends PageMixin(LitElement){
                             <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="sets" value="${exercise.sets}"></ion-input>
                         </ion-item>
                         <ion-item lines="none">
-                            <ion-label position="fixed">Wiederholungen</ion-label>
+                            <ion-label class="ion-text-wrap" position="fixed">Wiederholungen</ion-label>
                             <ion-input @input=${event => this.onInput(event, index)} type="number" required placeholder="Sätze angeben" id="repetitions" value="${exercise.repetitions}"></ion-input>
                         </ion-item>
                         <ion-item lines="none">
