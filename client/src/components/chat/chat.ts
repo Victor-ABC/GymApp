@@ -122,12 +122,27 @@ class ChatComponent extends PageMixin(LitElement) {
             .map(m => this.renderMessage(m, m.from === this.id))}
         </ion-list>
       </ion-content>
-      <ion-footer>
-        <ion-row>
-          <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
-          <ion-button @click="${this.onEnter}" style="margin-bottom: 5px">senden</ion-button>
-        </ion-row>
-      </ion-footer>
+
+      ${Capacitor.getPlatform() === "ios" ? 
+          html`
+            <ion-footer style="margin-bottom: 40px;">
+              <ion-row>
+                <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
+                <ion-button @click="${this.onEnter}" style="margin-bottom: 5px">
+                  <ion-icon name="send-outline"></ion-icon>
+                </ion-button>
+              </ion-row>
+            </ion-footer>
+          `: html`
+            <ion-footer>
+              <ion-row>
+                <ion-input style="display: flex;" type="text" required placeholder="Text eingeben" id="text"></ion-input>
+                <ion-button @click="${this.onEnter}" style="margin-bottom: 5px">
+                  <ion-icon name="send-outline"></ion-icon>
+                </ion-button>
+              </ion-row>
+            </ion-footer>
+          `}
     `;
   }
 
