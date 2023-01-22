@@ -31,7 +31,7 @@ class WorkoutEditComponent extends PageMixin(LitElement){
     }
 
     async firstUpdated() {
-        this.workout = await WorkoutSyncDao.findAll({id: this.id})
+        this.workout = await WorkoutSyncDao.findOne({id: this.id})
   
         this.tasks = await TaskSyncDao.findAll();
 
@@ -164,11 +164,8 @@ class WorkoutEditComponent extends PageMixin(LitElement){
     }
 
     async submit() {
-        if (this.isFormValid()) {}
+        const workout = await WorkoutSyncDao.update(this.workout);
 
-        const workoutResponse = await WorkoutSyncDao.update(this.workout);
-
-        const workout = (await workoutResponse.json());
         this.exercises.map(async exercise => {
             if(exercise.id) {
                 await ExerciseSyncDao.update(exercise);

@@ -59,7 +59,7 @@ class UserCreateComponent extends LitElement {
     return html`
       <ion-content class="ion-padding">
       ${!Capacitor.isNativePlatform() ? html`
-      <h1>User erstelen</h1>
+      <h1>User erstellen</h1>
     ` : null }
 
       <form>

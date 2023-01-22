@@ -52,6 +52,7 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       repetitions: req.body.repetitions,
       sets: req.body.sets
   })
+  
   res.status(201).json(exercies);
 });
 

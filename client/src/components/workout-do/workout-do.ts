@@ -226,6 +226,10 @@ class WorkoutDoComponent extends PageMixin(LitElement){
 
     async setWorkoutData() {
         await this.results.map(async (sets, index) => {
+            if(!this.exercises[index].finished) {
+                return;
+            }
+
             const maxWeight = Math.max(...sets.map(o => o.weight));
             const maxRepetitions = Math.max(...sets.map(o => o.repetitions));
 
