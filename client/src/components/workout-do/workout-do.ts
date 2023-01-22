@@ -179,12 +179,12 @@ class WorkoutDoComponent extends PageMixin(LitElement){
                         <ion-row class="ion-justify-content-around">
                             <ion-col size="3">
                             <ion-item class="set" lines="none">
-                                Satz ${setIndex}
+                                Satz ${setIndex + 1}
                             </ion-item>
                             </ion-col>
                             <ion-col size="5">
                                 <ion-item lines="none">
-                                    <ion-label position="stacked">Wiederholungen:</ion-label>
+                                    <ion-label position="stacked">Wdh:</ion-label>
                                     <ion-input color="primary" @input=${event => this.onInput(event, index, setIndex)} type="number" id="repetitions" value="${exercise.repetitions}"></ion-input>
                                 </ion-item>
                             </ion-col>
