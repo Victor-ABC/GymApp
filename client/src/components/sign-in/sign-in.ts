@@ -1,6 +1,6 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
-import { LitElement, html } from 'lit';
+import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import { httpClient } from '../../http-client.js';
 import { router } from '../../router/router.js';
@@ -22,6 +22,18 @@ class SignInComponent extends PageMixin(LitElement) {
 
   protected createRenderRoot(): Element | ShadowRoot {
     return this;
+  }
+
+  async firstUpdated(): Promise<void> {
+    if(authenticationService.isAuthenticated()) {
+      router.navigate('/home');
+      return 
+    }
+
+    const child = document.querySelector('app-header') as LitElement;
+    if(child) {
+      child.requestUpdate();
+    }
   }
 
   render() {

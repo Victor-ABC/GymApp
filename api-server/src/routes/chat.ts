@@ -39,6 +39,9 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       if (newArray[i]) {
         if (message.from === newArray[i].id && message.to === res.locals.user.id) {
           newArray.splice(i, 1);
+        }
+
+        if(!newArray[i]) {
           continue;
         }
 

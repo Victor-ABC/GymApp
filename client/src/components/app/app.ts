@@ -61,7 +61,7 @@ class AppComponent extends LitElement {
     { title: 'Mitglieder', routePath: '/users', authRequired: true, trainerRequired: true, component: 'app-user-overview', nativeHeaderBackButton: false, inBrowserHeader: true },
     { title: 'Mitglied detials', routePath: '/users/detail/:id', authRequired: true, trainerRequired: false, component: 'app-user-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
     { title: 'Mitglied editieren', routePath: '/users/edit/:id', authRequired: true, trainerRequired: false, component: 'app-user-edit', nativeHeaderBackButton: true, inBrowserHeader: false },
-    { title: 'Mitglied erstelen', routePath: '/users/create', authRequired: true, trainerRequired: false, component: 'app-user-create', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Mitglied ', routePath: '/users/create', authRequired: true, trainerRequired: false, component: 'app-user-create', nativeHeaderBackButton: true, inBrowserHeader: false },
     
     { title: 'Profil', routePath: '/profile', authRequired: true, trainerRequired: false, component: 'app-profile', nativeHeaderBackButton: false, inBrowserHeader: false },
     { title: 'Abmelden', routePath: '/users/sign-out', authRequired: true, trainerRequired: false, component: 'app-sign-out', nativeHeaderBackButton: false, inBrowserHeader: true },
