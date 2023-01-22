@@ -1,3 +1,5 @@
+/* Autor: Henrik Bruns */
+
 import express from "express";
 import { MemberInCourse } from "../models/course/member-in-course";
 import { Course } from "../models/course/course";

@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Henrik Bruns */
 
 import { LitElement, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';

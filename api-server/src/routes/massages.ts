@@ -1,3 +1,5 @@
+/* Autor: Victor Corbet */
+
 import express from 'express';
 import { wsServer } from '../ws-server.js';
 import { GenericDAO } from '../models/generic.dao.js';

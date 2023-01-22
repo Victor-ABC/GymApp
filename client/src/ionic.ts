@@ -1,3 +1,5 @@
+/* Autor: Henrik Bruns */
+
 import * as IonComponents from '@ionic/core/components';
 import { addIcons } from 'ionicons';
 

@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Victor Corbet */
 
 import express from 'express';
 import bcrypt from 'bcryptjs';

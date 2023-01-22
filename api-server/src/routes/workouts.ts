@@ -1,4 +1,5 @@
 /* Autor: Pascal Thesing (FH Münster) */
+
 import express from "express";
 import { Workout } from "../models/workout/workout";
 import { GenericDAO } from "../models/generic.dao";

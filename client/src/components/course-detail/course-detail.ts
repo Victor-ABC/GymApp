@@ -1,3 +1,5 @@
+/* Autor: Henrik Bruns */
+
 import { LitElement, html } from 'lit';
 import { customElement, state, query, property } from 'lit/decorators.js';
 import { PageMixin } from '../page.mixin.js';

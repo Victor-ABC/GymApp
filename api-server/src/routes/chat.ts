@@ -1,3 +1,5 @@
+/* Autor: Victor Corbet */
+
 import express from 'express';
 import { GenericDAO } from '../models/generic.dao.js';
 import { authService } from '../services/auth.service.js';

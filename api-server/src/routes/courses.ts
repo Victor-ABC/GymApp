@@ -1,3 +1,5 @@
+/* Autor: Henrik Bruns */
+
 import express from "express";
 import { Course } from "../models/course/course";
 import { GenericDAO } from "../models/generic.dao";

@@ -1,4 +1,6 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Henrik Bruns */
+/* Autor: Pascal Thesing */
+/* Autor: Victor Corbet */
 
 import { LitElement, html, PropertyValueMap } from 'lit';
 import { customElement, query, state } from 'lit/decorators.js';
