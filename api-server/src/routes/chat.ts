@@ -39,7 +39,9 @@ router.get('/all/users', authService.authenticationMiddleware, async (req, res) 
       if (newArray[i]) {
         if (message.from === newArray[i].id && message.to === res.locals.user.id) {
           newArray.splice(i, 1);
+          continue;
         }
+
         //already a message from me to user
         if (message.to === newArray[i].id && message.from === res.locals.user.id) {
           newArray.splice(i, 1);
