@@ -3,8 +3,6 @@
 import { User } from "./interfaces";
 import { Storage } from "@ionic/storage";
 import { CourseSyncDao, ExerciseSyncDao, TaskSyncDao, WorkoutSyncDao, MemberInCourseSyncDao, UserSyncDao, MassageSyncDao } from "./offline/sync-dao";
-import { useFakeTimers } from "sinon";
-import { router } from "./router/router";
 import { ChatSyncDao } from "./offline/chat-sync-dao";
 
 const storageKey = 'USER_STORAGE_KEY';
