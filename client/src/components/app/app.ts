@@ -90,6 +90,10 @@ class AppComponent extends LitElement {
   async firstUpdated(): Promise<void> {
     await authenticationService.init();
 
+    if(authenticationService.isAuthenticated()) {
+      return;
+    }
+
     await WorkoutSyncDao.init();
     await TaskSyncDao.init();
     await ExerciseSyncDao.init();
@@ -138,6 +142,13 @@ class AppComponent extends LitElement {
     if(!authenticationService.isAuthenticated()) {
       notificationService.showNotification('Bitte loggen Sie sich ein.')
       return { redirect: '/users/sign-in' };
+    }
+
+    if(route.trainerRequired) {
+      if(!authenticationService.isTrainer()) {
+        notificationService.showNotification('Route ist nur für Trainer verfügbar.')
+        return { redirect: '/home' };
+      }
     }
 
     return true;
