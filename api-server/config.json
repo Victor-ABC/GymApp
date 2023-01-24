@@ -1,12 +1,12 @@
 {
   "server": { "https": false, "port": 3000 },
   "db": {
-    "use": "in-memory-db",
+    "use": "mongodb",
     "connect": {
-      "user": "taskman",
-      "host": "localhost",
-      "database": "taskman",
-      "password": "wifhm",
+      "user": "myUserAdmin",
+      "host": "5.75.141.244",
+      "database": "gym",
+      "password": "coexist_tubby7_Frozen7",
       "port": {
         "mongodb": 27017
       }
