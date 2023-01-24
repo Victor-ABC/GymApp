@@ -102,18 +102,24 @@ router.patch('/:id', authService.authenticationMiddleware, async (req, res) => {
       res.status(400).json({ message });
   };
 
-  if (!hasRequiredFields(req.body, ['id', 'name',  'email', 'password'], errors)) {
-      return sendErrorMessage(errors.join('\n'));
+  if (!hasRequiredFields(req.body, ['id', 'name', 'email'], errors)) {
+    return sendErrorMessage(errors.join('\n'));
   }
 
-  const user = await userDAO.update({
-      id: req.body.id,  
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      isTrainer: req.body.isTrainer ?? false,
-      avatar: req.body.avatar ?? null
-  })
+  let userData = {
+    id: req.body.id,
+    name: req.body.name,
+    email: req.body.email,
+    isTrainer: req.body.isTrainer ?? false,
+    avatar: req.body.avatar ?? null
+  }
+
+  if(req.body.password) {
+    userData.password = await bcrypt.hash(req.body.password, 10);
+  }
+
+  const user = await userDAO.update(userData);
+
   res.status(201).json(user);
 });
 

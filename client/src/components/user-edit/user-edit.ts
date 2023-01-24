@@ -151,11 +151,14 @@ async submit() {
       id: this.user.id,
       name: this.nameElement.value,
       email: this.emailElement.value,
-      password: !!this.passwordElement.value ? this.passwordElement.value : this.user.password,
       passwordCheck: this.passwordCheckElement.value,
       isTrainer: !!this.isTrainerCheckboxElement.checked ? this.isTrainerCheckboxElement.checked : this.user.isTrainer,
       avatar: this.avatar 
     };
+
+    if(this.passwordElement.value) {
+      accountData.password = this.passwordElement.value;
+    }
 
     UserSyncDao.update(accountData);
 
