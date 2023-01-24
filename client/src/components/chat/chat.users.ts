@@ -31,7 +31,7 @@ class AppChatNewUsers extends PageMixin(LitElement) {
   render() {
     return html`
       <ion-content class="ion-padding">
-        <h1>Users</h1>
+        <h1>Mitglieder</h1>
         <ion-list> ${this.allUsers.map(user => this.buildUsers(user))} </ion-list>
       </ion-content>
     `;

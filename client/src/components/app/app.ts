@@ -41,8 +41,8 @@ class AppComponent extends LitElement {
 
     { title: 'Home', routePath: '/home', authRequired: true, trainerRequired: false, component: 'app-home', nativeHeaderBackButton: false, inBrowserHeader: true },
 
-    { title: 'Chat', routePath: '/chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', nativeHeaderBackButton: false, inBrowserHeader: true },
-    { title: 'Neuer Chat', routePath: '/newchat', authRequired: true, trainerRequired: false, component: 'app-chat-new-users', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Chats', routePath: '/chats/all', authRequired: true, trainerRequired: false, component: 'app-chats', nativeHeaderBackButton: false, inBrowserHeader: true },
+    { title: 'Chat', routePath: '/newchat', authRequired: true, trainerRequired: false, component: 'app-chat-new-users', nativeHeaderBackButton: true, inBrowserHeader: false },
     { title: 'Chat', routePath: '/chat/:id', authRequired: true, trainerRequired: false, component: 'app-chat', nativeHeaderBackButton: true, inBrowserHeader: false },
 
     { title: 'Kurse', routePath: '/course', authRequired: true, trainerRequired: false, component: 'app-course-overview', nativeHeaderBackButton: false, inBrowserHeader: true },
@@ -54,7 +54,7 @@ class AppComponent extends LitElement {
     { title: 'Workout erstellen', routePath: '/workouts/create/:userId', authRequired: true, trainerRequired: false, component: 'app-workout-create', nativeHeaderBackButton: true, inBrowserHeader: false },
     { title: 'Workout durchführen', routePath: '/workouts/do/:id', authRequired: true, trainerRequired: false, component: 'app-workout-do', nativeHeaderBackButton: true, inBrowserHeader: false },
     { title: 'Workout editieren', routePath: '/workouts/edit/:id', authRequired: true, trainerRequired: false, component: 'app-workout-edit', nativeHeaderBackButton: true, inBrowserHeader: false },
-    { title: 'Workout details', routePath: '/workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
+    { title: 'Workout Details', routePath: '/workouts/:id', authRequired: true, trainerRequired: false, component: 'app-workout-detail', nativeHeaderBackButton: true, inBrowserHeader: false },
 
     { title: 'Übungen', routePath: '/exercises', authRequired: true, trainerRequired: true, component: 'app-exercise-overview', nativeHeaderBackButton: true, inBrowserHeader: true },
     { title: 'Übung erstellen', routePath: '/exercises/create', authRequired: true, trainerRequired: true, component: 'app-exercise-create', nativeHeaderBackButton: true, inBrowserHeader: false },

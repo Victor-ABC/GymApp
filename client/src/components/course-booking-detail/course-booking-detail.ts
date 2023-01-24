@@ -110,34 +110,34 @@ class CourseBookingDetailComponent extends PageMixin(LitElement) {
                 </ion-card-header>
                 <ion-card-content>
                     <ion-item lines="full">
-                        <ion-label>Buchungszeitpunkt: ${this.coursebooking.bookingDate}</ion-label>
+                        <ion-label class="ion-text-wrap">Buchungszeitpunkt: ${this.coursebooking.bookingDate}</ion-label>
                         <ion-icon slot="start" name="create-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Beschreibung: ${this.coursebooking.description}</ion-label>
+                        <ion-label class="ion-text-wrap">Beschreibung: ${this.coursebooking.description}</ion-label>
                         <ion-icon slot="start" name="document-text-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Trainer: ${this.trainer.name}</ion-label>
+                        <ion-label class="ion-text-wrap">Trainer: ${this.trainer.name}</ion-label>
                         <ion-icon slot="start" name="person-circle-outline"></ion-icon>
                         ${this.checkIfMemberIsCurrentUser(this.trainer.id!) ?
                             html`` : html` <ion-button slot="end" size="small" fill="outline" type="button" @click="${() => this.openChatWithMember(this.trainer.id!, this.trainer.name!, this.trainer.mail!, this.trainer.createdAt!)}">Chat</ion-button>
                         `}
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>
+                        <ion-label class="ion-text-wrap">Wochentag: ${this.coursebooking.dayOfWeek}</ion-label>
                         <ion-icon slot="start" name="calendar-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Beginn: ${this.coursebooking.startTime} Uhr</ion-label>
+                        <ion-label class="ion-text-wrap">Beginn: ${this.coursebooking.startTime} Uhr</ion-label>
                         <ion-icon slot="start" name="time-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Ende: ${this.coursebooking.endTime} Uhr</ion-label>
+                        <ion-label class="ion-text-wrap">Ende: ${this.coursebooking.endTime} Uhr</ion-label>
                         <ion-icon slot="start" name="time-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="full">
-                        <ion-label>Zeitraum: ${format(new Date(this.coursebooking.startDate!), 'dd.MM.yyyy')} bis  ${format(new Date(this.coursebooking.endDate!), 'dd.MM.yyyy')}</ion-label>
+                        <ion-label class="ion-text-wrap">Zeitraum: ${format(new Date(this.coursebooking.startDate!), 'dd.MM.yyyy')} bis  ${format(new Date(this.coursebooking.endDate!), 'dd.MM.yyyy')}</ion-label>
                         <ion-icon slot="start" name="calendar-number-outline"></ion-icon>
                     </ion-item>
                     <ion-item lines="none">

@@ -3,7 +3,7 @@
   "db": {
     "use": "mongodb",
     "connect": {
-      "user": "myUserAdmin",
+      "user": "root",
       "host": "5.75.141.244",
       "database": "gym",
       "password": "coexist_tubby7_Frozen7",

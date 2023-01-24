@@ -73,7 +73,7 @@ class HomeComponent extends PageMixin(LitElement) {
             }
           </ion-thumbnail>
 
-            <ion-label>${this.getNameByTaskId(exercise.taskId)}</ion-label>
+            <ion-label class="ion-text-wrap">${this.getNameByTaskId(exercise.taskId)}</ion-label>
           </ion-item>
               
           `

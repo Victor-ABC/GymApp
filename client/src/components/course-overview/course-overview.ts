@@ -47,7 +47,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
             <ion-content class="ion-padding">
                 <div class="header-overview">
                 ${!Capacitor.isNativePlatform() ? html`
-                    <h1>Course Overview</h1>
+                    <h1>Alle Kurse</h1>
                 ` : null }
                     ${authenticationService.isTrainer() && Capacitor.getPlatform() === 'web' ? html`
                         <ion-button @click="${() => this.openCreateCourse()}">
@@ -67,7 +67,7 @@ class CourseOverviewComponent extends PageMixin(LitElement){
                                     course => html`
                                         <ion-item-sliding>
                                             <ion-item>
-                                                <ion-label>${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
+                                                <ion-label class="ion-text-wrap">${course.name} | ${course.dayOfWeek}s, Start: ${course.startTime} Uhr</ion-label>
                                                 <ion-button fill="clear" @click="${() => this.openCourse(course.id)}">Details</ion-button>
                                                 <ion-button fill="clear" id="click-trigger-${course.id}">
                                                     <ion-icon slot="icon-only" name="menu-sharp"></ion-icon>

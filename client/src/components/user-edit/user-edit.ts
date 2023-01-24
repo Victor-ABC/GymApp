@@ -85,7 +85,7 @@ buildBody() {
     <ion-row>
         <ion-col
             ><ion-button id="pictureBtn" expand="block" @click="${this.takePhoto}"
-              >Ein foto machen</ion-button
+              >Foto hochladen</ion-button
             ></ion-col
           >
     </ion-row>
