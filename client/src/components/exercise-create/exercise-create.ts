@@ -105,12 +105,12 @@ class ExerciseCreateComponent extends PageMixin(LitElement){
                         ${this.exercisePictures.length <= 6
                           ? html`<ion-col
                               ><ion-button id="pictureBtn" expand="block" @click="${this.takePhoto}"
-                                >Ein foto machen</ion-button
+                                >Foto hochladen</ion-button
                               ></ion-col
                             >`
                           : html`<ion-col
                               ><ion-button expand="block" disabled="true"
-                                >Maximale Anzahl an fotos</ion-button
+                                >Maximale Anzahl an Fotos</ion-button
                               ></ion-col
                             >`}
                         ${this.exercisePictures.length > 0

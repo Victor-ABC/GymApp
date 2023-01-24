@@ -181,7 +181,7 @@ class HomeComponent extends PageMixin(LitElement) {
 
         <ion-card-content>
         ${this.myWorkouts.length === 0 ?
-          html`<div class="no-content">Du hast momentan keine Training</div>` : html`
+          html`<div class="no-content">Du hast momentan kein Training erstellt</div>` : html`
           <ion-list>
             ${repeat(
               this.myWorkouts,

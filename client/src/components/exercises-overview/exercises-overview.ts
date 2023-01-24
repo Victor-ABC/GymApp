@@ -49,7 +49,7 @@ class ExerciseOverviewComponent extends PageMixin(LitElement){
             <ion-content class="ion-padding">
               <div class="header-overview">
               ${!Capacitor.isNativePlatform() ? html`
-              <h1>Übungen</h1>
+              <h1>Alle Übungen</h1>
           ` : null }
                 <ion-button @click="${this.openCreateExercise}">
                   <ion-icon slot="icon-only" name="add"></ion-icon>
